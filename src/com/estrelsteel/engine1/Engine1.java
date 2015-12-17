@@ -61,7 +61,7 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public String title = "Engine1";
 	public String version = "v0.1a";
-	public int build = 0;
+	public int build = 1;
 	public long time = System.currentTimeMillis();
 	
 	
