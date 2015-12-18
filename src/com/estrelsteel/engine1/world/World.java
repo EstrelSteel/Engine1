@@ -96,7 +96,7 @@ public class World {
 			if(!t.getType().getImage().isImageLoaded()) {
 				t.getType().getImage().loadImage();
 			}
-			if(displayX + t.getLocation().getWidth() > 0 && displayX < Engine1.startWidth && displayY + t.getLocation().getHeight() > 0 && displayY < Engine1.startHeight) {
+			if(displayX + t.getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + t.getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
 				trans = new AffineTransform();
 				trans.translate(displayX, displayY);
 				trans.scale(t.getLocation().getWidth() / t.getType().getLocation().getWidth(), t.getLocation().getHeight() / t.getType().getLocation().getHeight());

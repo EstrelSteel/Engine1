@@ -60,8 +60,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Engine1";
-	public String version = "v0.1a";
-	public int build = 1;
+	public String version = "v0.1b";
+	public int build = 2;
 	public long time = System.currentTimeMillis();
 	
 	
@@ -93,6 +93,9 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		EntityType.WALPOLE.getAnimations().get(0).setMaxWait(15);
 		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
+		EntityType.JOHN_SNOW.getAnimations().get(0).setMaxWait(15);
+		EntityType.JOHN_SNOW.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
+		
 		for(int i = 0; i < 4; i++) {
 			EntityType.WALPOLE.getAnimations().add(new Animation(15));
 			EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
@@ -228,7 +231,9 @@ public class Engine1 extends Canvas implements Runnable {
 		ctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		ctx.clearRect(0, 0, getWidth(), getHeight());
-		ctx = world.renderWorld(ctx);
+		if(world != null) {
+			world.renderWorld(ctx);
+		}
 		if(showFPS) {
 			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
 		}

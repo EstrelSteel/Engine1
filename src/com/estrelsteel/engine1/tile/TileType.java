@@ -18,7 +18,9 @@ public enum TileType {
 	DIRT(11, "DIRT", "/com/estrelsteel/engine1/res/texture.png", new Location(4 * 16, 1 * 16, 16, 16)),
 	XMARK(12, "XMARK", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 1 * 16, 16, 16)),
 	WATER_OVERLAY(13, "WATER_OVERLAY", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 1 * 16, 16, 16)),
-	GRASS_OVERLAY(14, "GRASS_OVERLAY", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 1 * 16, 16, 16));
+	GRASS_OVERLAY(14, "GRASS_OVERLAY", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 1 * 16, 16, 16)),
+	PRESENT_SIDE(15, "PRESENT_SIDE", "/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 2 * 16, 16, 16)),
+	PRESENT_TOP(16, "PRESENT_TOP", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 2 * 16, 16, 16));
 	
 	private int id;
 	private String name;
