@@ -3,13 +3,11 @@ package com.estrelsteel.engine1;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.camera.Camera;
@@ -60,8 +58,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Engine1";
-	public String version = "v0.1b";
-	public int build = 2;
+	public String version = "v0.1c";
+	public int build = 3;
 	public long time = System.currentTimeMillis();
 	
 	

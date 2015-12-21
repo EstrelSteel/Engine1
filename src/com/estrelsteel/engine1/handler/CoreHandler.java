@@ -10,9 +10,6 @@ import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowStateListener;
 
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.entitiy.Entity;
-import com.estrelsteel.engine1.tile.Tile;
-import com.estrelsteel.engine1.world.Location;
 
 public class CoreHandler extends WindowAdapter implements WindowStateListener, WindowFocusListener, FocusListener, ComponentListener {
 
@@ -26,29 +23,24 @@ public class CoreHandler extends WindowAdapter implements WindowStateListener, W
 		engine.stop();
     }
 
-	@Override
 	public void focusGained(FocusEvent e) {
 		//System.out.println("focused");
 		engine.focused = 0;
 	}
 
-	@Override
 	public void focusLost(FocusEvent e) {
 		//System.out.println("un-focused");
 		engine.focused = 1;
 	}
 
-	@Override
 	public void componentHidden(ComponentEvent e) {
 		
 	}
 
-	@Override
 	public void componentMoved(ComponentEvent e) {
 		
 	}
 
-	@Override
 	public void componentResized(ComponentEvent e) {
 //		double scaleWidth = (double) e.getComponent().getWidth() / (double) Engine1.startWidth;
 //		double scaleHeight = (double) e.getComponent().getHeight() / (double) Engine1.startHeight;
@@ -75,7 +67,6 @@ public class CoreHandler extends WindowAdapter implements WindowStateListener, W
 //		}
 	}
 
-	@Override
 	public void componentShown(ComponentEvent e) {
 		
 	}
