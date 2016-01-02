@@ -17,6 +17,7 @@ import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityImage;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.estrelian.Estrelian;
+import com.estrelsteel.engine1.font.Font;
 import com.estrelsteel.engine1.handler.CoreHandler;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
@@ -25,8 +26,8 @@ import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Server;
-import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.tile.Tile;
+import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 
@@ -77,6 +78,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public Server server;
 	public Client client;
 	
+	public Font fpsFont;
+	
 	public synchronized void start() {
 		running = true;
 
@@ -110,12 +113,18 @@ public class Engine1 extends Canvas implements Runnable {
 			type = TileType.findByID(i);
 			statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), true, null));
 		}
-		
+		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), true, null));
+		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), true, null));
+		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), true, null));
+		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), true, null));
 		statictest.addEntity(player);
 		statictest.addCamera(playerCamera);
 		statictest.setMainCamera(playerCamera);
 		
 		worlds.add(statictest);
+		
+		fpsFont = new Font();
+		fpsFont.getTextLocation().setWidth(128);
 		
 		world = statictest;
 		Handler.loadHandlers(this, worlds);
@@ -233,10 +242,12 @@ public class Engine1 extends Canvas implements Runnable {
 			world.renderWorld(ctx);
 		}
 		if(showFPS) {
-			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
+			//ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
+			ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
 		}
 		
 		ctx.setColor(Color.BLACK);
+		
 		//ctx.drawLine(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
 		//ctx.drawLine(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
 		String line;

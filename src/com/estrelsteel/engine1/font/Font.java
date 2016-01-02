@@ -24,7 +24,7 @@ public class Font {
 		charBlock2 = "QRSTUVWX";
 		charBlock3 = "YZ123456";
 		charBlock4 = "7890.,!?";
-		charBlock5 = ":;- ####";
+		charBlock5 = ";:-_ ###";
 		image = new Image("/com/estrelsteel/engine1/res/font.png");
 		charSize = new Location(0, 0, 16, 16);
 		textLoc = new Location(0, 0, 256, 32);
@@ -71,25 +71,53 @@ public class Font {
 		AffineTransform trans;
 		int x = textLoc.getX();
 		int y = textLoc.getY();
-		Location loc = new Location(112, 112, 16, 16);
-		int yPush = 0;
+		int iReduce = 0;
+		int xPush = 0;
+		int yPush = 112;
 		for(int i = 0; i < str.length(); i++) {
-			for(int a = 0; a < charBlock0.length(); a++) {
-				
+			for(xPush = 0; xPush < charBlock0.length();  xPush++) {
+				if(str.toUpperCase().charAt(i) == charBlock0.charAt(xPush)) {
+					yPush = 0;
+					break;
+				}
+				if(str.toUpperCase().charAt(i) == charBlock1.charAt(xPush)) {
+					yPush = 16;
+					break;
+				}
+				if(str.toUpperCase().charAt(i) == charBlock2.charAt(xPush)) {
+					yPush = 32;
+					break;
+				}
+				if(str.toUpperCase().charAt(i) == charBlock3.charAt(xPush)) {
+					yPush = 48;
+					break;
+				}
+				if(str.toUpperCase().charAt(i) == charBlock4.charAt(xPush)) {
+					yPush = 64;
+					break;
+				}
+				if(str.toUpperCase().charAt(i) == charBlock5.charAt(xPush)) {
+					yPush = 80;
+					break;
+				}
 			}
 			trans = new AffineTransform();
-			if(x + (charSpace.getWidth() * i) + (charSize.getWidth() * i) + charSize.getWidth() > textLoc.getX() + textLoc.getWidth()) {
+			if(x + charSize.getWidth() > textLoc.getX() + textLoc.getWidth()) {
 				x = textLoc.getX();
 				y = y + (charSize.getHeight()) + (charSpace.getHeight());
+				iReduce = i;
 			}
 			else {
-				x = x + (charSpace.getWidth() * i) + (charSize.getWidth() * i);
+				x = (charSpace.getWidth() * (i - iReduce)) + (charSize.getWidth() * (i- iReduce));
 			}
 			trans.translate(x, y);
 			trans.scale(charSize.getWidth() / 16, charSize.getHeight() / 16);
 			
 			trans.rotate(Math.toRadians(charSize.getRotation()), charSize.getWidth() / 2, charSize.getHeight() / 2);
-			ctx.drawImage(image.getImage().getSubimage(x, y, w, h), trans, null);
+			if(!image.isImageLoaded()) {
+				image.loadImage();
+			}
+			ctx.drawImage(image.getImage().getSubimage(xPush * 16, yPush, 16, 16), trans, null);
 		}
 		
 		return ctx;
