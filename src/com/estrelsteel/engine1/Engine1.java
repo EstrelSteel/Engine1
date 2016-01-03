@@ -106,7 +106,7 @@ public class Engine1 extends Canvas implements Runnable {
 		TileType type;
 		for(int i = 0; i < TileType.values().length; i++) {
 			type = TileType.findByID(i);
-			statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), true, null));
+			statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), false, null));
 		}
 		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), true, null));

@@ -158,13 +158,13 @@ public class World {
 	
 	public boolean doesCollide(Entity e, Location loc) {
 		for(Tile tile : tiles) {
-			if(tile.getCollide() && tile.getLocation().collidesWith(loc, mainCamera)) {
+			if(tile.getCollide() && tile.getLocation().collidesWith(loc)) {
 				return true;
 			}
 			
 		}
 		for(Entity entity : entities) {
-			if(!e.equals(entity) && entity.getCollide() && loc.collidesWith(entity.getLocation(), mainCamera)) {
+			if(!e.equals(entity) && entity.getCollide() && loc.collidesWith(entity.getLocation())) {
 				return true;
 			}
 		}
@@ -173,13 +173,13 @@ public class World {
 	
 	public boolean doesCollide(Tile t, Location loc) {
 		for(Tile tile : tiles) {
-			if(!t.equals(tile) && tile.getCollide() && tile.getLocation().collidesWith(loc, mainCamera)) {
+			if(!t.equals(tile) && tile.getCollide() && tile.getLocation().collidesWith(loc)) {
 				return true;
 			}
 			
 		}
 		for(Entity entity : entities) {
-			if(entity.getCollide() && loc.collidesWith(entity.getLocation(), mainCamera)) {
+			if(entity.getCollide() && loc.collidesWith(entity.getLocation())) {
 				return true;
 			}
 		}
