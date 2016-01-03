@@ -24,7 +24,17 @@ public enum TileType {
 	SNOW(17, "SNOW", "/com/estrelsteel/engine1/res/texture.png", new Location(2 * 16, 2 * 16, 16, 16)),
 	STONE(18, "STONE", "/com/estrelsteel/engine1/res/texture.png", new Location(3 * 16, 2 * 16, 16, 16)),
 	CLAY(19, "CLAY", "/com/estrelsteel/engine1/res/texture.png", new Location(4 * 16, 2 * 16, 16, 16)),
-	GRAVEL(20, "GRAVEL", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 2 * 16, 16, 16));
+	GRAVEL(20, "GRAVEL", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 2 * 16, 16, 16)),
+	TREE_PINE_TOP(21, "TREE_PINE_TOP", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 2 * 16, 16, 16)),
+	TREE_PINE_BOTTOM(22, "TREE_PINE_BOTTOM", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 2 * 16, 16, 16)),
+	TREE_TOP(23, "TREE_TOP", "/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 3 * 16, 16, 16)),
+	TREE_BOTTOM(24, "TREE_BOTTOM", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 3 * 16, 16, 16)),
+	STONE_BRICK(25, "STONE_BRICK", "/com/estrelsteel/engine1/res/texture.png", new Location(2 * 16, 3 * 16, 16, 16)),
+	SAND_BRICK(26, "SAND_BRICK", "/com/estrelsteel/engine1/res/texture.png", new Location(3 * 16, 3 * 16, 16, 16)),
+	DIRT_BRICK(27, "DIRT_BRICK", "/com/estrelsteel/engine1/res/texture.png", new Location(4 * 16, 3 * 16, 16, 16)),
+	SNOW_BRICK(28, "SNOW_BRICK", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 3 * 16, 16, 16)),
+	WOODEN_PLANKS(29, "WOODEN_PLANKS", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 3 * 16, 16, 16)),
+	WOODEN_PLANKS_NAILS(30, "WOODEN_PLANKS_NAILS", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 3 * 16, 16, 16)),;
 	
 	private int id;
 	private String name;

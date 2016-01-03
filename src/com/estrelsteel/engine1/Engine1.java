@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.camera.Camera;
@@ -17,6 +15,7 @@ import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityImage;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.estrelian.Estrelian;
+import com.estrelsteel.engine1.font.Font;
 import com.estrelsteel.engine1.handler.CoreHandler;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
@@ -25,17 +24,14 @@ import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Server;
-import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.tile.Tile;
+import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 
 public class Engine1 extends Canvas implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-
 	public static final double SCALE = 1.625;
 	public static int WIDTH = 400;
 	public static final int startWidth = (int) (WIDTH * SCALE);
@@ -58,8 +54,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Engine1";
-	public String version = "v0.1c";
-	public int build = 3;
+	public String version = "v0.1d";
+	public int build = 4;
 	public long time = System.currentTimeMillis();
 	
 	
@@ -76,6 +72,8 @@ public class Engine1 extends Canvas implements Runnable {
 	private Estrelian es2 = new Estrelian();
 	public Server server;
 	public Client client;
+	
+	public Font fpsFont;
 	
 	public synchronized void start() {
 		running = true;
@@ -110,12 +108,18 @@ public class Engine1 extends Canvas implements Runnable {
 			type = TileType.findByID(i);
 			statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), true, null));
 		}
-		
+		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), true, null));
+		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), true, null));
+		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), true, null));
+		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), true, null));
 		statictest.addEntity(player);
 		statictest.addCamera(playerCamera);
 		statictest.setMainCamera(playerCamera);
 		
 		worlds.add(statictest);
+		
+		fpsFont = new Font();
+		fpsFont.getTextLocation().setWidth(128);
 		
 		world = statictest;
 		Handler.loadHandlers(this, worlds);
@@ -154,13 +158,14 @@ public class Engine1 extends Canvas implements Runnable {
 				if(focused < 2) {
 					tick();
 				}
-				delta -= 1;
+				delta = delta - 1;
 				shouldRender = true;
 			}
 			
 			try {
 				Thread.sleep(2);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			
@@ -187,10 +192,6 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public void tick() {
 		tickCount++;
-		
-		for(int i = 0; i < pixels.length; i++) {
-			pixels[i] = i + tickCount;
-		}
 		
 		for(Entity e : world.getEntities()) {
 			if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
@@ -222,7 +223,6 @@ public class Engine1 extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-		
 		Graphics2D ctx = (Graphics2D) bs.getDrawGraphics();
 		
 		ctx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -230,13 +230,15 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		ctx.clearRect(0, 0, getWidth(), getHeight());
 		if(world != null) {
-			world.renderWorld(ctx);
+			ctx = world.renderWorld(ctx);
 		}
 		if(showFPS) {
-			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
+			//ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
+			ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
 		}
 		
 		ctx.setColor(Color.BLACK);
+		
 		//ctx.drawLine(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
 		//ctx.drawLine(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
 		String line;
@@ -253,15 +255,6 @@ public class Engine1 extends Canvas implements Runnable {
 					}
 				}
 			}
-		}
-		if(focused == 1) {
-			ctx.setColor(Color.GRAY);
-			ctx.fillRect(0, 0, getWidth(), getHeight());
-			ctx.setColor(Color.BLACK);
-			//System.out.println("drawing");
-			ctx.drawString("The Game is Paused!", 30, 30);
-			ctx.drawString("If you would like to continue, please re-focus the window.", 30, 100);
-			focused = 2;
 		}
 		
 		ctx.dispose();
