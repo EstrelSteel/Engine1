@@ -1,6 +1,5 @@
 package com.estrelsteel.engine1.world;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -92,11 +91,11 @@ public class World {
 			else {
 				displayY = t.getLocation().getY() + y;
 			}
-			ctx.setColor(Color.BLACK);
-			if(!t.getType().getImage().isImageLoaded()) {
-				t.getType().getImage().loadImage();
-			}
+			//ctx.setColor(Color.BLACK);
 			if(displayX + t.getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + t.getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
+				if(!t.getType().getImage().isImageLoaded()) {
+					t.getType().getImage().loadImage();
+				}
 				trans = new AffineTransform();
 				trans.translate(displayX, displayY);
 				trans.scale(t.getLocation().getWidth() / t.getType().getLocation().getWidth(), t.getLocation().getHeight() / t.getType().getLocation().getHeight());

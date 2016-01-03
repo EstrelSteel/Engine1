@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.camera.Camera;
@@ -34,9 +32,6 @@ import com.estrelsteel.engine1.world.World;
 public class Engine1 extends Canvas implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-
 	public static final double SCALE = 1.625;
 	public static int WIDTH = 400;
 	public static final int startWidth = (int) (WIDTH * SCALE);
@@ -163,13 +158,14 @@ public class Engine1 extends Canvas implements Runnable {
 				if(focused < 2) {
 					tick();
 				}
-				delta -= 1;
+				delta = delta - 1;
 				shouldRender = true;
 			}
 			
 			try {
 				Thread.sleep(2);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			
@@ -196,10 +192,6 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public void tick() {
 		tickCount++;
-		
-		for(int i = 0; i < pixels.length; i++) {
-			pixels[i] = i + tickCount;
-		}
 		
 		for(Entity e : world.getEntities()) {
 			if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
@@ -231,7 +223,6 @@ public class Engine1 extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-		
 		Graphics2D ctx = (Graphics2D) bs.getDrawGraphics();
 		
 		ctx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -239,7 +230,7 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		ctx.clearRect(0, 0, getWidth(), getHeight());
 		if(world != null) {
-			world.renderWorld(ctx);
+			ctx = world.renderWorld(ctx);
 		}
 		if(showFPS) {
 			//ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
@@ -264,15 +255,6 @@ public class Engine1 extends Canvas implements Runnable {
 					}
 				}
 			}
-		}
-		if(focused == 1) {
-			ctx.setColor(Color.GRAY);
-			ctx.fillRect(0, 0, getWidth(), getHeight());
-			ctx.setColor(Color.BLACK);
-			//System.out.println("drawing");
-			ctx.drawString("The Game is Paused!", 30, 30);
-			ctx.drawString("If you would like to continue, please re-focus the window.", 30, 100);
-			focused = 2;
 		}
 		
 		ctx.dispose();
