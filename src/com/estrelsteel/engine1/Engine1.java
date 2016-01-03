@@ -54,8 +54,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Engine1";
-	public String version = "v0.1d";
-	public int build = 4;
+	public String version = "v0.1e";
+	public int build = 5;
 	public long time = System.currentTimeMillis();
 	
 	
@@ -91,16 +91,43 @@ public class Engine1 extends Canvas implements Runnable {
 		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
 		EntityType.JOHN_SNOW.getAnimations().get(0).setMaxWait(15);
 		EntityType.JOHN_SNOW.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
-		
-		for(int i = 0; i < 4; i++) {
-			EntityType.WALPOLE.getAnimations().add(new Animation(15));
-			EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
-			EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
+		EntityType.CLOUD.getAnimations().get(0).setMaxWait(7);
+		EntityType.SLASH.getAnimations().get(0).setMaxWait(3);
+		EntityType.SLASH_GOLD.getAnimations().get(0).setMaxWait(3);
+		EntityType.SLASH_RUBY.getAnimations().get(0).setMaxWait(3);
+		EntityType.SWORD_DIAMOND.getAnimations().get(0).setMaxWait(3);
+		EntityType.SWORD_GOLD.getAnimations().get(0).setMaxWait(3);
+		EntityType.SWORD_RUBY.getAnimations().get(0).setMaxWait(3);
+		EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).setMaxWait(3);
+		EntityType.WAR_AXE_GOLD.getAnimations().get(0).setMaxWait(3);
+		EntityType.WAR_AXE_RUBY.getAnimations().get(0).setMaxWait(3);
+		for(int i = 0; i < 8; i++) {
+			if(i > 0 && i < 4) {
+				EntityType.WALPOLE.getAnimations().add(new Animation(15));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
+				
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(15));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
 			
-			EntityType.JOHN_SNOW.getAnimations().add(new Animation(15));
-			EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
-			EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
-		
+			}
+			if(i > -1 && i < 5) {
+				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));
+				
+			}
+			if(i > 0 && i < 8) {
+				EntityType.SWORD_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 0 * 16, 16, 16)));
+				EntityType.SWORD_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 1 * 16, 16, 16)));
+				EntityType.SWORD_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 2 * 16, 16, 16)));
+				EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 3 * 16, 16, 16)));
+				EntityType.WAR_AXE_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 4 * 16, 16, 16)));
+				EntityType.WAR_AXE_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 5 * 16, 16, 16)));
+				
+				EntityType.SLASH.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 1 * 16, 16, 16)));
+				EntityType.SLASH_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 2 * 16, 16, 16)));
+				EntityType.SLASH_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 3 * 16, 16, 16)));
+			}
 		}
 		
 		TileType type;
@@ -113,6 +140,9 @@ public class Engine1 extends Canvas implements Runnable {
 		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), true, null));
 		statictest.addEntity(player);
+		statictest.addEntity(new Entity(EntityType.SLASH_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SLASH"));
+		statictest.addEntity(new Entity(EntityType.SWORD_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SWORD"));
+		statictest.addEntity(new Entity(EntityType.CLOUD, new Location(336, 336, 64, 64), 0, true, null, "CLOUD"));
 		statictest.addCamera(playerCamera);
 		statictest.setMainCamera(playerCamera);
 		
@@ -194,21 +224,23 @@ public class Engine1 extends Canvas implements Runnable {
 		tickCount++;
 		
 		for(Entity e : world.getEntities()) {
-			if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-				e.moveUp(world);
-				e.setActiveAnimationNum(1);
-			}
-			if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-				e.moveDown(world);
-				e.setActiveAnimationNum(0);
-			}
-			if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-				e.moveRight(world);
-				e.setActiveAnimationNum(2);
-			}
-			if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-				e.moveLeft(world);
-				e.setActiveAnimationNum(3);
+			if(e.getControls() != null) {
+				if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.moveUp(world);
+					e.setActiveAnimationNum(1);
+				}
+				if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.moveDown(world);
+					e.setActiveAnimationNum(0);
+				}
+				if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.moveRight(world);
+					e.setActiveAnimationNum(2);
+				}
+				if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.moveLeft(world);
+					e.setActiveAnimationNum(3);
+				}
 			}
 			e.getCurrentAnimation().run();
 			
