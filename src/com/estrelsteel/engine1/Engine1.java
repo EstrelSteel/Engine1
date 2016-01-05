@@ -135,16 +135,17 @@ public class Engine1 extends Canvas implements Runnable {
 			type = TileType.findByID(i);
 			statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), false, null));
 		}
+		EntityType eType;
+		for(int i = 0; i < EntityType.values().length; i++) {
+			eType = EntityType.findByID(i);
+			statictest.addEntity(new Entity(eType, new Location(i * 64, 64, 64, 64, 0), 0, false, null, eType.getName()));
+		}
 		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), true, null));
 		statictest.addEntity(player);
-		EntityType eType;
-		for(int i = 0; i < EntityType.values().length; i++) {
-			eType = EntityType.findByID(i);
-			statictest.addEntity(new Entity(eType, new Location(i * 64, 64, 64, 64), 0, false, null, eType.getName()));
-		}
+		
 //		statictest.addEntity(new Entity(EntityType.SLASH_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SLASH"));
 //		statictest.addEntity(new Entity(EntityType.SWORD_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SWORD"));
 //		statictest.addEntity(new Entity(EntityType.CLOUD, new Location(336, 336, 64, 64), 0, true, null, "CLOUD"));

@@ -137,8 +137,7 @@ public class World {
 				trans.translate(displayX, displayY);
 				trans.scale(e.getLocation().getWidth() / e.getCurrentImage().getLocation().getWidth(), e.getLocation().getHeight() / e.getCurrentImage().getLocation().getHeight());
 				
-				trans.rotate(Math.toRadians(e.getLocation().getRotation()), e.getLocation().getWidth() / 2, e.getLocation().getHeight() / 2);
-				
+				trans.rotate(Math.toRadians(e.getLocation().getRotation()), e.getLocation().getWidth() / (e.getCurrentImage().getLocation().getWidth() / 2), e.getLocation().getHeight() / (e.getCurrentImage().getLocation().getHeight() / 2));
 				ctx.drawImage(e.getCurrentImage().getEntity(), trans, null);
 			}
 		}
