@@ -77,7 +77,10 @@ public class World {
 		int y = mainCamera.getLocation().getY();
 		int displayX = 0;
 		int displayY = 0;
+		int displayXE = 0;
+		int displayYE = 0;
 		AffineTransform trans;
+		AffineTransform transE = new AffineTransform();
 		for(Tile t : tiles) {
 			if(mainCamera.getFollowX()) {
 				displayX = t.getLocation().getX() - (t.getLocation().getWidth() / 2) + x;
@@ -109,25 +112,43 @@ public class World {
 			if(mainCamera.getFollowX()) {
 				if(mainCamera.getEntity().equals(e)) {
 					displayX = (int) ((Engine1.WIDTH / 2) - (e.getLocation().getWidth() / 2));
+					if(e.getEquiped() != null) {
+						displayXE = (int) ((Engine1.WIDTH / 2) - (e.getLocation().getWidth() / 2)) + e.getEquiped().getLocation().getX();
+					}
 				}
 				else {
 					displayX = e.getLocation().getX() - (e.getLocation().getWidth() / 2) + x;
+					if(e.getEquiped() != null) {
+						displayXE = e.getEquiped().getLocation().getX() - (e.getEquiped().getLocation().getWidth() / 2) + x;
+					}
 				}
 			}
 			else {
 				displayX = e.getLocation().getX() + x;
+				if(e.getEquiped() != null) {
+					displayXE = e.getEquiped().getLocation().getX()  + x;
+				}
 			}
 			
 			if(mainCamera.getFollowY()) {
 				if(mainCamera.getEntity().equals(e)) {
 					displayY = (int) ((Engine1.HEIGHT / 2) - (e.getLocation().getHeight() / 2));
+					if(e.getEquiped() != null) {
+						displayYE = (int) ((Engine1.HEIGHT / 2) - (e.getLocation().getHeight() / 2)) + e.getEquiped().getLocation().getY();
+					}
 				}
 				else {
 					displayY = e.getLocation().getY() - (e.getLocation().getHeight() / 2) + y;
+					if(e.getEquiped() != null) {
+						displayYE = e.getEquiped().getLocation().getY() - (e.getEquiped().getLocation().getHeight() / 2) + y;
+					}
 				}
 			}
 			else {
 				displayY = e.getLocation().getY() + y;
+				if(e.getEquiped() != null) {
+					displayYE = e.getEquiped().getLocation().getY() + y;
+				}
 			}
 			if(displayX + e.getLocation().getWidth() > 0 && displayX < Engine1.startWidth && displayY + e.getLocation().getHeight() > 0 && displayY < Engine1.startHeight) {
 				if(!e.getCurrentImage().isImageLoaded()) {
@@ -138,7 +159,23 @@ public class World {
 				trans.scale(e.getLocation().getWidth() / e.getCurrentImage().getLocation().getWidth(), e.getLocation().getHeight() / e.getCurrentImage().getLocation().getHeight());
 				
 				trans.rotate(Math.toRadians(e.getLocation().getRotation()), e.getLocation().getWidth() / (e.getCurrentImage().getLocation().getWidth() / 2), e.getLocation().getHeight() / (e.getCurrentImage().getLocation().getHeight() / 2));
+				if(e.getEquiped() != null) {
+					transE = new AffineTransform();
+					transE.translate(displayXE, displayYE);
+					transE.scale(e.getEquiped().getLocation().getWidth() / e.getEquiped().getCurrentImage().getLocation().getWidth(), e.getEquiped().getLocation().getHeight() / e.getEquiped().getCurrentImage().getLocation().getHeight());
+					
+					transE.rotate(Math.toRadians(e.getEquiped().getLocation().getRotation()), e.getEquiped().getLocation().getWidth() / (e.getEquiped().getCurrentImage().getLocation().getWidth() / 2), e.getEquiped().getLocation().getHeight() / (e.getEquiped().getCurrentImage().getLocation().getHeight() / 2));
+				}
+				
+				if(e.getEquiped() != null && e.getTopEquip()) {
+					ctx.drawImage(e.getEquiped().getCurrentImage().getEntity(), transE, null);
+				}
+				
 				ctx.drawImage(e.getCurrentImage().getEntity(), trans, null);
+				
+				if(e.getEquiped() != null && !e.getTopEquip()) {
+					ctx.drawImage(e.getEquiped().getCurrentImage().getEntity(), transE, null);
+				}
 			}
 		}
 		return ctx;

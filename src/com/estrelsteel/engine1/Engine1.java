@@ -67,6 +67,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
 	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
+	public Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
+	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
 	
 	@SuppressWarnings("unused")
 	private Estrelian es2 = new Estrelian();
@@ -112,6 +114,25 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
 			
 			}
+			if(i > 3 && i < 5) {
+				EntityType.WALPOLE.getAnimations().add(new Animation(24));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().add(new Animation(24));
+				EntityType.WALPOLE.getAnimations().get(i + 1).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().add(new Animation(24));
+				EntityType.WALPOLE.getAnimations().get(i + 2).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().add(new Animation(24));
+				EntityType.WALPOLE.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
+				
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
+				EntityType.JOHN_SNOW.getAnimations().get(i + 1).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
+				EntityType.JOHN_SNOW.getAnimations().get(i + 2).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
+				EntityType.JOHN_SNOW.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
+			}
 			if(i > -1 && i < 5) {
 				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));
 				
@@ -140,10 +161,12 @@ public class Engine1 extends Canvas implements Runnable {
 			eType = EntityType.findByID(i);
 			statictest.addEntity(new Entity(eType, new Location(i * 64, 64, 64, 64, 0), 0, false, null, eType.getName()));
 		}
+		player.setEquiped(weapon);
 		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), true, null));
 		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), true, null));
+		statictest.addEntity(slash);
 		statictest.addEntity(player);
 		
 //		statictest.addEntity(new Entity(EntityType.SLASH_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SLASH"));
@@ -246,6 +269,39 @@ public class Engine1 extends Canvas implements Runnable {
 				if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.moveLeft(world);
 					e.setActiveAnimationNum(3);
+				}
+				
+				if(e.getActiveAnimationNum() == 1 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.setActiveAnimationNum(5);
+					e.getEquiped().setLocation(new Location(0, -16, 64, 64, 270));
+					e.setTopEquip(true);
+					slash.setLocation(new Location(0 + e.getLocation().getX(), -16 + e.getLocation().getY(), 64, 64, 270));
+				}
+				else if(e.getActiveAnimationNum() == 0 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.setActiveAnimationNum(4);
+					e.getEquiped().setLocation(new Location(0, 48, 64, 64, 90));
+					e.setTopEquip(false);
+					slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+				}
+				else if(e.getActiveAnimationNum() == 2 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.setActiveAnimationNum(6);
+					e.getEquiped().setLocation(new Location(32, 16, 64, 64, 0));
+					e.setTopEquip(true);
+					slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+				}
+				else if(e.getActiveAnimationNum() == 3 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.setActiveAnimationNum(7);
+					e.getEquiped().setLocation(new Location(-32, 16, 64, 64, 180));
+					e.setTopEquip(true);
+					slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+				}
+				else if(!PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
+					e.setTopEquip(false);
+					slash.setLocation(new Location(1000, 1000, 0, 0, 90));
+					if(e.getActiveAnimationNum() > 3 && e.getActiveAnimationNum() < 8) {
+						e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
+					}
 				}
 			}
 			e.getCurrentAnimation().run();
