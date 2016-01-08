@@ -15,6 +15,8 @@ public class Entity {
 	private boolean collide;
 	private String name;
 	private int activeAnimation;
+	private Entity equiped;
+	private boolean topEquip;
 	
 	public Entity() {
 		this.loc = new Location(0, 0, 64, 64);
@@ -97,6 +99,14 @@ public class Entity {
 	
 	public EntityImage getCurrentImage()  {
 		return getCurrentAnimation().getImages().get(getCurrentAnimation().getFrame());
+	}
+	
+	public Entity getEquiped() {
+		return equiped;
+	}
+	
+	public boolean getTopEquip() {
+		return topEquip;
 	}
 	
 	public boolean equals(Entity entity) {
@@ -205,5 +215,15 @@ public class Entity {
 	
 	public void setActiveAnimationNum(int activeAnimation) {
 		this.activeAnimation = activeAnimation;
+	}
+	
+	public void setEquiped(Entity equiped) {
+		this.equiped = equiped;
+		return;
+	}
+	
+	public void setTopEquip(boolean topEquip) {
+		this.topEquip = topEquip;
+		return;
 	}
 }

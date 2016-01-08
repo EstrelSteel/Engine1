@@ -9,7 +9,8 @@ public class PlayerHandler extends Handler {
 		UP(87, 79, 38),
 		DOWN(83, 76, 40),
 		RIGHT(68, 186, 39),
-		LEFT(65, 75, 37);
+		LEFT(65, 75, 37),
+		USE(32, 9, 13);
 		
 		private int primary;
 		private int secondary;
@@ -87,6 +88,9 @@ public class PlayerHandler extends Handler {
 		if(PlayerControls.LEFT.getPrimaryKey() == e.getKeyCode()  || PlayerControls.LEFT.getSecondaryKey() == e.getKeyCode() || PlayerControls.LEFT.getTertiaryKey() == e.getKeyCode()) {
 			PlayerControls.LEFT.setPressed(true);
 		}
+		if(PlayerControls.USE.getPrimaryKey() == e.getKeyCode()  || PlayerControls.USE.getSecondaryKey() == e.getKeyCode() || PlayerControls.USE.getTertiaryKey() == e.getKeyCode()) {
+			PlayerControls.USE.setPressed(true);
+		}
 	}
 
 	@Override
@@ -102,6 +106,9 @@ public class PlayerHandler extends Handler {
 		}
 		if(PlayerControls.LEFT.getPrimaryKey() == e.getKeyCode()  || PlayerControls.LEFT.getSecondaryKey() == e.getKeyCode() || PlayerControls.LEFT.getTertiaryKey() == e.getKeyCode()) {
 			PlayerControls.LEFT.setPressed(false);
+		}
+		if(PlayerControls.USE.getPrimaryKey() == e.getKeyCode()  || PlayerControls.USE.getSecondaryKey() == e.getKeyCode() || PlayerControls.USE.getTertiaryKey() == e.getKeyCode()) {
+			PlayerControls.USE.setPressed(false);
 		}
 	}
 

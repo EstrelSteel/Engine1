@@ -138,22 +138,15 @@ public class Location {
 	}
 	
 	public boolean collidesWith(Location loc) {
-		if(((loc.getX() >= x && loc.getX() <= x + w)
-			|| (loc.getX() + loc.getWidth() >= x && loc.getX() <= x + w))
-			&& ((loc.getY() >= y && loc.getY() <= y + h)
-			|| (loc.getY() + loc.getHeight() >= y && loc.getY() <= y + h))) {
+		if(x + w > loc.getX()
+				&& x < loc.getX() + loc.getWidth()
+				&& y + h > loc.getY()
+				&& y < loc.getY() + loc.getHeight()) {
 			return true;
 		}
 		else {
 			return false;
 		}
-	}
-	
-	public boolean collidesWith(Location loc, Camera camera) {
-		int newX = loc.getX();
-		int newY = loc.getY();
-		Location newLoc = new Location(newX, newY, loc.getWidth(), loc.getHeight());
-		return collidesWith(newLoc);
 	}
 	
 	public boolean collidesWith(int x, int y, int w, int h) {

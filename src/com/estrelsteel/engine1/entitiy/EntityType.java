@@ -8,7 +8,18 @@ public enum EntityType {
 	UNKOWN(-1, "UNKNOWN", "/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
 	PLAYER(0, "PLAYER", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 0 * 16, 16, 16)),
 	WALPOLE(1, "WALPOLE", "/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
-	JOHN_SNOW(2, "JOHN_SNOW", "/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 0 * 16, 19, 21));
+	JOHN_SNOW(2, "JOHN_SNOW", "/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
+	//ID 3
+	CLOUD(4, "CLOUD", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 0 * 16, 16, 16)),
+	SLASH(5, "SLASH", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 1 * 16, 16, 16)),
+	SLASH_GOLD(6, "SLASH_GOLD", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 2 * 16, 16, 16)),
+	SLASH_RUBY(7, "SLASH_RUBY", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 3 * 16, 16, 16)),
+	SWORD_DIAMOND(8, "SWORD_DIAMOND", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 0 * 16, 16, 16)),
+	SWORD_GOLD(9, "SWORD_GOLD", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 1 * 16, 16, 16)),
+	SWORD_RUBY(10, "SWORD_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 2 * 16, 16, 16)),
+	WAR_AXE_DIAMOND(11, "WAR_AXE_DIAMOND", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 3 * 16, 16, 16)),
+	WAR_AXE_GOLD(12, "WAR_AXE_GOLD", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 4 * 16, 16, 16)),
+	WAR_AXE_RUBY(13, "WAR_AXE_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 5 * 16, 16, 16));
 	
 	private int id;
 	private String name;
