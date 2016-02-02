@@ -167,6 +167,10 @@ public class Location {
 		return "X: " + x + "\tY: " + y + "\tW: " + w + "\tH: " + h;
 	}
 	
+	public String convertToJava() {
+		return "new Location(" + x + ", " + y + ", " + w + ", " + h + ", " + rotation + ")";
+	}
+	
 	public ArrayList<String> convertToES1File(ArrayList<String> lines) {
 		lines.add("x = " + x);
 		lines.add("y = " + y);

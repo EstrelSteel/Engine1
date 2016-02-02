@@ -34,7 +34,19 @@ public enum TileType {
 	DIRT_BRICK(27, "DIRT_BRICK", "/com/estrelsteel/engine1/res/texture.png", new Location(4 * 16, 3 * 16, 16, 16)),
 	SNOW_BRICK(28, "SNOW_BRICK", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 3 * 16, 16, 16)),
 	WOODEN_PLANKS(29, "WOODEN_PLANKS", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 3 * 16, 16, 16)),
-	WOODEN_PLANKS_NAILS(30, "WOODEN_PLANKS_NAILS", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 3 * 16, 16, 16)),;
+	WOODEN_PLANKS_NAILS(30, "WOODEN_PLANKS_NAILS", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 3 * 16, 16, 16)),
+	LADDER(31, "LADDER", "/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 4 * 16, 16, 16)),
+	LIGHT_BULB(32, "LIGHT_BULB", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 4 * 16, 16, 16)),
+	BORDER(33, "BORDER", "/com/estrelsteel/engine1/res/texture.png", new Location(2 * 16, 4 * 16, 16, 16)),
+	BORDER_CORNER(34, "BORDER_CORNER", "/com/estrelsteel/engine1/res/texture.png", new Location(3 * 16, 4 * 16, 16, 16)),
+	BORDER_DIAGONAL(35, "BORDER_DIAGONAL", "/com/estrelsteel/engine1/res/texture.png", new Location(4 * 16, 4 * 16, 16, 16)),
+	DARKNESS(36, "DARKNESS", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 4 * 16, 16, 16)),
+	BORDER_MID(37, "BORDER_MID", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 4 * 16, 16, 16)),
+	BORDER_DIAGONAL_MID(38, "BORDER_DIAGONAL_MID", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 4 * 16, 16, 16)),
+	BORDER_DIAGONAL_MID_FLIP(39, "BORDER_DIAGONAL_MID_FLIP", "/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 5 * 16, 16, 16)),
+	BORDER_MID_HALF(40, "BORDER_MID_HALF", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 5 * 16, 16, 16)),
+	BORDER_DIAGONAL_HALF(41, "BORDER_DIAGONAL_HALF", "/com/estrelsteel/engine1/res/texture.png", new Location(2 * 16, 5 * 16, 16, 16)),
+	BORDER_DIAGONAL_HALF_FLIP(42, "BORDER_DIAGONAL_HALF_FLIP", "/com/estrelsteel/engine1/res/texture.png", new Location(3 * 16, 5 * 16, 16, 16));
 	
 	private int id;
 	private String name;

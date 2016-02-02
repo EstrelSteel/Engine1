@@ -21,7 +21,7 @@ public abstract class Handler implements KeyListener, MouseListener {
 	
 	public static void loadHandlers(Engine1 engine, ArrayList<World> worlds) {
 		for(World world : worlds) {
-			for(Tile t : world.getTiles()) {
+			for(Tile t : world.getAllTiles()) {
 				if(t.getControls() != null) {
 					engine.addKeyListener(t.getControls());
 					engine.addMouseListener(t.getControls());
@@ -35,6 +35,7 @@ public abstract class Handler implements KeyListener, MouseListener {
 				}
 			}
 		}
+		engine.addKeyListener(engine.selector);
 		
 	}
 	

@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowStateListener;
+import java.io.IOException;
 
 import com.estrelsteel.engine1.Engine1;
 
@@ -20,7 +21,11 @@ public class CoreHandler extends WindowAdapter implements WindowStateListener, W
 	}
 
 	public void windowClosing(WindowEvent e) {
-		engine.stop();
+		try {
+			engine.stop();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
     }
 
 	public void focusGained(FocusEvent e) {

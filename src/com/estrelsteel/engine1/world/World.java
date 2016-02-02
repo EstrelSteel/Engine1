@@ -8,17 +8,25 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.tile.Tile;
+import com.estrelsteel.engine1.tile.TileType;
 
 public class World {
-	private ArrayList<Tile> tiles = new ArrayList<Tile>();
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
-	private ArrayList<Camera> cameras = new ArrayList<Camera>();
+	private ArrayList<Chunk> chunks;
+	private ArrayList<Tile> tiles;
+	private ArrayList<Tile> collideTiles;
+	private ArrayList<Entity> entities;
+	private ArrayList<Camera> cameras;
 	private Camera mainCamera;
 	
 	private double width;
 	private double height;
 	
 	public World() {
+		this.chunks = new ArrayList<Chunk>();
+		this.tiles = new ArrayList<Tile>();
+		this.collideTiles = new ArrayList<Tile>();
+		this.entities = new ArrayList<Entity>();
+		this.cameras = new ArrayList<Camera>();
 		this.width = 1;
 		this.height = 1;
 		this.cameras.add(new Camera(new Location(0, 0)));
@@ -26,6 +34,11 @@ public class World {
 	}
 	
 	public World(double width, double height) {
+		this.chunks = new ArrayList<Chunk>();
+		this.tiles = new ArrayList<Tile>();
+		this.collideTiles = new ArrayList<Tile>();
+		this.entities = new ArrayList<Entity>();
+		this.cameras = new ArrayList<Camera>();
 		this.width = width;
 		this.height = height;
 		this.cameras.add(new Camera(new Location(0, 0)));
@@ -40,8 +53,16 @@ public class World {
 		return height;
 	}
 	
-	public ArrayList<Tile> getTiles() {
+	public ArrayList<Chunk> getChunks() {
+		return chunks;
+	}
+	
+	public ArrayList<Tile> getAllTiles() {
 		return tiles;
+	}
+	
+	public ArrayList<Tile> getCollideTiles() {
+		return collideTiles;
 	}
 	
 	public ArrayList<Entity> getEntities() {
@@ -56,8 +77,18 @@ public class World {
 		return mainCamera;
 	}
 	
+	public void addChunk(Chunk chunk) {
+		chunks.add(chunk);
+	}
+	
 	public void addTile(Tile tile) {
-		tiles.add(tile);
+		if(tile.getCollide()) {
+			collideTiles.add(tile);
+			tiles.add(tile);
+		}
+		else {
+			tiles.add(tile);
+		}
 		return;
 	}
 	
@@ -81,39 +112,92 @@ public class World {
 		int displayYE = 0;
 		AffineTransform trans;
 		AffineTransform transE = new AffineTransform();
-		for(Tile t : tiles) {
+		Tile t;
+		Entity e;
+		Chunk c;
+		for(int i = 0; i < chunks.size(); i++) {
+			c = chunks.get(i);
 			if(mainCamera.getFollowX()) {
-				displayX = t.getLocation().getX() - (t.getLocation().getWidth() / 2) + x;
+				displayX = c.getBounds().getX() - (c.getBounds().getWidth() / 2) + x;
 			}
 			else {
-				displayX = t.getLocation().getX() + x;
+				displayX = c.getBounds().getX() + x;
 			}
 			if(mainCamera.getFollowY()) {
-				displayY = t.getLocation().getY() - (t.getLocation().getHeight() / 2) + y;
+				displayY = c.getBounds().getY() - (c.getBounds().getHeight() / 2) + y;
 			}
 			else {
-				displayY = t.getLocation().getY() + y;
+				displayY = c.getBounds().getY() + y;
 			}
-			//ctx.setColor(Color.BLACK);
-			if(displayX + t.getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + t.getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
-				if(!t.getType().getImage().isImageLoaded()) {
-					t.getType().getImage().loadImage();
+			if(displayX + c.getBounds().getWidth() > -300 && displayX < Engine1.startWidth + 10 && displayY + c.getBounds().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
+				for(int j = 0; j < c.getTiles().size(); j++) {
+					t = c.getTiles().get(j);
+					if(t.getType() != TileType.UNKOWN) {
+						if(mainCamera.getFollowX()) {
+							displayX = t.getLocation().getX() - (t.getLocation().getWidth() / 2) + x;
+						}
+						else {
+							displayX = t.getLocation().getX() + x;
+						}
+						if(mainCamera.getFollowY()) {
+							displayY = t.getLocation().getY() - (t.getLocation().getHeight() / 2) + y;
+						}
+						else {
+							displayY = t.getLocation().getY() + y;
+						}
+						//ctx.setColor(Color.BLACK);
+						if(displayX + t.getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + t.getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
+							if(!t.getType().getImage().isImageLoaded()) {
+								t.getType().getImage().loadImage();
+							}
+							trans = new AffineTransform();
+							trans.translate(displayX, displayY);
+							trans.scale(t.getLocation().getWidth() / t.getType().getLocation().getWidth(), t.getLocation().getHeight() / t.getType().getLocation().getHeight());
+							
+							trans.rotate(Math.toRadians(t.getLocation().getRotation()), t.getLocation().getWidth() / 2, t.getLocation().getHeight() / 2);
+							
+							ctx.drawImage(t.getType().getImage().getTile(), trans, null);
+						}
+					}
 				}
-				trans = new AffineTransform();
-				trans.translate(displayX, displayY);
-				trans.scale(t.getLocation().getWidth() / t.getType().getLocation().getWidth(), t.getLocation().getHeight() / t.getType().getLocation().getHeight());
-				
-				trans.rotate(Math.toRadians(t.getLocation().getRotation()), t.getLocation().getWidth() / 2, t.getLocation().getHeight() / 2);
-				
-				ctx.drawImage(t.getType().getImage().getTile(), trans, null);
 			}
 		}
-		for(Entity e : entities) {
+		for(int i = 0; i < tiles.size(); i++) {
+			t = tiles.get(i);
+			if(t.getType() != TileType.UNKOWN) {
+				if(mainCamera.getFollowX()) {
+					displayX = t.getLocation().getX() - (t.getLocation().getWidth() / 2) + x;
+				}
+				else {
+					displayX = t.getLocation().getX() + x;
+				}
+				if(mainCamera.getFollowY()) {
+					displayY = t.getLocation().getY() - (t.getLocation().getHeight() / 2) + y;
+				}
+				else {
+					displayY = t.getLocation().getY() + y;
+				}
+				//ctx.setColor(Color.BLACK);
+				if(displayX + t.getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + t.getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
+					if(!t.getType().getImage().isImageLoaded()) {
+						t.getType().getImage().loadImage();
+					}
+					trans = new AffineTransform();
+					trans.translate(displayX, displayY);
+					trans.scale(t.getLocation().getWidth() / t.getType().getLocation().getWidth(), t.getLocation().getHeight() / t.getType().getLocation().getHeight());
+					trans.rotate(Math.toRadians(t.getLocation().getRotation()), t.getLocation().getWidth() / (t.getType().getImage().getLocation().getWidth() / 2), t.getLocation().getHeight() / (t.getType().getImage().getLocation().getHeight() / 2));
+					//transE.rotate(Math.toRadians(e.getEquiped().getLocation().getRotation()), e.getEquiped().getLocation().getWidth() / (e.getEquiped().getCurrentImage().getLocation().getWidth() / 2), e.getEquiped().getLocation().getHeight() / (e.getEquiped().getCurrentImage().getLocation().getHeight() / 2));
+					ctx.drawImage(t.getType().getImage().getTile(), trans, null);
+				}
+			}
+		}
+		for(int i = 0; i < entities.size(); i++) {
+			e = entities.get(i);
 			if(mainCamera.getFollowX()) {
 				if(mainCamera.getEntity().equals(e)) {
 					displayX = (int) ((Engine1.WIDTH / 2) - (e.getLocation().getWidth() / 2));
 					if(e.getEquiped() != null) {
-						displayXE = (int) ((Engine1.WIDTH / 2) - (e.getLocation().getWidth() / 2)) + e.getEquiped().getLocation().getX();
+						displayXE = e.getEquiped().getLocation().getX() - (e.getEquiped().getLocation().getWidth() / 2) + x;
 					}
 				}
 				else {
@@ -134,7 +218,7 @@ public class World {
 				if(mainCamera.getEntity().equals(e)) {
 					displayY = (int) ((Engine1.HEIGHT / 2) - (e.getLocation().getHeight() / 2));
 					if(e.getEquiped() != null) {
-						displayYE = (int) ((Engine1.HEIGHT / 2) - (e.getLocation().getHeight() / 2)) + e.getEquiped().getLocation().getY();
+						displayYE = e.getEquiped().getLocation().getY() - (e.getEquiped().getLocation().getHeight() / 2) + y;
 					}
 				}
 				else {
@@ -181,10 +265,42 @@ public class World {
 		return ctx;
 	}
 	
-	
+	public void sortToChunks() {
+		boolean found = false;
+		Tile t;
+		Chunk chunk;
+		for(int i = 0; i < tiles.size(); i++) {
+			t = tiles.get(i);
+			found = false;
+			for(Chunk c : chunks) {
+				if(c.addTile(tiles.get(i))) {
+					found = true;
+					tiles.remove(i);
+					i--;
+					if(i < 0) {
+						i = 0;
+					}
+				}
+			}
+			if(!found) {
+				chunk = new Chunk(new Location((t.getLocation().getX() / (8 * 64)) * (8 * 16), (t.getLocation().getY() / (8 * 64)) * (8 * 16), 8 * 64, 8 * 64));
+				
+				if(chunk.addTile(tiles.get(i))) {
+					System.out.println("chunk created");
+					chunks.add(chunk);
+					tiles.remove(i);
+					i--;
+					if(i < 0) {
+						i = 0;
+					}
+				}
+			}
+		}
+		System.out.println("chunks " + chunks.size());
+	}
 	
 	public boolean equals(World world) {
-		if(world.getWidth() == width && world.getHeight() == height && world.getTiles() == tiles && world.getEntities() == entities && cameras == world.getCameras()) {
+		if(world.getWidth() == width && world.getHeight() == height && world.getAllTiles() == tiles && world.getEntities() == entities && cameras == world.getCameras()) {
 			return true;
 		}
 		else {
@@ -193,7 +309,7 @@ public class World {
 	}
 	
 	public boolean doesCollide(Entity e, Location loc) {
-		for(Tile tile : tiles) {
+		for(Tile tile : collideTiles) {
 			if(tile.getCollide() && tile.getLocation().collidesWith(loc)) {
 				return true;
 			}
@@ -208,7 +324,7 @@ public class World {
 	}
 	
 	public boolean doesCollide(Tile t, Location loc) {
-		for(Tile tile : tiles) {
+		for(Tile tile : collideTiles) {
 			if(!t.equals(tile) && tile.getCollide() && tile.getLocation().collidesWith(loc)) {
 				return true;
 			}
@@ -248,6 +364,12 @@ public class World {
 		}
 		return false;
 	}
+	public ArrayList<String> convertToJava(ArrayList<String> lines) {
+		for(Tile t : tiles) {
+			lines.add("world.addTile("+ t.convertToJava() + ");");
+		}
+		return lines;
+	}
 	
 	public ArrayList<String> convertToES1File(ArrayList<String> lines) {
 		for(Tile t : tiles) {
@@ -285,8 +407,18 @@ public class World {
 		return;
 	}
 	
+	public void setChunks(ArrayList<Chunk> chunks) {
+		this.chunks = chunks;
+		return;
+	}
+	
 	public void setTiles(ArrayList<Tile> tiles) {
 		this.tiles = tiles;
+		return;
+	}
+	
+	public void setCollideTiles(ArrayList<Tile> collideTiles) {
+		this.collideTiles = collideTiles;
 		return;
 	}
 	

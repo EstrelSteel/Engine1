@@ -1,5 +1,6 @@
 package com.estrelsteel.engine1.tile;
 
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.handler.Handler;
@@ -10,6 +11,7 @@ public class Tile {
 	private TileType type;
 	private Handler controls;
 	private boolean collide;
+	private AffineTransform trans;
 	
 	public Tile() {
 		this.loc = new Location(0, 0, 16, 16);
@@ -52,6 +54,10 @@ public class Tile {
 		return collide;
 	}
 	
+	public AffineTransform getTransformation() {
+		return trans;
+	}
+	
 	public boolean equals(Tile tile) {
 		if(loc.equals(tile.getLocation()) && type.getID() == tile.getType().getID()) {
 			return true;
@@ -59,6 +65,11 @@ public class Tile {
 		else {
 			return false;
 		}
+	}
+
+	
+	public String convertToJava() {
+		return "new Tile(TileType." + type.getName() + ", " + loc.convertToJava() + ", " + collide + ", null)";
 	}
 	
 	public ArrayList<String> convertToES1File(ArrayList<String> lines) {
@@ -88,6 +99,11 @@ public class Tile {
 	
 	public void setCollide(boolean collide) {
 		this.collide = collide;
+		return;
+	}
+	
+	public void setTransformation(AffineTransform trans) {
+		this.trans = trans;
 		return;
 	}
 }

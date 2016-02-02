@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.camera.Camera;
@@ -20,12 +22,18 @@ import com.estrelsteel.engine1.handler.CoreHandler;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
+import com.estrelsteel.engine1.handler.Selector;
+import com.estrelsteel.engine1.maps.Map;
+import com.estrelsteel.engine1.maps.Mine;
 import com.estrelsteel.engine1.menu.Menu;
+import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
+import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Server;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
+import com.estrelsteel.engine1.world.Chunk;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 
@@ -44,7 +52,8 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public int tickCount = 0;
 	public int frames;
-	private boolean showFPS = true;
+	public boolean debug = true;
+	private boolean showFPS = false;
 	public int fps;
 	public int tps;
 	public int focused = 0;
@@ -54,8 +63,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Engine1";
-	public String version = "v0.1e";
-	public int build = 5;
+	public String version = "v0.1f";
+	public int build = 6;
 	public long time = System.currentTimeMillis();
 	
 	
@@ -63,31 +72,41 @@ public class Engine1 extends Canvas implements Runnable {
 	public World world;
 	public World statictest = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World test = statictest;
-	public Entity player = new Entity(EntityType.WALPOLE, new Location(100, 100, 64, 64), 5, true, playerHandler, "PLAYER");
+	public Entity player = new Entity(EntityType.WALPOLE, new Location(0, 0, 64, 64), 5, true, playerHandler, "PLAYER");
 	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
 	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
 	public Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
 	
+	public World staticMines = new World(WIDTH * SCALE, HEIGHT * SCALE);
+	public World mines = staticMines;
+	
 	@SuppressWarnings("unused")
 	private Estrelian es2 = new Estrelian();
 	public Server server;
 	public Client client;
 	
+	public Selector selector = new Selector("SELECTOR", this);
+	private AffineTransform selectTrans;
+	
 	public Font fpsFont;
+	
+	public Mine mine = new Mine();
+	
+	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	
 	public synchronized void start() {
 		running = true;
 
 		addFocusListener(coreHandler);
-		
 		thread = new Thread(this, title + version + "_main");
 		thread.start();
 		
 		playerCamera.setFollowX(true);
 		playerCamera.setFollowY(true);
 		playerCamera.setCameraController(camControlTest);
+		player.setSlowWalkspeed(1);
 		
 		EntityType.WALPOLE.getAnimations().get(0).setMaxWait(15);
 		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
@@ -103,6 +122,9 @@ public class Engine1 extends Canvas implements Runnable {
 		EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).setMaxWait(3);
 		EntityType.WAR_AXE_GOLD.getAnimations().get(0).setMaxWait(3);
 		EntityType.WAR_AXE_RUBY.getAnimations().get(0).setMaxWait(3);
+		EntityType.SPEAR.getAnimations().get(0).setMaxWait(3);
+		EntityType.BOW.getAnimations().get(0).setMaxWait(3);
+		EntityType.LEVER.getAnimations().get(0).setMaxWait(5);
 		for(int i = 0; i < 8; i++) {
 			if(i > 0 && i < 4) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(15));
@@ -134,8 +156,10 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.JOHN_SNOW.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
 			}
 			if(i > -1 && i < 5) {
-				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));
-				
+				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));	
+			}
+			if(i > 0 && i < 7) {
+				EntityType.LEVER.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/hud.png", new Location(i * 16, 5 * 16, 16, 16)));	
 			}
 			if(i > 0 && i < 8) {
 				EntityType.SWORD_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 0 * 16, 16, 16)));
@@ -145,27 +169,48 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.WAR_AXE_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 4 * 16, 16, 16)));
 				EntityType.WAR_AXE_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 5 * 16, 16, 16)));
 				
+				EntityType.BOW.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 7 * 16, 16, 16)));
+				
 				EntityType.SLASH.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 1 * 16, 16, 16)));
 				EntityType.SLASH_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 2 * 16, 16, 16)));
 				EntityType.SLASH_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 3 * 16, 16, 16)));
+			
+				EntityType.SPEAR.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 32, 6 * 16, 32, 16)));
 			}
 		}
 		
 		TileType type;
+		Chunk chunk = new Chunk(new Location(0, 0, 64, 64));
 		for(int i = 0; i < TileType.values().length; i++) {
 			type = TileType.findByID(i);
-			statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), false, null));
+			if(i % 10 == 0) {
+				chunk = new Chunk(new Location((i / 10) * (10 * 64), 0, 64 * 10, 64 * 10));
+				statictest.addChunk(chunk);
+			}
+			statictest.getChunks().get(statictest.getChunks().size() - 1).addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), false, null));
+			//statictest.addTile(new Tile(type, new Location(i * 64, 0, 64, 64, 0), false, null));
 		}
 		EntityType eType;
 		for(int i = 0; i < EntityType.values().length; i++) {
 			eType = EntityType.findByID(i);
 			statictest.addEntity(new Entity(eType, new Location(i * 64, 64, 64, 64, 0), 0, false, null, eType.getName()));
 		}
+		
+		hud.addMenuItem(new MenuItem(MenuItemType.MOUSE, new Location(0, 650 - 192, 128, 256)));
+		hud.addMenuItem(new MenuItem(MenuItemType.KEY_ONE, new Location(144 + (60) * 0, 650 - 80, 64, 64)));
+		hud.addMenuItem(new MenuItem(MenuItemType.KEY_TWO, new Location(144 + (60) * 1, 650 - 80, 64, 64)));
+		hud.addMenuItem(new MenuItem(MenuItemType.KEY_THREE, new Location(144 + (60) * 2, 650 - 80, 64, 64)));
+		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FOUR, new Location(144 + (60) * 3, 650 - 80, 64, 64)));
+		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FIVE, new Location(144 + (60) * 4, 650 - 80, 64, 64)));
+		hud.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 16, 576, 64)));
+		hud.setOpen(false);
+		menus.add(hud);
+		
 		player.setEquiped(weapon);
-		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), true, null));
-		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), true, null));
-		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), true, null));
-		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), true, null));
+//		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));
+//		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), false, null));
+//		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), false, null));
+//		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), false, null));
 		statictest.addEntity(slash);
 		statictest.addEntity(player);
 		
@@ -174,17 +219,35 @@ public class Engine1 extends Canvas implements Runnable {
 //		statictest.addEntity(new Entity(EntityType.CLOUD, new Location(336, 336, 64, 64), 0, true, null, "CLOUD"));
 		statictest.addCamera(playerCamera);
 		statictest.setMainCamera(playerCamera);
-		
+		statictest.sortToChunks();
 		worlds.add(statictest);
 		
 		fpsFont = new Font();
 		fpsFont.getTextLocation().setWidth(128);
 		
-		world = statictest;
+		world = mine.load();
+		world = addBasics(world);
 		Handler.loadHandlers(this, worlds);
 	}
 	
-	public synchronized void stop() {
+	public World addBasics(World world) {
+		//ENTITIES
+		world.addEntity(slash);
+		world.addEntity(weapon);
+		world.addEntity(player);
+		
+		//CAMERAS
+		world.addCamera(playerCamera);
+		world.setMainCamera(playerCamera);
+		
+		//CHUNKS
+		world.sortToChunks();
+		
+		return world;
+	}
+	
+	public synchronized void stop() throws IOException {
+		Map.generateFile("Mine", world);
 		running = false;
 		try {
 			thread.join();
@@ -237,7 +300,7 @@ public class Engine1 extends Canvas implements Runnable {
 			
 			if(System.currentTimeMillis() - lastTimer >= 1000) {
 				lastTimer += 1000;
-				if(showFPS) {
+				if(showFPS || debug) {
 					System.out.println(frames + " fps, " + ticks + " tps");
 				}
 				fps = frames;
@@ -273,25 +336,25 @@ public class Engine1 extends Canvas implements Runnable {
 				
 				if(e.getActiveAnimationNum() == 1 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(5);
-					e.getEquiped().setLocation(new Location(0, -16, 64, 64, 270));
+					e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
 					e.setTopEquip(true);
-					slash.setLocation(new Location(0 + e.getLocation().getX(), -16 + e.getLocation().getY(), 64, 64, 270));
+					slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
 				}
 				else if(e.getActiveAnimationNum() == 0 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(4);
-					e.getEquiped().setLocation(new Location(0, 48, 64, 64, 90));
+					e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 					e.setTopEquip(false);
 					slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 				}
 				else if(e.getActiveAnimationNum() == 2 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(6);
-					e.getEquiped().setLocation(new Location(32, 16, 64, 64, 0));
+					e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
 					e.setTopEquip(true);
 					slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
 				}
 				else if(e.getActiveAnimationNum() == 3 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(7);
-					e.getEquiped().setLocation(new Location(-32, 16, 64, 64, 180));
+					e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
 					e.setTopEquip(true);
 					slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
 				}
@@ -328,15 +391,28 @@ public class Engine1 extends Canvas implements Runnable {
 		if(world != null) {
 			ctx = world.renderWorld(ctx);
 		}
-		if(showFPS) {
+		if(showFPS || debug) {
 			//ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
 			ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
 		}
 		
-		ctx.setColor(Color.BLACK);
-		
-		//ctx.drawLine(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
-		//ctx.drawLine(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
+		if(debug && selector != null) {
+			//if(selectTrans == null)  {
+			selectTrans = new AffineTransform();
+			selectTrans.translate(650 - 64, 0);
+			selectTrans.scale(64 / selector.type.getLocation().getWidth(), 64 / selector.type.getLocation().getHeight());
+			selectTrans.rotate(Math.toRadians(selector.rotation), 64 / (selector.type.getImage().getLocation().getWidth() / 2), 64 / (selector.type.getImage().getLocation().getHeight() / 2));
+			//}
+			ctx.setColor(Color.WHITE);
+			ctx.fillRect(650 - 64, 0, 64, 94);
+			ctx.setColor(Color.BLACK);
+			ctx.drawImage(selector.type.getImage().getTile(), selectTrans, null);
+			ctx.drawString("r = "+ selector.rotation, 650 - 64, 74);
+			ctx.drawString("c = " + selector.collide, 650 - 64, 84);
+			ctx.setColor(Color.RED);
+			//loc = new Location(engine.player.getLocation().getX() / 64 * 64, engine.player.getLocation().getY() / 64 * 64, 64, 64, rotation);
+			ctx.drawRect((player.getLocation().getX() / 64 * 64) - (32) + world.getMainCamera().getLocation().getX(), (player.getLocation().getY() / 64 * 64) - (32) + world.getMainCamera().getLocation().getY(), 64, 64);
+		}
 		String line;
 		for(Menu menu : menus) {
 			if(menu.isOpen()) {
@@ -352,6 +428,11 @@ public class Engine1 extends Canvas implements Runnable {
 				}
 			}
 		}
+		ctx.setColor(Color.BLACK);
+		
+		//ctx.drawLine(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
+		//ctx.drawLine(0, HEIGHT / 2, WIDTH, HEIGHT / 2);
+		
 		
 		ctx.dispose();
 		bs.show();

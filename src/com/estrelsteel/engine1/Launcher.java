@@ -2,6 +2,7 @@ package com.estrelsteel.engine1;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -31,7 +32,12 @@ public class Launcher extends Applet {
 	
 	@Override
 	public void stop() {
-		engine.stop();
+		try {
+			engine.stop();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		return;
 	}
 	

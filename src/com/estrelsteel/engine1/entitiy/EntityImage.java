@@ -1,5 +1,6 @@
 package com.estrelsteel.engine1.entitiy;
 
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import com.estrelsteel.engine1.world.Image;
@@ -62,6 +63,7 @@ public class EntityImage extends Image {
 		return eImg;
 	}
 	
+
 	public void setLocation(Location loc) {
 		this.loc = loc;
 		return;

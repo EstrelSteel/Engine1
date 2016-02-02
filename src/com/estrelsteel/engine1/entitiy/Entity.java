@@ -1,9 +1,11 @@
 package com.estrelsteel.engine1.entitiy;
 
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
+import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 
@@ -12,11 +14,14 @@ public class Entity {
 	private EntityType type;
 	private Handler controls;
 	private int walkspeed;
+	private int slowWalkspeed;
 	private boolean collide;
 	private String name;
 	private int activeAnimation;
 	private Entity equiped;
 	private boolean topEquip;
+	private AffineTransform trans;
+	private boolean noClip = false;
 	
 	public Entity() {
 		this.loc = new Location(0, 0, 64, 64);
@@ -30,6 +35,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = null;
 		this.walkspeed = 5;
+		this.slowWalkspeed = (int) (this.walkspeed / 2);
 		this.collide = true;
 		this.name = "NULL";
 		this.activeAnimation = 0;
@@ -40,6 +46,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = controls;
 		this.walkspeed = 5;
+		this.slowWalkspeed = (int) (this.walkspeed / 2);
 		this.collide = true;
 		this.name = "NULL";
 		this.activeAnimation = 0;
@@ -50,6 +57,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = controls;
 		this.walkspeed = walkspeed;
+		this.slowWalkspeed = (int) (this.walkspeed / 2);
 		this.collide = true;
 		this.name = "NULL";
 		this.activeAnimation = 0;
@@ -60,6 +68,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = controls;
 		this.walkspeed = walkspeed;
+		this.slowWalkspeed = (int) (this.walkspeed / 2);
 		this.collide = collide;
 		this.name = name;
 		this.activeAnimation = 0;
@@ -79,6 +88,10 @@ public class Entity {
 	
 	public int getWalkspeed() {
 		return walkspeed;
+	}
+	
+	public int getSlowWalkspeed() {
+		return slowWalkspeed;
 	}
 	
 	public boolean getCollide() {
@@ -109,6 +122,14 @@ public class Entity {
 		return topEquip;
 	}
 	
+	public AffineTransform getTransformation() {
+		return trans;
+	}
+	
+	public boolean isNoClip() {
+		return noClip;
+	}
+	
 	public boolean equals(Entity entity) {
 		if(loc.equals(entity.getLocation()) && type.getID() == entity.getType().getID() && entity.getWalkspeed() == walkspeed && entity.getName() == name) {
 			return true;
@@ -128,46 +149,68 @@ public class Entity {
 	}
 	
 	public boolean moveUp(World world) {
-		if(world.doesCollide(this, new Location(loc.getX(), loc.getY() - walkspeed, loc.getWidth(), loc.getHeight()))) {
-			return false;
-		}
-		else {
+		if(noClip || !world.doesCollide(this, new Location(loc.getX(), loc.getY() - walkspeed, loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX());
 			loc.setY(loc.getY() - walkspeed);
 			return true;
 		}
+		else if(noClip || !world.doesCollide(this, new Location(loc.getX(), loc.getY() - slowWalkspeed, loc.getWidth(), loc.getHeight()))) {
+			loc.setX(loc.getX());
+			loc.setY(loc.getY() - slowWalkspeed);
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+		
 	}
 	
 	public boolean moveDown(World world) {
-		if(world.doesCollide(this, new Location(loc.getX(), loc.getY() + walkspeed, loc.getWidth(), loc.getHeight()))) {
-			return false;
-		}
-		else {
+		if(noClip || !world.doesCollide(this, new Location(loc.getX(), loc.getY() + walkspeed, loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX());
 			loc.setY(loc.getY() + walkspeed);
 			return true;
 		}
+		else if(noClip || !world.doesCollide(this, new Location(loc.getX(), loc.getY() + slowWalkspeed, loc.getWidth(), loc.getHeight()))) {
+			loc.setX(loc.getX());
+			loc.setY(loc.getY() + slowWalkspeed);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public boolean moveRight(World world) {
-		if(world.doesCollide(this, new Location(loc.getX() + walkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
-			return false;
-		}
-		else {
+		if(noClip || !world.doesCollide(this, new Location(loc.getX() + walkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX() + walkspeed);
 			loc.setY(loc.getY());
 			return true;
 		}
+		else if(noClip || !world.doesCollide(this, new Location(loc.getX() + slowWalkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
+			loc.setX(loc.getX() + slowWalkspeed);
+			loc.setY(loc.getY());
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public boolean moveLeft(World world) {
-		if(world.doesCollide(this, new Location(loc.getX() - walkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
-			return false;
-		}
-		else {
+		if(noClip || !world.doesCollide(this, new Location(loc.getX() - walkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX() - walkspeed);
 			loc.setY(loc.getY());
 			return true;
+		}
+		else if(noClip || !world.doesCollide(this, new Location(loc.getX() - slowWalkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
+			loc.setX(loc.getX() - slowWalkspeed);
+			loc.setY(loc.getY());
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 	
@@ -203,6 +246,11 @@ public class Entity {
 		return;
 	}
 	
+	public void setSlowWalkspeed(int slowWalkspeed) {
+		this.slowWalkspeed = slowWalkspeed;
+		return;
+	}
+	
 	public void setCollide(boolean collide) {
 		this.collide = collide;
 		return;
@@ -224,6 +272,16 @@ public class Entity {
 	
 	public void setTopEquip(boolean topEquip) {
 		this.topEquip = topEquip;
+		return;
+	}
+	
+	public void setTransformation(AffineTransform trans) {
+		this.trans = trans;
+		return;
+	}
+	
+	public void setNoClip(boolean noClip) {
+		this.noClip = noClip;
 		return;
 	}
 }
