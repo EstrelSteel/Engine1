@@ -46,7 +46,29 @@ public enum TileType {
 	BORDER_DIAGONAL_MID_FLIP(39, "BORDER_DIAGONAL_MID_FLIP", "/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 5 * 16, 16, 16)),
 	BORDER_MID_HALF(40, "BORDER_MID_HALF", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 5 * 16, 16, 16)),
 	BORDER_DIAGONAL_HALF(41, "BORDER_DIAGONAL_HALF", "/com/estrelsteel/engine1/res/texture.png", new Location(2 * 16, 5 * 16, 16, 16)),
-	BORDER_DIAGONAL_HALF_FLIP(42, "BORDER_DIAGONAL_HALF_FLIP", "/com/estrelsteel/engine1/res/texture.png", new Location(3 * 16, 5 * 16, 16, 16));
+	BORDER_DIAGONAL_HALF_FLIP(42, "BORDER_DIAGONAL_HALF_FLIP", "/com/estrelsteel/engine1/res/texture.png", new Location(3 * 16, 5 * 16, 16, 16)),
+	WOOD_FENCE_UP(43, "WOOD_FENCE_UP", "/com/estrelsteel/engine1/res/walls.png", new Location(0 * 16, 0 * 16, 16, 16)),
+	WOOD_FENCE_DOWN(44, "WOOD_FENCE_DOWN", "/com/estrelsteel/engine1/res/walls.png", new Location(0 * 16, 1 * 16, 16, 16)),
+	WOOD_FENCE_1_LEFT(45, "WOOD_FENCE_1_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(1 * 16, 0 * 16, 16, 16)),
+	WOOD_FENCE_1_CENTRE(46, "WOOD_FENCE_1_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(2 * 16, 0 * 16, 16, 16)),
+	WOOD_FENCE_1_RIGHT(47, "WOOD_FENCE_1_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(3 * 16, 0 * 16, 16, 16)),
+	WOOD_FENCE_2_LEFT(48, "WOOD_FENCE_2_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(1 * 16, 1 * 16, 16, 16)),
+	WOOD_FENCE_2_CENTRE(49, "WOOD_FENCE_2_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(2 * 16, 1 * 16, 16, 16)),
+	WOOD_FENCE_2_RIGHT(50, "WOOD_FENCE_2_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(3 * 16, 1 * 16, 16, 16)),
+	WOOD_FENCE_3_LEFT(51, "WOOD_FENCE_3_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(1 * 16, 2 * 16, 16, 16)),
+	WOOD_FENCE_3_CENTRE(52, "WOOD_FENCE_3_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(2 * 16, 2 * 16, 16, 16)),
+	WOOD_FENCE_3_RIGHT(53, "WOOD_FENCE_3_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(3 * 16, 2 * 16, 16, 16)),
+	STONE_WALL_UP(54, "STONE_WALL_UP", "/com/estrelsteel/engine1/res/walls.png", new Location(4 * 16, 0 * 16, 16, 16)),
+	STONE_WALL_DOWN(55, "STONE_WALL_DOWN", "/com/estrelsteel/engine1/res/walls.png", new Location(4 * 16, 1 * 16, 16, 16)),
+	STONE_WALL_1_LEFT(56, "STONE_WALL_1_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(5 * 16, 0 * 16, 16, 16)),
+	STONE_WALL_1_CENTRE(57, "STONE_WALL_1_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(6 * 16, 0 * 16, 16, 16)),
+	STONE_WALL_1_RIGHT(58, "STONE_WALL_1_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(7 * 16, 0 * 16, 16, 16)),
+	STONE_WALL_2_LEFT(59, "STONE_WALL_2_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(5 * 16, 1 * 16, 16, 16)),
+	STONE_WALL_2_CENTRE(60, "STONE_WALL_2_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(6 * 16, 1 * 16, 16, 16)),
+	STONE_WALL_2_RIGHT(61, "STONE_WALL_2_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(7 * 16, 1 * 16, 16, 16)),
+	STONE_WALL_3_LEFT(62, "STONE_WALL_3_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(5 * 16, 2 * 16, 16, 16)),
+	STONE_WALL_3_CENTRE(63, "STONE_WALL_3_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(6 * 16, 2 * 16, 16, 16)),
+	STONE_WALL_3_RIGHT(64, "STONE_WALL_3_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(7 * 16, 2 * 16, 16, 16));
 	
 	private int id;
 	private String name;

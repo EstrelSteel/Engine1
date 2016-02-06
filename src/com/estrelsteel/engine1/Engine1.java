@@ -62,9 +62,9 @@ public class Engine1 extends Canvas implements Runnable {
 	public CoreHandler coreHandler;
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
-	public String title = "Engine1";
-	public String version = "v0.1f";
-	public int build = 6;
+	public String title = "Aeris";
+	public String version = "v0.1g";
+	public int build = 7;
 	public long time = System.currentTimeMillis();
 	
 	
@@ -96,7 +96,7 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	
-	public synchronized void start() {
+	public void start() {
 		running = true;
 
 		addFocusListener(coreHandler);
@@ -159,7 +159,7 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));	
 			}
 			if(i > 0 && i < 7) {
-				EntityType.LEVER.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/hud.png", new Location(i * 16, 5 * 16, 16, 16)));	
+				EntityType.LEVER.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/aeris.png", new Location(i * 16, 0 * 16, 16, 16)));	
 			}
 			if(i > 0 && i < 8) {
 				EntityType.SWORD_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 0 * 16, 16, 16)));
@@ -241,12 +241,12 @@ public class Engine1 extends Canvas implements Runnable {
 		world.setMainCamera(playerCamera);
 		
 		//CHUNKS
-		world.sortToChunks();
+		//world.sortToChunks();
 		
 		return world;
 	}
 	
-	public synchronized void stop() throws IOException {
+	public void stop() throws IOException {
 		Map.generateFile("Mine", world);
 		running = false;
 		try {
@@ -392,8 +392,8 @@ public class Engine1 extends Canvas implements Runnable {
 			ctx = world.renderWorld(ctx);
 		}
 		if(showFPS || debug) {
-			//ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
-			ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
+			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
+			//ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
 		}
 		
 		if(debug && selector != null) {
