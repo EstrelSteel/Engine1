@@ -9,7 +9,7 @@ import com.estrelsteel.engine1.world.World;
 
 public abstract class Map {
 	
-	public abstract World loadTiles(World world);
+	public abstract World loadTiles1(World world);
 	
 	public abstract World loadEntities(World world);
 	
@@ -17,7 +17,7 @@ public abstract class Map {
 	
 	public World load() {
 		World world = new World(650, 650);
-		loadTiles(world);
+		loadTiles1(world);
 		loadEntities(world);
 		loadChunks(world);
 		return world;
@@ -32,10 +32,21 @@ public abstract class Map {
 		bw.write("import com.estrelsteel.engine1.world.Location;\n");
 		bw.write("import com.estrelsteel.engine1.world.World;\n\n");
 		bw.write("public class " + name + " extends Map {\n");
-		bw.write("\tpublic World loadTiles(World world) {\n");
-		
-		for(String line : world.convertToJava(new ArrayList<String>())) {
+		bw.write("\tpublic World loadTiles1(World world) {\n");
+		ArrayList<String> worldJava = world.convertToJava(new ArrayList<String>());
+		int byteCount = 0;
+		int method = 1;
+		for(String line : worldJava) {
+			byteCount = byteCount + line.getBytes().length;
 			bw.write("\t\t" + line + "\n");
+			if(byteCount >= 64000) {
+				byteCount = 0;
+				method = method + 1;
+				bw.write("\t\tworld = loadTiles" + method + "(world);\n");
+				bw.write("\t\treturn world;\n\t}\n");
+				bw.write("\tpublic World loadTiles" + method + "(World world) {\n");
+				
+			}
 		}
 		bw.write("\t\treturn world;\n\t}\n");
 		bw.write("\tpublic World loadEntities(World world) {\n");

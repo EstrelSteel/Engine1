@@ -68,7 +68,11 @@ public enum TileType {
 	STONE_WALL_2_RIGHT(61, "STONE_WALL_2_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(7 * 16, 1 * 16, 16, 16)),
 	STONE_WALL_3_LEFT(62, "STONE_WALL_3_LEFT", "/com/estrelsteel/engine1/res/walls.png", new Location(5 * 16, 2 * 16, 16, 16)),
 	STONE_WALL_3_CENTRE(63, "STONE_WALL_3_CENTRE", "/com/estrelsteel/engine1/res/walls.png", new Location(6 * 16, 2 * 16, 16, 16)),
-	STONE_WALL_3_RIGHT(64, "STONE_WALL_3_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(7 * 16, 2 * 16, 16, 16));
+	STONE_WALL_3_RIGHT(64, "STONE_WALL_3_RIGHT", "/com/estrelsteel/engine1/res/walls.png", new Location(7 * 16, 2 * 16, 16, 16)),
+	WOODEN_BRIDGE_EDGE1(65, "WOODEN_BRIDGE_EDGE1", "/com/estrelsteel/engine1/res/texture.png", new Location(4 * 16, 5 * 16, 16, 16)),
+	WOODEN_BRIDGE_CENTRE1(66, "WOODEN_BRIDGE_CENTRE1", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 5 * 16, 16, 16)),
+	WOODEN_BRIDGE_EDGE2(67, "WOODEN_BRIDGE_EDGE2", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 5 * 16, 16, 16)),
+	WOODEN_BRIDGE_CENTRE2(68, "WOODEN_BRIDGE_CENTRE2", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 5 * 16, 16, 16));
 	
 	private int id;
 	private String name;
