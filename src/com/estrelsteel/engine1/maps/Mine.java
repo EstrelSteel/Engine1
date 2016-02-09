@@ -5899,6 +5899,7 @@ public class Mine extends Map {
 		world.addTile(new Tile(TileType.WOOD_FENCE_1_LEFT, new Location(-1216, -64, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WOOD_FENCE_1_CENTRE, new Location(704, 0, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WOOD_FENCE_1_RIGHT, new Location(1920, -320, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WATER, new Location(-4608, -256, 64, 64, 0.0), false, null));
 		return world;
 	}
 	public World loadEntities(World world) {
