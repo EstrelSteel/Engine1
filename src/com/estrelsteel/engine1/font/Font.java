@@ -20,7 +20,6 @@ public class Font {
 	private Location textLoc;
 	private Location charSpace;
 	private ArrayList<BufferedImage> imgs;
-	private String lastStr;
 	
 	public Font() {
 		charBlock0 = "ABCDEFGH";
@@ -34,7 +33,6 @@ public class Font {
 		textLoc = new Location(0, 0, 256, 32);
 		charSpace = new Location(0, 0, 2, 2);
 		imgs = new ArrayList<BufferedImage>();
-		lastStr = "";
 	}
 	
 	public String getCharBlock0() {
@@ -138,7 +136,6 @@ public class Font {
 				ctx.drawImage(imgs.get(i), trans, null);
 			}
 		}
-		lastStr = str;
 		return ctx;
 	}
 	

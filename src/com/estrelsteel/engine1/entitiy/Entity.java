@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
-import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 

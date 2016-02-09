@@ -1,6 +1,5 @@
 package com.estrelsteel.engine1.entitiy;
 
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import com.estrelsteel.engine1.world.Image;
