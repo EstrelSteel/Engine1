@@ -1,18 +1,30 @@
 package com.estrelsteel.engine1.tile.shrine;
 
 public enum Team {
-	NEUTRAL(0),
-	RED(1),
-	BLUE(2),
-	OFF(3);
+	NEUTRAL(0, "NEUTRAL", "WHITE"),
+	RED(1, "RED", "RED"),
+	BLUE(2, "BLUE", "BLUE"),
+	OFF(3, "OFF", "BLACK");
 	
 	private int id;
+	private String name;
+	private String colour;
 	
-	Team(int id) {
+	Team(int id, String name, String colour) {
 		this.id = id;
+		this.name = name;
+		this.colour = colour;
 	}
 	
 	public int getID() {
 		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getColour() {
+		return colour;
 	}
 }

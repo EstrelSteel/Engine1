@@ -40,10 +40,10 @@ import com.estrelsteel.engine1.world.World;
 public class Engine1 extends Canvas implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
-	public static final double SCALE = 1.625;
-	public static int WIDTH = 400;
+	public static final double SCALE = 1;
+	public static int WIDTH = 650;
 	public static final int startWidth = (int) (WIDTH * SCALE);
-	public static int HEIGHT = 400;
+	public static int HEIGHT = 650;
 	public static final int startHeight = (int) (HEIGHT * SCALE);
 	public static Dimension dimension = new Dimension((int) (WIDTH * Engine1.SCALE), (int) (HEIGHT * Engine1.SCALE));
 	

@@ -73,21 +73,15 @@ public enum TileType {
 	WOODEN_BRIDGE_CENTRE1(66, "WOODEN_BRIDGE_CENTRE1", "/com/estrelsteel/engine1/res/texture.png", new Location(5 * 16, 5 * 16, 16, 16)),
 	WOODEN_BRIDGE_EDGE2(67, "WOODEN_BRIDGE_EDGE2", "/com/estrelsteel/engine1/res/texture.png", new Location(6 * 16, 5 * 16, 16, 16)),
 	WOODEN_BRIDGE_CENTRE2(68, "WOODEN_BRIDGE_CENTRE2", "/com/estrelsteel/engine1/res/texture.png", new Location(7 * 16, 5 * 16, 16, 16)),
-	SHRINE_CORNER_WHITE(69, "SHRINE_CORNER_WHITE", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 1 * 16, 16, 16)),
-	SHRINE_EDGE_WHITE(70, "SHRINE_EDGE_WHITE", "/com/estrelsteel/engine1/res/aeris.png", new Location(1 * 16, 1 * 16, 16, 16)),
-	SHRINE_CENTRE_WHITE(71, "SHRINE_CENTRE_WHITE", "/com/estrelsteel/engine1/res/aeris.png", new Location(2 * 16, 1 * 16, 16, 16)),
-	SHRINE_CORNER_GOLD(72, "SHRINE_CORNER_GOLD", "/com/estrelsteel/engine1/res/aeris.png", new Location(3 * 16, 1 * 16, 16, 16)),
-	SHRINE_EDGE_GOLD(73, "SHRINE_EDGE_GOLD", "/com/estrelsteel/engine1/res/aeris.png", new Location(4 * 16, 1 * 16, 16, 16)),
-	SHRINE_CENTRE_GOLD(74, "SHRINE_CENTRE_GOLD", "/com/estrelsteel/engine1/res/aeris.png", new Location(5 * 16, 1 * 16, 16, 16)),
-	SHRINE_CORNER_RED(75, "SHRINE_CORNER_RED", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 2 * 16, 16, 16)),
-	SHRINE_EDGE_RED(76, "SHRINE_EDGE_RED", "/com/estrelsteel/engine1/res/aeris.png", new Location(1 * 16, 2 * 16, 16, 16)),
-	SHRINE_CENTRE_RED(77, "SHRINE_CENTRE_RED", "/com/estrelsteel/engine1/res/aeris.png", new Location(2 * 16, 2 * 16, 16, 16)),
-	SHRINE_CORNER_BLUE(78, "SHRINE_CORNER_BLUE", "/com/estrelsteel/engine1/res/aeris.png", new Location(3 * 16, 2 * 16, 16, 16)),
-	SHRINE_EDGE_BLUE(79, "SHRINE_EDGE_BLUE", "/com/estrelsteel/engine1/res/aeris.png", new Location(4 * 16, 2 * 16, 16, 16)),
-	SHRINE_CENTRE_BLUE(80, "SHRINE_CENTRE_BLUE", "/com/estrelsteel/engine1/res/aeris.png", new Location(5 * 16, 2 * 16, 16, 16)),
-	SHRINE_CORNER_BLACK(81, "SHRINE_CORNER_BLACK", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 3 * 16, 16, 16)),
-	SHRINE_EDGE_BLACK(82, "SHRINE_EDGE_BLACK", "/com/estrelsteel/engine1/res/aeris.png", new Location(1 * 16, 3 * 16, 16, 16)),
-	SHRINE_CENTRE_BLACK(83, "SHRINE_CENTRE_BLACK", "/com/estrelsteel/engine1/res/aeris.png", new Location(2 * 16, 3 * 16, 16, 16));
+	SHRINE(69, "SHRINE", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 1 * 16, 16, 16)),
+	SHRINE_EDGE(70, "SHRINE_EDGE", "/com/estrelsteel/engine1/res/aeris.png", new Location(1 * 16, 1 * 16, 16, 16)),
+	FILTER_WHITE(71, "FILTER_WHITE", "/com/estrelsteel/engine1/res/aeris.png", new Location(7 * 16, 0 * 16, 16, 16)),
+	FILTER_GOLD(72, "FILTER_GOLD", "/com/estrelsteel/engine1/res/aeris.png", new Location(2 * 16, 1 * 16, 16, 16)),
+	FILTER_RED(73, "FILTER_RED", "/com/estrelsteel/engine1/res/aeris.png", new Location(3 * 16, 1 * 16, 16, 16)),
+	FILTER_BLUE(74, "FILTER_BLUE", "/com/estrelsteel/engine1/res/aeris.png", new Location(4 * 16, 1 * 16, 16, 16)),
+	FILTER_BLACK(75, "FILTER_BLACK", "/com/estrelsteel/engine1/res/aeris.png", new Location(5 * 16, 1 * 16, 16, 16)),
+	FILTER_GREEN(76, "FILTER_GREEN", "/com/estrelsteel/engine1/res/aeris.png", new Location(6 * 16, 1 * 16, 16, 16)),
+	FILTER_PURPLE(77, "FILTER_PURPLE", "/com/estrelsteel/engine1/res/aeris.png", new Location(7 * 16, 1 * 16, 16, 16));
 	
 	private int id;
 	private String name;
