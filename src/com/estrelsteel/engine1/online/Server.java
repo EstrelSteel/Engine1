@@ -11,17 +11,23 @@ import com.estrelsteel.engine1.Engine1;
 
 public class Server extends Thread {
 	private DatagramSocket socket;
-	ArrayList<String> users = new ArrayList<String>();
-	ArrayList<InetAddress> ips = new ArrayList<InetAddress>();
-	ArrayList<String> ports = new ArrayList<String>();
-	ArrayList<String> chatHold = new ArrayList<String>();
-	boolean holdChat = false;
-	int port;
-	int clientBuild = 1;
+	protected ArrayList<String> users;
+	protected ArrayList<InetAddress> ips;
+	protected ArrayList<String> ports;
+	private boolean join;
+	private int port;
 	private Engine1 engine;
+	private String msg;
+	private String id;
+	private String packetData;
+	private String[] packetArgs;
 	
 	public Server(Engine1 engine, int port) {
 		this.port = port;
+		this.users = new ArrayList<String>();
+		this.ips = new ArrayList<InetAddress>();
+		this.ports = new ArrayList<String>();
+		this.join = false;
 		this.engine = engine;
 		System.out.println("Online Server");
 		try {
@@ -45,15 +51,13 @@ public class Server extends Thread {
 				engine.server = null;
 				return;
 			}
-			String msg = new String(packet.getData());
+			msg = new String(packet.getData());
 			System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
-			String id = Packets.trimToID(msg);
-			String packetData = Packets.trimToData(msg);
-			String[] packetArgs = Packets.packetArgs(packetData);
+			id = Packets.trimToID(msg);
+			packetData = Packets.trimToData(msg);
+			packetArgs = Packets.packetArgs(packetData);
 			System.out.println("id=" + id + " data=" + packetData);
 			if(id.equalsIgnoreCase(Packets.LOGIN.getID())) {
-				//TODO: Add username check
-				Packets.sendPacketToAllUsers(msg, this);
 				if(Engine1.stringtoint(packetArgs[2].trim()) != engine.build) {
 					System.out.println("USER JOIN FAILED: OUTDATED CLIENT OR SERVER");
 					Packets.sendPacketToAllUsers(Packets.KICKED.getID() + "✂Outdated client or server.", this);
@@ -64,7 +68,7 @@ public class Server extends Thread {
 						Packets.sendPacketToAllUsers(Packets.KICKED.getID() + "✂Username already in use.", this);
 					}
 				}
-				
+				Packets.sendPacketToAllUsers(msg, this);
 				users.add(packetArgs[1].trim());
 				ips.add(packet.getAddress());
 				ports.add(packet.getPort() + "");
@@ -84,6 +88,13 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.KICKED.getID())) {
 					Packets.sendPacketToUser(packetArgs[1].trim(), msg, this);
 				}
+				else if(id.equalsIgnoreCase(Packets.MOVE.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
+				}
+				
+				
+				
+				
 				if(msg.trim().equalsIgnoreCase("ping")) {
 					sendData("pong".getBytes(), packet.getAddress(), packet.getPort());
 				}

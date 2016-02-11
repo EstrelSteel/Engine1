@@ -16,6 +16,7 @@ import com.estrelsteel.engine1.entitiy.Animation;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityImage;
 import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.Player;
 import com.estrelsteel.engine1.estrelian.Estrelian;
 import com.estrelsteel.engine1.font.Font;
 import com.estrelsteel.engine1.handler.CoreHandler;
@@ -33,6 +34,8 @@ import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Server;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
+import com.estrelsteel.engine1.tile.shrine.Shrine;
+import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Chunk;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
@@ -72,13 +75,13 @@ public class Engine1 extends Canvas implements Runnable {
 	public World world;
 	public World statictest = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World test = statictest;
-	public Entity player = new Entity(EntityType.WALPOLE, new Location(0, 0, 64, 64), 5, true, playerHandler, "PLAYER");
+	public Player player = new Player(EntityType.WALPOLE, new Location(0, 0, 64, 64), 5, true, playerHandler, "PLAYER");
 	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
 	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
 	public Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
-	
+	public Player pSearch;
 	public World staticMines = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World mines = staticMines;
 	
@@ -86,6 +89,7 @@ public class Engine1 extends Canvas implements Runnable {
 	private Estrelian es2 = new Estrelian();
 	public Server server;
 	public Client client;
+	public static boolean multiplayer = false;
 	
 	public Selector selector = new Selector("SELECTOR", this);
 	private AffineTransform selectTrans;
@@ -107,6 +111,7 @@ public class Engine1 extends Canvas implements Runnable {
 		playerCamera.setFollowY(true);
 		playerCamera.setCameraController(camControlTest);
 		player.setSlowWalkspeed(1);
+		player.setTeam(Team.BLUE);
 		
 		EntityType.WALPOLE.getAnimations().get(0).setMaxWait(15);
 		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
@@ -371,6 +376,20 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		for(Entity e : world.getEntities()) {
 			e.getCurrentAnimation().setRan(false);
+			if(e.getName().startsWith("PLAYER")) {
+				pSearch = (Player) e;
+				for(Shrine s : world.getShrines()) {
+					if(s.getLocation().collidesWith(pSearch.getLocation())) {
+						System.out.println("s=" + s.getCount());
+						if(pSearch.getTeam() == Team.BLUE) {
+							s.subtractCount(1.0);
+						}
+						else if(pSearch.getTeam() == Team.RED) {
+							s.addCount(1.0);
+						}
+					}
+				}
+			}
 		}
 		WIDTH = getWidth();
 		HEIGHT = getHeight();

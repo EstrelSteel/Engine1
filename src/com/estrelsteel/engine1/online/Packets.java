@@ -9,9 +9,10 @@ public enum Packets {
 	INVALID("-01"),
 	LOGIN("000"),
 	DISCONNECT("001"),
-	KICKED("002");
+	KICKED("002"),
+	MOVE("003");
 	
-	String packetID = "-01";
+	private String packetID;
 	
 	Packets(String packetID) {
 		this.packetID = packetID;

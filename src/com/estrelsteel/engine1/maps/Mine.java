@@ -6389,11 +6389,11 @@ public class Mine extends Map {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-3776, 1024, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-3840, 1024, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-3904, 1024, 64, 64, 0.0), true, null));
-		world.addShrine(new Shrine(0, Team.BLUE, new Location(-4288, 384, 64, 64, 0.0)));
-		world.addShrine(new Shrine(1, Team.BLUE, new Location(-3072, -192, 64, 64, 0.0)));
-		world.addShrine(new Shrine(2, Team.NEUTRAL, new Location(-1280, -128, 64, 64, 0.0)));
-		world.addShrine(new Shrine(3, Team.RED, new Location(640, -64, 64, 64, 0.0)));
-		world.addShrine(new Shrine(4, Team.RED, new Location(1856, -384, 64, 64, 0.0)));
+		world.addShrine(new Shrine(0, Team.BLUE, new Location(-4288, 384, 192, 192, 0.0)));
+		world.addShrine(new Shrine(1, Team.BLUE, new Location(-3072, -192, 192, 192, 0.0)));
+		world.addShrine(new Shrine(2, Team.NEUTRAL, new Location(-1280, -128, 192, 64, 0.0)));
+		world.addShrine(new Shrine(3, Team.RED, new Location(640, -64, 192, 192, 0.0)));
+		world.addShrine(new Shrine(4, Team.RED, new Location(1856, -384, 192, 192, 0.0)));
 		return world;
 	}
 }

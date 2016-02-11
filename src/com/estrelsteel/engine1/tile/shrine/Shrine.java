@@ -11,11 +11,17 @@ public class Shrine {
 	private Location loc;
 	private ArrayList<Tile> tiles;
 	private int id;
+	private double count;
+	private double resetCount;
+	private double maxCount;
 	
 	public Shrine(int id, Team team, Location loc) {
 		this.id = id;
 		this.team = team;
 		this.loc = loc;
+		this.resetCount = 300.0;
+		this.count = 300.0;
+		this.maxCount = 600.0;
 		this.tiles = new ArrayList<Tile>();
 		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
 		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
@@ -81,6 +87,84 @@ public class Shrine {
 		return loc;
 	}
 	
+	public double getCount() {
+		return count;
+	}
+	
+	public double getMaxCount() {
+		return maxCount;
+	}
+	
+	public Team getLowerTeam() {
+		if(team == Team.BLUE) {
+			return Team.BLUE;
+		}
+		else if(team == Team.RED) {
+			return Team.NEUTRAL;
+		}
+		else if(team == Team.NEUTRAL) {
+			return Team.BLUE;
+		}
+		else {
+			return Team.OFF;
+		}
+	}
+	
+	public Team getHigherTeam() {
+		if(team == Team.BLUE) {
+			return Team.NEUTRAL;
+		}
+		else if(team == Team.RED) {
+			return Team.RED;
+		}
+		else if(team == Team.NEUTRAL) {
+			return Team.RED;
+		}
+		else {
+			return Team.OFF;
+		}
+	}
+	
+	public void addCount(double c) {
+		if(count < 0.0) {
+			count = 0.0;
+		}
+		count = count + c;
+		hasConverted();
+		return;
+	}
+	
+	public void subtractCount(double c) {
+		if(count > maxCount) {
+			count = maxCount;
+		}
+		count = count - c;
+		hasConverted();
+		return;
+	}
+	
+	public boolean hasConverted() {
+		if(count <= 0) {
+			if(team != Team.BLUE) {
+				team = getLowerTeam();
+				count = resetCount;
+				update();
+			}
+			return true;
+		}
+		else if(count >= maxCount) {
+			if(team != Team.RED) {
+				team = getHigherTeam();
+				count = resetCount;
+				update();
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public void update() {
 		Tile tile;
 		for(int i = 0; i < tiles.size(); i++) {
@@ -118,6 +202,16 @@ public class Shrine {
 	
 	public void setID(int id) {
 		this.id = id;
+		return;
+	}
+	
+	public void setCount(double count) {
+		this.count = count;
+		return;
+	}
+	
+	public void setMaxCount(double maxCount) {
+		this.maxCount = maxCount;
 		return;
 	}
 }
