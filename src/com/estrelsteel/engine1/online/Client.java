@@ -20,7 +20,7 @@ public class Client extends Thread {
 	private String id;
 	private String packetData;
 	private String[] packetArgs;
-	private ArrayList<String> packetCache;
+	public ArrayList<String> packetCache;
 	
 	public Client(Engine1 engine, String ipAddress, int port) {
 		this.engine = engine;
@@ -72,12 +72,9 @@ public class Client extends Thread {
 			}
 			else if(id.equalsIgnoreCase(Packets.MOVE.getID())) {
 				packetCache.add(msg);
-//				for(Entity e : engine.world.getEntities()) {
-//					if(e.getName().equalsIgnoreCase(packetArgs[1].trim())) {
-//						e.getLocation().setX(Engine1.stringtoint(packetArgs[2].trim()));
-//						e.getLocation().setY(Engine1.stringtoint(packetArgs[3].trim()));
-//					}
-//				}
+			}
+			else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
+				packetCache.add(msg);
 			}
 			if(msg.trim().equalsIgnoreCase("pong")) {
 				sendData("Computer 2 Pong Reply".getBytes());

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.entitiy.Entity;
+import com.estrelsteel.engine1.entitiy.Player;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
@@ -18,6 +19,7 @@ public class World {
 	private ArrayList<Entity> entities;
 	private ArrayList<Camera> cameras;
 	private ArrayList<Shrine> shrines;
+	private ArrayList<Player> players;
 	private Camera mainCamera;
 	
 	private double width;
@@ -80,6 +82,10 @@ public class World {
 	public ArrayList<Shrine> getShrines() {
 		return shrines;
 	}
+	
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
 
 	public Camera getMainCamera() {
 		return mainCamera;
@@ -112,6 +118,11 @@ public class World {
 	
 	public void addShrine(Shrine shrine) {
 		shrines.add(shrine);
+		return;
+	}
+	
+	public void addPlayer(Player player) {
+		players.add(player);
 		return;
 	}
 	
@@ -483,6 +494,11 @@ public class World {
 	
 	public void setShrines(ArrayList<Shrine> shrines) {
 		this.shrines = shrines;
+		return;
+	}
+	
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
 		return;
 	}
 	

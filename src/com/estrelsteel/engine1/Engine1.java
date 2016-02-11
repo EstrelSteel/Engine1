@@ -31,6 +31,7 @@ import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Client;
+import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.Server;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
@@ -81,7 +82,6 @@ public class Engine1 extends Canvas implements Runnable {
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
 	public Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
-	public Player pSearch;
 	public World staticMines = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World mines = staticMines;
 	
@@ -90,6 +90,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Server server;
 	public Client client;
 	public static boolean multiplayer = false;
+	private String[] packetArgs;
 	
 	public Selector selector = new Selector("SELECTOR", this);
 	private AffineTransform selectTrans;
@@ -376,17 +377,25 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		for(Entity e : world.getEntities()) {
 			e.getCurrentAnimation().setRan(false);
-			if(e.getName().startsWith("PLAYER")) {
-				pSearch = (Player) e;
-				for(Shrine s : world.getShrines()) {
-					if(s.getLocation().collidesWith(pSearch.getLocation())) {
-						System.out.println("s=" + s.getCount());
-						if(pSearch.getTeam() == Team.BLUE) {
-							s.subtractCount(1.0);
-						}
-						else if(pSearch.getTeam() == Team.RED) {
-							s.addCount(1.0);
-						}
+		}
+		for(Player p : world.getPlayers()) {
+			for(String s : client.packetCache) {
+				packetArgs = Packets.packetArgs(s);
+				if(Packets.trimToID(s).equalsIgnoreCase(Packets.MOVE.getID())) {
+					p.getLocation().setX(stringtoint(packetArgs[1].trim()));
+					p.getLocation().setY(stringtoint(packetArgs[2].trim()));
+				}
+				else if(Packets.trimToID(s).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+					p.setActiveAnimationNum(stringtoint(packetArgs[1]));
+				}
+			}
+			for(Shrine s : world.getShrines()) {
+				if(s.getLocation().collidesWith(p.getLocation())) {
+					if(p.getTeam() == Team.BLUE) {
+						s.subtractCount(1.0);
+					}
+					else if(p.getTeam() == Team.RED) {
+						s.addCount(1.0);
 					}
 				}
 			}

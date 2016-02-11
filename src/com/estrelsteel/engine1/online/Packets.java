@@ -10,7 +10,8 @@ public enum Packets {
 	LOGIN("000"),
 	DISCONNECT("001"),
 	KICKED("002"),
-	MOVE("003");
+	MOVE("003"),
+	ANIMATION("004");
 	
 	private String packetID;
 	
