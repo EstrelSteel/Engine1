@@ -11,7 +11,8 @@ public enum Packets {
 	DISCONNECT("001"),
 	KICKED("002"),
 	MOVE("003"),
-	ANIMATION("004");
+	ANIMATION("004"),
+	PLAYER_DATA("005");
 	
 	private String packetID;
 	

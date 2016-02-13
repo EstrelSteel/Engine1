@@ -8,6 +8,8 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -86,6 +88,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
 	public World staticMines = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World mines = staticMines;
+	public World multiWorld = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	
 	@SuppressWarnings("unused")
 	private Estrelian es2 = new Estrelian();
@@ -105,7 +108,6 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public void start() {
 		running = true;
-
 		addFocusListener(coreHandler);
 		thread = new Thread(this, title + version + "_main");
 		thread.start();
@@ -219,9 +221,9 @@ public class Engine1 extends Canvas implements Runnable {
 //		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), false, null));
 //		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), false, null));
 //		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), false, null));
-//		statictest.addEntity(slash);
-//		statictest.addEntity(player);
-//		statictest.addPlayer(player);
+		statictest.addEntity(slash);
+		statictest.addEntity(player);
+		statictest.addPlayer(player);
 		
 //		statictest.addEntity(new Entity(EntityType.SLASH_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SLASH"));
 //		statictest.addEntity(new Entity(EntityType.SWORD_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SWORD"));
@@ -238,7 +240,6 @@ public class Engine1 extends Canvas implements Runnable {
 		world = addBasics(world);
 		Handler.loadHandlers(this, worlds);
 		TEMPStartClientServer();
-		
 	}
 	
 	public World addBasics(World world) {
@@ -251,23 +252,37 @@ public class Engine1 extends Canvas implements Runnable {
 		//CAMERAS
 		world.addCamera(playerCamera);
 		world.setMainCamera(playerCamera);
-		
+		for(Entity e : multiWorld.getEntities()) {
+			world.addEntity(e);
+		}
+		for(Player p : multiWorld.getPlayers()) {
+			world.addPlayer(p);
+		}
 		//CHUNKS
 		//world.sortToChunks();
 		
 		return world;
 	}
 	
-	public void TEMPStartClientServer() {
+	public synchronized void TEMPStartClientServer() {
+		String username;
 		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
 		if(ui.equalsIgnoreCase("y")) {
-			server = new Server(this, 5005);
-			client = new Client(this, "0.0.0.0", 5005);
+			server = new Server(this, 5006);
+			client = new Client(this, "10.0.1.18", 5006);
 		}
 		else {
-			client = new Client(this, "0.0.0.0", 5005);
+			client = new Client(this, "10.0.1.18", 5006);
 		}
+		username = JOptionPane.showInputDialog("What would you like your username to be", "TEMP Start server...");
+		player.setName(username);
+		if(server != null) {
+			server.start();
+		}
+		client.start();
 		
+		client.sendData((Packets.LOGIN.getID() + "✂" + username + "✂" + build).getBytes());
+//		client.sendData("ping".getBytes());
 	}
 	
 	public void stop() throws IOException {
@@ -397,14 +412,16 @@ public class Engine1 extends Canvas implements Runnable {
 			e.getCurrentAnimation().setRan(false);
 		}
 		for(Player p : world.getPlayers()) {
-			for(String s : client.packetCache) {
-				packetArgs = Packets.packetArgs(s);
-				if(Packets.trimToID(s).equalsIgnoreCase(Packets.MOVE.getID())) {
-					p.getLocation().setX(stringtoint(packetArgs[1].trim()));
-					p.getLocation().setY(stringtoint(packetArgs[2].trim()));
-				}
-				else if(Packets.trimToID(s).equalsIgnoreCase(Packets.ANIMATION.getID())) {
-					p.setActiveAnimationNum(stringtoint(packetArgs[1]));
+			if(client != null && client.packetCache != null) {
+				for(String s : client.packetCache) {
+					packetArgs = Packets.packetArgs(s);
+					if(Packets.trimToID(s).equalsIgnoreCase(Packets.MOVE.getID())) {
+						p.getLocation().setX(stringtoint(packetArgs[1].trim()));
+						p.getLocation().setY(stringtoint(packetArgs[2].trim()));
+					}
+					else if(Packets.trimToID(s).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+						p.setActiveAnimationNum(stringtoint(packetArgs[1]));
+					}
 				}
 			}
 			for(Shrine s : world.getShrines()) {

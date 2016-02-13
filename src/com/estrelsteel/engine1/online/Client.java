@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
+import com.estrelsteel.engine1.entitiy.Player;
 
 public class Client extends Thread {
 	private InetAddress ipAddress;
@@ -74,6 +75,9 @@ public class Client extends Thread {
 				packetCache.add(msg);
 			}
 			else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
+				packetCache.add(msg);
+			}
+			else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
 				packetCache.add(msg);
 			}
 			if(msg.trim().equalsIgnoreCase("pong")) {

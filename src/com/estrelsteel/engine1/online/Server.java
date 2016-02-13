@@ -14,6 +14,7 @@ public class Server extends Thread {
 	protected ArrayList<String> users;
 	protected ArrayList<InetAddress> ips;
 	protected ArrayList<String> ports;
+	private ArrayList<String> cachedPlayerPackets;
 	private boolean join;
 	private int port;
 	private Engine1 engine;
@@ -27,6 +28,7 @@ public class Server extends Thread {
 		this.users = new ArrayList<String>();
 		this.ips = new ArrayList<InetAddress>();
 		this.ports = new ArrayList<String>();
+		this.cachedPlayerPackets = new ArrayList<String>();
 		this.join = false;
 		this.engine = engine;
 		System.out.println("Online Server");
@@ -69,6 +71,9 @@ public class Server extends Thread {
 					}
 				}
 				Packets.sendPacketToAllUsers(msg, this);
+				for(int i = 0; i < users.size(); i++) {
+					Packets.sendPacketToUser(packetArgs[1].trim(), Packets.LOGIN.getID() + "✂" + users.get(i), this);
+				}
 				users.add(packetArgs[1].trim());
 				ips.add(packet.getAddress());
 				ports.add(packet.getPort() + "");
@@ -94,13 +99,13 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
 				}
-				
-				
-				
-				
-				if(msg.trim().equalsIgnoreCase("ping")) {
-					sendData("pong".getBytes(), packet.getAddress(), packet.getPort());
+				else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
+					cachedPlayerPackets.add(msg);
 				}
+			}
+			if(msg.trim().equalsIgnoreCase("ping")) {
+				sendData("pong".getBytes(), packet.getAddress(), packet.getPort());
 			}
 		}
 	}
