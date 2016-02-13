@@ -32,6 +32,7 @@ public class World {
 		this.entities = new ArrayList<Entity>();
 		this.cameras = new ArrayList<Camera>();
 		this.shrines = new ArrayList<Shrine>();
+		this.players = new ArrayList<Player>();
 		this.width = 1;
 		this.height = 1;
 		this.cameras.add(new Camera(new Location(0, 0)));
@@ -45,6 +46,7 @@ public class World {
 		this.entities = new ArrayList<Entity>();
 		this.cameras = new ArrayList<Camera>();
 		this.shrines = new ArrayList<Shrine>();
+		this.players = new ArrayList<Player>();
 		this.width = width;
 		this.height = height;
 		this.cameras.add(new Camera(new Location(0, 0)));

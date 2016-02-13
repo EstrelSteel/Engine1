@@ -27,4 +27,22 @@ public enum Team {
 	public String getColour() {
 		return colour;
 	}
+	
+	public static Team findByName(String name) {
+		for(Team type : Team.values()) {
+			if(type.getName().equalsIgnoreCase(name)) {
+				return type;
+			}
+		}
+		return Team.OFF;
+	}
+	
+	public static Team findByID(int id) {
+		for(Team type : Team.values()) {
+			if(type.getID() == id) {
+				return type;
+			}
+		}
+		return Team.OFF;
+	}
 }

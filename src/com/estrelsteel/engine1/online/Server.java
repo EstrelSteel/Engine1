@@ -91,6 +91,9 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.MOVE.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
 				}
+				else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
+				}
 				
 				
 				

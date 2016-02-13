@@ -10,6 +10,8 @@ import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.camera.TestCameraControl;
 import com.estrelsteel.engine1.entitiy.Animation;
@@ -217,8 +219,9 @@ public class Engine1 extends Canvas implements Runnable {
 //		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), false, null));
 //		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), false, null));
 //		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), false, null));
-		statictest.addEntity(slash);
-		statictest.addEntity(player);
+//		statictest.addEntity(slash);
+//		statictest.addEntity(player);
+//		statictest.addPlayer(player);
 		
 //		statictest.addEntity(new Entity(EntityType.SLASH_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SLASH"));
 //		statictest.addEntity(new Entity(EntityType.SWORD_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SWORD"));
@@ -234,6 +237,8 @@ public class Engine1 extends Canvas implements Runnable {
 		world = mine.load();
 		world = addBasics(world);
 		Handler.loadHandlers(this, worlds);
+		TEMPStartClientServer();
+		
 	}
 	
 	public World addBasics(World world) {
@@ -241,6 +246,7 @@ public class Engine1 extends Canvas implements Runnable {
 		world.addEntity(slash);
 		world.addEntity(weapon);
 		world.addEntity(player);
+		world.addPlayer(player);
 		
 		//CAMERAS
 		world.addCamera(playerCamera);
@@ -250,6 +256,18 @@ public class Engine1 extends Canvas implements Runnable {
 		//world.sortToChunks();
 		
 		return world;
+	}
+	
+	public void TEMPStartClientServer() {
+		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
+		if(ui.equalsIgnoreCase("y")) {
+			server = new Server(this, 5005);
+			client = new Client(this, "0.0.0.0", 5005);
+		}
+		else {
+			client = new Client(this, "0.0.0.0", 5005);
+		}
+		
 	}
 	
 	public void stop() throws IOException {
