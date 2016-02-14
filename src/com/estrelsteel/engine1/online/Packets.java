@@ -10,9 +10,12 @@ public enum Packets {
 	LOGIN("000"),
 	DISCONNECT("001"),
 	KICKED("002"),
-	MOVE("003"),
-	ANIMATION("004"),
-	PLAYER_DATA("005");
+	MOVE("003"),			//NAME, X, Y
+	ANIMATION("004"),		//NAME, ANIMATION ID
+	PLAYER_DATA("005"),		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID 
+	DAMAGE("006"),			//NAME (hit), DAMAGE 
+	;
+	
 	
 	private String packetID;
 	

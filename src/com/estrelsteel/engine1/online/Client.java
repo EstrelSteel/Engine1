@@ -10,7 +10,9 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
+import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.world.Location;
 
 public class Client extends Thread {
 	private InetAddress ipAddress;
@@ -55,9 +57,23 @@ public class Client extends Thread {
 			packetData = Packets.trimToData(msg);
 			packetArgs = Packets.packetArgs(packetData);
 			if(id.equalsIgnoreCase(Packets.LOGIN.getID())) {
-				if(engine.server == null) {
-					System.out.println("Connected...");
-				}
+				Player player = new Player(EntityType.JOHN_SNOW, new Location(0, 0, 64, 64, 0), 5, false, null, packetArgs[1].trim());
+				Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "s_" + packetArgs[1].trim());
+				Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "w_" + packetArgs[1].trim());
+				
+				player.setEquiped(weapon);
+				
+				engine.multiWorld.addPlayer(player);
+				engine.world.addPlayer(player);
+				
+				engine.world.addEntity(weapon);
+				engine.world.addEntity(slash);
+				
+				engine.multiWorld.addEntity(player);
+				engine.world.addEntity(player);
+				
+				engine.multiWorld.addEntity(weapon);
+				engine.multiWorld.addEntity(slash);
 			}
 			else if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
 				if(engine.server == null) {
@@ -67,18 +83,30 @@ public class Client extends Thread {
 			}
 			else if(id.equalsIgnoreCase(Packets.KICKED.getID())) {
 				if(engine.server == null) {
-					sendData((Packets.DISCONNECT.getID() + "✂" + ipAddress.toString()).getBytes());
+					sendData((Packets.DISCONNECT.getID() + "✂" + packetArgs[1].trim()).getBytes());
+					System.out.println("Kicked from the Server: " + packetArgs[2].trim());
 					return;
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.MOVE.getID())) {
-				packetCache.add(msg);
+				if(!packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
+					packetCache.add(msg);
+				}
 			}
 			else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
-				packetCache.add(msg);
+				if(!packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
+					packetCache.add(msg);
+				}
 			}
 			else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
-				packetCache.add(msg);
+				if(!packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
+					packetCache.add(msg);
+				}
+			}
+			else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
+				if(packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
+					engine.player.setHealth(engine.player.getHealth() - Engine1.stringtodouble(packetArgs[2].trim()));
+				}
 			}
 			if(msg.trim().equalsIgnoreCase("pong")) {
 				sendData("Computer 2 Pong Reply".getBytes());

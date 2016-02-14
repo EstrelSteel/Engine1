@@ -34,7 +34,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = null;
 		this.walkspeed = 5;
-		this.slowWalkspeed = (int) (this.walkspeed / 2);
+		this.slowWalkspeed = 1;
 		this.collide = true;
 		this.name = "NULL";
 		this.activeAnimation = 0;
@@ -45,7 +45,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = controls;
 		this.walkspeed = 5;
-		this.slowWalkspeed = (int) (this.walkspeed / 2);
+		this.slowWalkspeed = 1;
 		this.collide = true;
 		this.name = "NULL";
 		this.activeAnimation = 0;
@@ -56,7 +56,7 @@ public class Entity {
 		this.loc = loc;
 		this.controls = controls;
 		this.walkspeed = walkspeed;
-		this.slowWalkspeed = (int) (this.walkspeed / 2);
+		this.slowWalkspeed = 1;
 		this.collide = true;
 		this.name = "NULL";
 		this.activeAnimation = 0;
@@ -67,9 +67,9 @@ public class Entity {
 		this.loc = loc;
 		this.controls = controls;
 		this.walkspeed = walkspeed;
-		this.slowWalkspeed = (int) (this.walkspeed / 2);
+		this.slowWalkspeed = 1;
 		this.collide = collide;
-		this.name = name;
+		this.name = name.trim();
 		this.activeAnimation = 0;
 	}
 	
@@ -262,6 +262,7 @@ public class Entity {
 	
 	public void setActiveAnimationNum(int activeAnimation) {
 		this.activeAnimation = activeAnimation;
+		return;
 	}
 	
 	public void setEquiped(Entity equiped) {

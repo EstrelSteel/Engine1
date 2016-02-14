@@ -84,8 +84,9 @@ public class Engine1 extends Canvas implements Runnable {
 	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
 	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
-	public Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
+	public Entity weapon = new Entity(EntityType.SWORD_RUBY, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
+	public Location attackLoc;
 	public World staticMines = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World mines = staticMines;
 	public World multiWorld = new World(WIDTH * SCALE, HEIGHT * SCALE);
@@ -94,7 +95,7 @@ public class Engine1 extends Canvas implements Runnable {
 	private Estrelian es2 = new Estrelian();
 	public Server server;
 	public Client client;
-	public static boolean multiplayer = false;
+	public boolean multiplayer = false;
 	private String[] packetArgs;
 	
 	public Selector selector = new Selector("SELECTOR", this);
@@ -117,6 +118,7 @@ public class Engine1 extends Canvas implements Runnable {
 		playerCamera.setCameraController(camControlTest);
 		player.setSlowWalkspeed(1);
 		player.setTeam(Team.BLUE);
+		player.setEngine(this);
 		
 		EntityType.WALPOLE.getAnimations().get(0).setMaxWait(15);
 		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
@@ -135,7 +137,7 @@ public class Engine1 extends Canvas implements Runnable {
 		EntityType.SPEAR.getAnimations().get(0).setMaxWait(3);
 		EntityType.BOW.getAnimations().get(0).setMaxWait(3);
 		EntityType.LEVER.getAnimations().get(0).setMaxWait(5);
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < 9; i++) {
 			if(i > 0 && i < 4) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(15));
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
@@ -165,8 +167,31 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
 				EntityType.JOHN_SNOW.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
 			}
+			if(i > 7 && i < 9) {
+				EntityType.WALPOLE.getAnimations().add(new Animation(5));
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(5));
+				
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+			}
 			if(i > -1 && i < 5) {
-				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));	
+				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));
 			}
 			if(i > 0 && i < 7) {
 				EntityType.LEVER.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/aeris.png", new Location(i * 16, 0 * 16, 16, 16)));	
@@ -267,6 +292,10 @@ public class Engine1 extends Canvas implements Runnable {
 	public synchronized void TEMPStartClientServer() {
 		String username;
 		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
+		if(ui == null) {
+			ui = "";
+		}
+		multiplayer = true;
 		if(ui.equalsIgnoreCase("y")) {
 			server = new Server(this, 5006);
 			client = new Client(this, "10.0.1.18", 5006);
@@ -276,18 +305,29 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		username = JOptionPane.showInputDialog("What would you like your username to be", "TEMP Start server...");
 		player.setName(username);
+		weapon.setName("w_" + username);
+		slash.setName("s_" + username);
 		if(server != null) {
 			server.start();
 		}
 		client.start();
-		
+		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID 
 		client.sendData((Packets.LOGIN.getID() + "✂" + username + "✂" + build).getBytes());
-//		client.sendData("ping".getBytes());
+		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + username + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
+				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
 	}
 	
 	public void stop() throws IOException {
 		Map.generateFile("Mine", world);
 		running = false;
+		if(client != null && server == null) {
+			client.sendData((Packets.DISCONNECT.getID() + "✂" + player.getName()).getBytes());
+		}
+		else if(server != null) {
+			for(String s : server.users) {
+				Packets.sendPacketToUser(s, Packets.KICKED.getID() + "✂" + s + "✂Server Closed...", server);
+			}
+		}
 		try {
 			thread.join();
 		}
@@ -372,65 +412,133 @@ public class Engine1 extends Canvas implements Runnable {
 					e.moveLeft(world);
 					e.setActiveAnimationNum(3);
 				}
-				
 				if(e.getActiveAnimationNum() == 1 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(5);
 					e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
 					e.setTopEquip(true);
 					slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+					attackLoc = new Location(e.getLocation().getX() - 64, e.getLocation().getY(), 64, 64, 0);
 				}
 				else if(e.getActiveAnimationNum() == 0 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(4);
 					e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 					e.setTopEquip(false);
 					slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+					attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() + e.getLocation().getHeight(), 64, 64, 0);
 				}
 				else if(e.getActiveAnimationNum() == 2 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(6);
 					e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
 					e.setTopEquip(true);
 					slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+					attackLoc = new Location(e.getLocation().getX() + e.getLocation().getWidth(), e.getLocation().getY(), 64, 64, 0);
 				}
 				else if(e.getActiveAnimationNum() == 3 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.setActiveAnimationNum(7);
 					e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
 					e.setTopEquip(true);
 					slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+					attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - 64, 64, 64, 0);
 				}
-				else if(!PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+				else if(!PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 					e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
 					e.setTopEquip(false);
+					e.setWalkspeed(5);
 					slash.setLocation(new Location(1000, 1000, 0, 0, 90));
 					if(e.getActiveAnimationNum() > 3 && e.getActiveAnimationNum() < 8) {
 						e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
 					}
 				}
-			}
-			e.getCurrentAnimation().run();
-		}
-		for(Entity e : world.getEntities()) {
-			e.getCurrentAnimation().setRan(false);
-		}
-		for(Player p : world.getPlayers()) {
-			if(client != null && client.packetCache != null) {
-				for(String s : client.packetCache) {
-					packetArgs = Packets.packetArgs(s);
-					if(Packets.trimToID(s).equalsIgnoreCase(Packets.MOVE.getID())) {
-						p.getLocation().setX(stringtoint(packetArgs[1].trim()));
-						p.getLocation().setY(stringtoint(packetArgs[2].trim()));
+				if(PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					e.setWalkspeed(2);
+					if(e instanceof Player) {
+						((Player) e).attack(this, attackLoc, 10.0);
 					}
-					else if(Packets.trimToID(s).equalsIgnoreCase(Packets.ANIMATION.getID())) {
-						p.setActiveAnimationNum(stringtoint(packetArgs[1]));
+				}
+				if(e instanceof Player) {
+					if(((Player) e).getHealth() < 0.0) {
+						e.setActiveAnimationNum(8);
 					}
 				}
 			}
-			for(Shrine s : world.getShrines()) {
-				if(s.getLocation().collidesWith(p.getLocation())) {
-					if(p.getTeam() == Team.BLUE) {
-						s.subtractCount(1.0);
+			e.getCurrentAnimation().run();
+		}
+		Player p;
+		Location sl;
+		for(Entity e : world.getEntities()) {
+			e.getCurrentAnimation().setRan(false);
+			if(e instanceof Player) {
+				p = (Player) e;
+				if(client != null && client.packetCache != null) {
+					for(int i = 0; i < client.packetCache.size(); i++) {
+						packetArgs = Packets.packetArgs(client.packetCache.get(i));
+						if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.MOVE.getID())) {
+							if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+								p.getLocation().setX(stringtoint(packetArgs[2].trim()));
+								p.getLocation().setY(stringtoint(packetArgs[3].trim()));
+								client.packetCache.remove(i);
+								i--;
+							}
+						}
+						else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+							if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+								p.setGhostActiveAnimationNum(stringtoint(packetArgs[2].trim()));
+								client.packetCache.remove(i);
+								i--;
+								if(p.getActiveAnimationNum() == 4) {
+									e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+									e.setTopEquip(false);
+									sl = new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90);
+								}
+								else if(p.getActiveAnimationNum() == 5) {
+									p.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+									p.setTopEquip(true);
+									sl = new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270);
+								}
+								else if(p.getActiveAnimationNum() == 6) {
+									e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+									e.setTopEquip(true);
+									sl = new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0);
+								}
+								else if(p.getActiveAnimationNum() == 7) {
+									e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+									e.setTopEquip(true);
+									sl = new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180);
+								}
+								else {
+									e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
+									e.setTopEquip(false);
+									sl = new Location(1000, 1000, 0, 0, 90);
+								}
+								for(Entity s : world.getEntities()) {
+									if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+										s.setLocation(sl);
+									}
+								}
+							}
+						}
+						else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
+							if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+								p.setType(EntityType.findByID(stringtoint(packetArgs[2].trim())));
+								p.setTeam(Team.findByID(stringtoint(packetArgs[3].trim())));
+								p.getEquiped().setType(EntityType.findByID(stringtoint(packetArgs[4].trim())));
+								for(Entity s : world.getEntities()) {
+									if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+										s.setType(EntityType.findByID(stringtoint(packetArgs[5].trim())));
+									}
+								}
+							}
+						}
 					}
-					else if(p.getTeam() == Team.RED) {
-						s.addCount(1.0);
+				}
+				for(Shrine s : world.getShrines()) {
+					if(s.getLocation().collidesWith(p.getLocation())) {
+						if(p.getTeam() == Team.BLUE) {
+							s.subtractCount(1.0);
+						}
+						else if(p.getTeam() == Team.RED) {
+							s.addCount(1.0);
+						}
 					}
 				}
 			}
@@ -504,5 +612,9 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public static int stringtoint(String s) {
 		return Integer.parseInt(s);
+	}
+	
+	public static double stringtodouble(String s) {
+		return Double.parseDouble(s);
 	}
 }

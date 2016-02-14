@@ -11,10 +11,11 @@ import com.estrelsteel.engine1.Engine1;
 
 public class Server extends Thread {
 	private DatagramSocket socket;
-	protected ArrayList<String> users;
+	public ArrayList<String> users;
 	protected ArrayList<InetAddress> ips;
 	protected ArrayList<String> ports;
 	private ArrayList<String> cachedPlayerPackets;
+	private ArrayList<String> cachedLoginPackets;
 	private boolean join;
 	private int port;
 	private Engine1 engine;
@@ -29,6 +30,7 @@ public class Server extends Thread {
 		this.ips = new ArrayList<InetAddress>();
 		this.ports = new ArrayList<String>();
 		this.cachedPlayerPackets = new ArrayList<String>();
+		this.cachedLoginPackets = new ArrayList<String>();
 		this.join = false;
 		this.engine = engine;
 		System.out.println("Online Server");
@@ -71,21 +73,26 @@ public class Server extends Thread {
 					}
 				}
 				Packets.sendPacketToAllUsers(msg, this);
-				for(int i = 0; i < users.size(); i++) {
-					Packets.sendPacketToUser(packetArgs[1].trim(), Packets.LOGIN.getID() + "✂" + users.get(i), this);
-				}
 				users.add(packetArgs[1].trim());
 				ips.add(packet.getAddress());
 				ports.add(packet.getPort() + "");
+				for(int i = 0; i < cachedLoginPackets.size(); i++) {
+					Packets.sendPacketToUser(packetArgs[1].trim(), cachedLoginPackets.get(i), this);
+				}
+				for(int i = 0; i < cachedPlayerPackets.size(); i++) {
+					Packets.sendPacketToUser(packetArgs[1].trim(), cachedPlayerPackets.get(i), this);
+				}
+				cachedLoginPackets.add(msg);
 				System.out.println("User " + packetArgs[1].trim() + " has joined");
 			}
 			if(ips.contains(packet.getAddress())) {
 				if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
-					int index = users.indexOf(packetArgs[0].trim());
+					int index = users.indexOf(packetArgs[1].trim());
 					if(index > -1) {
 						users.remove(index);
 						ips.remove(index);
 						ports.remove(index);
+						cachedLoginPackets.remove(index);
 						System.out.println("User has disconnected...");
 						Packets.sendPacketToAllUsers(msg, this);
 					}
@@ -102,6 +109,9 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
 					cachedPlayerPackets.add(msg);
+				}
+				else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
+					Packets.sendPacketToUser(packetArgs[1].trim(), msg, this);
 				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {
