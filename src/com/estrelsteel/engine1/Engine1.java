@@ -298,10 +298,10 @@ public class Engine1 extends Canvas implements Runnable {
 		multiplayer = true;
 		if(ui.equalsIgnoreCase("y")) {
 			server = new Server(this, 5006);
-			client = new Client(this, "10.0.1.18", 5006);
+			client = new Client(this, "10.0.1.25", 5006);
 		}
 		else {
-			client = new Client(this, "10.0.1.18", 5006);
+			client = new Client(this, "10.0.1.25", 5006);
 		}
 		username = JOptionPane.showInputDialog("What would you like your username to be", "TEMP Start server...");
 		player.setName(username);
