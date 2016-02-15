@@ -102,7 +102,7 @@ public class Player extends Entity {
 			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation()))) {
 				((Player) e).setHealth(((Player) e).getHealth() - damage);
 				if(engine.multiplayer) {
-					engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage).getBytes());
+					engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage +  "✂" + getName()).getBytes());
 				}
 			}
 		}

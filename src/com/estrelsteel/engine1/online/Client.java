@@ -106,6 +106,7 @@ public class Client extends Thread {
 			else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
 				if(packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
 					engine.player.setHealth(engine.player.getHealth() - Engine1.stringtodouble(packetArgs[2].trim()));
+					packetCache.add(msg);
 				}
 			}
 			if(msg.trim().equalsIgnoreCase("pong")) {

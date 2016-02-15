@@ -60,8 +60,8 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public int tickCount = 0;
 	public int frames;
-	public boolean debug = true;
-	private boolean showFPS = false;
+	public boolean debug = false;
+	private boolean showFPS = true;
 	public int fps;
 	public int tps;
 	public int focused = 0;
@@ -82,6 +82,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public World test = statictest;
 	public Player player = new Player(EntityType.WALPOLE, new Location(0, 0, 64, 64), 5, true, playerHandler, "PLAYER");
 	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
+	public Camera killCam = new Camera(new Location(0, 0, 0, 0), player);
 	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
 	public Entity weapon = new Entity(EntityType.SWORD_RUBY, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
@@ -106,6 +107,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Mine mine = new Mine();
 	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu respawn = new Menu("respawn", new Location(0, 0, 675, 675), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	
 	public void start() {
 		running = true;
@@ -115,6 +117,8 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		playerCamera.setFollowX(true);
 		playerCamera.setFollowY(true);
+		killCam.setFollowX(true);
+		killCam.setFollowY(true);
 		playerCamera.setCameraController(camControlTest);
 		player.setSlowWalkspeed(1);
 		player.setTeam(Team.BLUE);
@@ -137,7 +141,7 @@ public class Engine1 extends Canvas implements Runnable {
 		EntityType.SPEAR.getAnimations().get(0).setMaxWait(3);
 		EntityType.BOW.getAnimations().get(0).setMaxWait(3);
 		EntityType.LEVER.getAnimations().get(0).setMaxWait(5);
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			if(i > 0 && i < 4) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(15));
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
@@ -171,6 +175,7 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.WALPOLE.getAnimations().add(new Animation(5));
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(5));
 				
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
@@ -181,6 +186,7 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
@@ -188,6 +194,14 @@ public class Engine1 extends Canvas implements Runnable {
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+			}
+			if(i > 8 && i < 10) {
+				EntityType.WALPOLE.getAnimations().add(new Animation(5));
+				EntityType.JOHN_SNOW.getAnimations().add(new Animation(5));
+				
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+
 				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 			}
 			if(i > -1 && i < 5) {
@@ -238,8 +252,11 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FOUR, new Location(144 + (60) * 3, 650 - 80, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FIVE, new Location(144 + (60) * 4, 650 - 80, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 16, 576, 64)));
-		hud.setOpen(false);
+		hud.setOpen(true);
 		menus.add(hud);
+		
+		respawn.setOpen(false);
+		menus.add(respawn);
 		
 		player.setEquiped(weapon);
 //		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));
@@ -296,12 +313,12 @@ public class Engine1 extends Canvas implements Runnable {
 			ui = "";
 		}
 		multiplayer = true;
-		if(ui.equalsIgnoreCase("y")) {
-			server = new Server(this, 5006);
-			client = new Client(this, "10.0.1.25", 5006);
+		if(ui.equalsIgnoreCase("y")) {			//Desktop		Laptop		School
+			server = new Server(this, 5006); 	//10.0.1.25 or 10.0.1.16 or 164.104.186.67
+			client = new Client(this, "164.104.186.67", 5006);
 		}
 		else {
-			client = new Client(this, "10.0.1.25", 5006);
+			client = new Client(this, "164.104.186.67", 5006);
 		}
 		username = JOptionPane.showInputDialog("What would you like your username to be", "TEMP Start server...");
 		player.setName(username);
@@ -393,151 +410,169 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public void tick() {
 		tickCount++;
-		
-		for(Entity e : world.getEntities()) {
-			if(e.getControls() != null) {
-				if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.moveUp(world);
-					e.setActiveAnimationNum(1);
-				}
-				if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.moveDown(world);
-					e.setActiveAnimationNum(0);
-				}
-				if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.moveRight(world);
-					e.setActiveAnimationNum(2);
-				}
-				if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.moveLeft(world);
-					e.setActiveAnimationNum(3);
-				}
-				if(e.getActiveAnimationNum() == 1 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.setActiveAnimationNum(5);
-					e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-					e.setTopEquip(true);
-					slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-					attackLoc = new Location(e.getLocation().getX() - 64, e.getLocation().getY(), 64, 64, 0);
-				}
-				else if(e.getActiveAnimationNum() == 0 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.setActiveAnimationNum(4);
-					e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
-					e.setTopEquip(false);
-					slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
-					attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() + e.getLocation().getHeight(), 64, 64, 0);
-				}
-				else if(e.getActiveAnimationNum() == 2 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.setActiveAnimationNum(6);
-					e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
-					e.setTopEquip(true);
-					slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
-					attackLoc = new Location(e.getLocation().getX() + e.getLocation().getWidth(), e.getLocation().getY(), 64, 64, 0);
-				}
-				else if(e.getActiveAnimationNum() == 3 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.setActiveAnimationNum(7);
-					e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
-					e.setTopEquip(true);
-					slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
-					attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - 64, 64, 64, 0);
-				}
-				else if(!PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
-					e.setTopEquip(false);
-					e.setWalkspeed(5);
-					slash.setLocation(new Location(1000, 1000, 0, 0, 90));
-					if(e.getActiveAnimationNum() > 3 && e.getActiveAnimationNum() < 8) {
-						e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
+		if(world != null) {
+			for(Entity e : world.getEntities()) {
+				if(e.getControls() != null) {
+					if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.moveUp(world);
+						e.setActiveAnimationNum(1);
 					}
-				}
-				if(PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-					e.setWalkspeed(2);
+					if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.moveDown(world);
+						e.setActiveAnimationNum(0);
+					}
+					if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.moveRight(world);
+						e.setActiveAnimationNum(2);
+					}
+					if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.moveLeft(world);
+						e.setActiveAnimationNum(3);
+					}
+					if(e.getActiveAnimationNum() == 1 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.setActiveAnimationNum(5);
+						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+						e.setTopEquip(true);
+						slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+						attackLoc = new Location(e.getLocation().getX() - 64, e.getLocation().getY(), 64, 64, 0);
+					}
+					else if(e.getActiveAnimationNum() == 0 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.setActiveAnimationNum(4);
+						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+						e.setTopEquip(false);
+						slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() + e.getLocation().getHeight(), 64, 64, 0);
+					}
+					else if(e.getActiveAnimationNum() == 2 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.setActiveAnimationNum(6);
+						e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+						e.setTopEquip(true);
+						slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+						attackLoc = new Location(e.getLocation().getX() + e.getLocation().getWidth(), e.getLocation().getY(), 64, 64, 0);
+					}
+					else if(e.getActiveAnimationNum() == 3 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.setActiveAnimationNum(7);
+						e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+						e.setTopEquip(true);
+						slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - 64, 64, 64, 0);
+					}
+					else if(!PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
+						e.setTopEquip(false);
+						e.setWalkspeed(5);
+						slash.setLocation(new Location(1000, 1000, 0, 0, 90));
+						if(e.getActiveAnimationNum() > 3 && e.getActiveAnimationNum() < 8) {
+							e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
+						}
+					}
+					if(PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+						e.setWalkspeed(2);
+						if(e instanceof Player) {
+							((Player) e).attack(this, attackLoc, 10.0);
+						}
+					}
 					if(e instanceof Player) {
-						((Player) e).attack(this, attackLoc, 10.0);
+						if(((Player) e).getHealth() < 0.0) {
+							if(e.getActiveAnimationNum() != 9) {
+								e.setActiveAnimationNum(8);
+							}
+							if(e.getActiveAnimationNum() == 8 && e.getCurrentAnimation().getFrame() >= 4) {
+								e.setActiveAnimationNum(9);
+								e.setWalkspeed(0);
+								e.setSlowWalkspeed(0);
+								hud.setOpen(false);
+								respawn.setOpen(true);
+								world.setMainCamera(killCam);
+							}
+						}
 					}
 				}
-				if(e instanceof Player) {
-					if(((Player) e).getHealth() < 0.0) {
-						e.setActiveAnimationNum(8);
-					}
-				}
+				e.getCurrentAnimation().run();
 			}
-			e.getCurrentAnimation().run();
-		}
-		Player p;
-		Location sl;
-		for(Entity e : world.getEntities()) {
-			e.getCurrentAnimation().setRan(false);
-			if(e instanceof Player) {
-				p = (Player) e;
-				if(client != null && client.packetCache != null) {
-					for(int i = 0; i < client.packetCache.size(); i++) {
-						packetArgs = Packets.packetArgs(client.packetCache.get(i));
-						if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.MOVE.getID())) {
-							if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-								p.getLocation().setX(stringtoint(packetArgs[2].trim()));
-								p.getLocation().setY(stringtoint(packetArgs[3].trim()));
-								client.packetCache.remove(i);
-								i--;
+			Player p;
+			Location sl;
+			for(Entity e : world.getEntities()) {
+				e.getCurrentAnimation().setRan(false);
+				if(e instanceof Player) {
+					p = (Player) e;
+					if(client != null && client.packetCache != null) {
+						for(int i = 0; i < client.packetCache.size(); i++) {
+							packetArgs = Packets.packetArgs(client.packetCache.get(i));
+							if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.MOVE.getID())) {
+								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.getLocation().setX(stringtoint(packetArgs[2].trim()));
+									p.getLocation().setY(stringtoint(packetArgs[3].trim()));
+									client.packetCache.remove(i);
+									i--;
+								}
 							}
-						}
-						else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.ANIMATION.getID())) {
-							if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-								p.setGhostActiveAnimationNum(stringtoint(packetArgs[2].trim()));
-								client.packetCache.remove(i);
-								i--;
-								if(p.getActiveAnimationNum() == 4) {
-									e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
-									e.setTopEquip(false);
-									sl = new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90);
-								}
-								else if(p.getActiveAnimationNum() == 5) {
-									p.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-									p.setTopEquip(true);
-									sl = new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270);
-								}
-								else if(p.getActiveAnimationNum() == 6) {
-									e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
-									e.setTopEquip(true);
-									sl = new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0);
-								}
-								else if(p.getActiveAnimationNum() == 7) {
-									e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
-									e.setTopEquip(true);
-									sl = new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180);
-								}
-								else {
-									e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
-									e.setTopEquip(false);
-									sl = new Location(1000, 1000, 0, 0, 90);
-								}
-								for(Entity s : world.getEntities()) {
-									if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
-										s.setLocation(sl);
+							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.setGhostActiveAnimationNum(stringtoint(packetArgs[2].trim()));
+									client.packetCache.remove(i);
+									i--;
+									if(p.getActiveAnimationNum() == 4) {
+										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+										e.setTopEquip(false);
+										sl = new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90);
+									}
+									else if(p.getActiveAnimationNum() == 5) {
+										p.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+										p.setTopEquip(true);
+										sl = new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270);
+									}
+									else if(p.getActiveAnimationNum() == 6) {
+										e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+										e.setTopEquip(true);
+										sl = new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0);
+									}
+									else if(p.getActiveAnimationNum() == 7) {
+										e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+										e.setTopEquip(true);
+										sl = new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180);
+									}
+									else {
+										e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
+										e.setTopEquip(false);
+										sl = new Location(1000, 1000, 0, 0, 90);
+									}
+									for(Entity s : world.getEntities()) {
+										if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+											s.setLocation(sl);
+										}
 									}
 								}
 							}
-						}
-						else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
-							if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-								p.setType(EntityType.findByID(stringtoint(packetArgs[2].trim())));
-								p.setTeam(Team.findByID(stringtoint(packetArgs[3].trim())));
-								p.getEquiped().setType(EntityType.findByID(stringtoint(packetArgs[4].trim())));
+							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
+								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.setType(EntityType.findByID(stringtoint(packetArgs[2].trim())));
+									p.setTeam(Team.findByID(stringtoint(packetArgs[3].trim())));
+									p.getEquiped().setType(EntityType.findByID(stringtoint(packetArgs[4].trim())));
+									for(Entity s : world.getEntities()) {
+										if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+											s.setType(EntityType.findByID(stringtoint(packetArgs[5].trim())));
+										}
+									}
+								}
+							}
+							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.DAMAGE.getID())) {
 								for(Entity s : world.getEntities()) {
-									if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
-										s.setType(EntityType.findByID(stringtoint(packetArgs[5].trim())));
+									if(s.getName().equalsIgnoreCase(packetArgs[3].trim())) {
+										killCam.setEntity(s);
 									}
 								}
 							}
 						}
 					}
-				}
-				for(Shrine s : world.getShrines()) {
-					if(s.getLocation().collidesWith(p.getLocation())) {
-						if(p.getTeam() == Team.BLUE) {
-							s.subtractCount(1.0);
-						}
-						else if(p.getTeam() == Team.RED) {
-							s.addCount(1.0);
+					for(Shrine s : world.getShrines()) {
+						if(s.getLocation().collidesWith(p.getLocation())) {
+							if(p.getTeam() == Team.BLUE) {
+								s.subtractCount(1.0);
+							}
+							else if(p.getTeam() == Team.RED) {
+								s.addCount(1.0);
+							}
 						}
 					}
 				}
