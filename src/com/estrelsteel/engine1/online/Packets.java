@@ -14,7 +14,7 @@ public enum Packets {
 	ANIMATION("004"),		//NAME, ANIMATION ID
 	PLAYER_DATA("005"),		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID 
 	DAMAGE("006"),			//NAME (hit), DAMAGE, NAME (sender) 
-	;
+	SHRINE_CAP("007");		//SHRINE ID, TEAM ID
 	
 	
 	private String packetID;

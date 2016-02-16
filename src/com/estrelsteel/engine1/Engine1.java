@@ -94,9 +94,9 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	@SuppressWarnings("unused")
 	private Estrelian es2 = new Estrelian();
-	public Server server;
-	public Client client;
-	public boolean multiplayer = false;
+	public static Server server;
+	public static Client client;
+	public static boolean multiplayer = false;
 	private String[] packetArgs;
 	
 	public Selector selector = new Selector("SELECTOR", this);
@@ -107,7 +107,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Mine mine = new Mine();
 	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu respawn = new Menu("respawn", new Location(0, 0, 675, 675), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu respawn = new Menu("respawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	
 	public void start() {
 		running = true;
@@ -313,12 +313,19 @@ public class Engine1 extends Canvas implements Runnable {
 			ui = "";
 		}
 		multiplayer = true;
+		String localIP = "";
+		try {
+			localIP = InetAddress.getLocalHost().toString();
+		}
+		catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		if(ui.equalsIgnoreCase("y")) {			//Desktop		Laptop		School
 			server = new Server(this, 5006); 	//10.0.1.25 or 10.0.1.16 or 164.104.186.67
-			client = new Client(this, "164.104.186.67", 5006);
+			client = new Client(this, localIP.split("/")[1], 5006);
 		}
 		else {
-			client = new Client(this, "164.104.186.67", 5006);
+			client = new Client(this, localIP.split("/")[1], 5006);
 		}
 		username = JOptionPane.showInputDialog("What would you like your username to be", "TEMP Start server...");
 		player.setName(username);
@@ -335,7 +342,7 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public void stop() throws IOException {
-		Map.generateFile("Mine", world);
+		//Map.generateFile("Mine", world);
 		running = false;
 		if(client != null && server == null) {
 			client.sendData((Packets.DISCONNECT.getID() + "✂" + player.getName()).getBytes());
@@ -466,7 +473,7 @@ public class Engine1 extends Canvas implements Runnable {
 							e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
 						}
 					}
-					if(PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					if(attackLoc != null && PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setWalkspeed(2);
 						if(e instanceof Player) {
 							((Player) e).attack(this, attackLoc, 10.0);
@@ -554,6 +561,8 @@ public class Engine1 extends Canvas implements Runnable {
 											s.setType(EntityType.findByID(stringtoint(packetArgs[5].trim())));
 										}
 									}
+									client.packetCache.remove(i);
+									i--;
 								}
 							}
 							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.DAMAGE.getID())) {
@@ -562,6 +571,18 @@ public class Engine1 extends Canvas implements Runnable {
 										killCam.setEntity(s);
 									}
 								}
+								client.packetCache.remove(i);
+								i--;
+							}
+							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
+								for(Shrine s : world.getShrines()) {
+									if(s.getID() == stringtoint(packetArgs[1].trim())) {
+										s.update(Team.findByID(stringtoint(packetArgs[2].trim())));
+										s.setCount(s.getResetCount());
+									}
+								}
+								client.packetCache.remove(i);
+								i--;
 							}
 						}
 					}

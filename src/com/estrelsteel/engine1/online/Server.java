@@ -113,6 +113,9 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
 					Packets.sendPacketToUser(packetArgs[1].trim(), msg, this);
 				}
+				else if(id.equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
+				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {
 				sendData("pong".getBytes(), packet.getAddress(), packet.getPort());

@@ -2,6 +2,8 @@ package com.estrelsteel.engine1.tile.shrine;
 
 import java.util.ArrayList;
 
+import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.world.Location;
@@ -125,6 +127,10 @@ public class Shrine {
 		}
 	}
 	
+	public double getResetCount() {
+		return resetCount;
+	}
+	
 	public void addCount(double c) {
 		if(count < 0.0) {
 			count = 0.0;
@@ -150,6 +156,9 @@ public class Shrine {
 				count = resetCount;
 				update();
 			}
+			if(Engine1.multiplayer) {
+				Engine1.client.sendData((Packets.SHRINE_CAP.getID() + "✂" + id + "✂" + team.getID()).getBytes());
+			}
 			return true;
 		}
 		else if(count >= maxCount) {
@@ -157,6 +166,9 @@ public class Shrine {
 				team = getHigherTeam();
 				count = resetCount;
 				update();
+			}
+			if(Engine1.multiplayer) {
+				Engine1.client.sendData((Packets.SHRINE_CAP.getID() + "✂" + id + "✂" + team.getID()).getBytes());
 			}
 			return true;
 		}
@@ -212,6 +224,11 @@ public class Shrine {
 	
 	public void setMaxCount(double maxCount) {
 		this.maxCount = maxCount;
+		return;
+	}
+	
+	public void setResetCount(double resetCount) {
+		this.resetCount = resetCount;
 		return;
 	}
 }
