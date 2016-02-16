@@ -89,7 +89,7 @@ public class Client extends Thread {
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.MOVE.getID())) {
-				if(!packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
+				if(packetArgs.length > 2 && !packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
 					packetCache.add(msg);
 				}
 			}

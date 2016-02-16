@@ -255,6 +255,7 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.setOpen(true);
 		menus.add(hud);
 		
+		respawn.addMenuItem(new MenuItem(MenuItemType.RESPAWN_TEXT, new Location((650  - 448) / 2, 650 / 3, 64, 448)));
 		respawn.setOpen(false);
 		menus.add(respawn);
 		
