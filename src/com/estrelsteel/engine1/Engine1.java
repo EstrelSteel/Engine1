@@ -108,7 +108,8 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu respawn = new Menu("respawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu respawn = new Menu("respawn", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	
 	public void start() {
 		running = true;
@@ -256,6 +257,15 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.setOpen(true);
 		menus.add(hud);
 		
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 0), 16, 64, 64)));
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 1), 16, 64, 64)));
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_N, new Location(37 + (128 * 2), 16, 64, 64)));
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 16, 64, 64)));
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 16, 64, 64)));
+		overlayHud.setOpen(true);
+		menus.add(overlayHud);
+		
+		respawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 650 / 2 + 650 / 8, 576, 64)));
 		respawn.addMenuItem(new MenuItem(MenuItemType.YOU_DIED_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		respawn.setOpen(false);
 		menus.add(respawn);
@@ -501,7 +511,9 @@ public class Engine1 extends Canvas implements Runnable {
 								e.setWalkspeed(0);
 								e.setSlowWalkspeed(0);
 								hud.setOpen(false);
+								overlayHud.setOpen(false);
 								respawn.setOpen(true);
+								overlayRespawn.setOpen(true);
 								world.setMainCamera(killCam);
 							}
 						}
@@ -630,9 +642,11 @@ public class Engine1 extends Canvas implements Runnable {
 						if(s.getLocation().collidesWith(p.getLocation())) {
 							if(p.getTeam() == Team.BLUE) {
 								s.subtractCount(1.0);
+								overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s));
 							}
 							else if(p.getTeam() == Team.RED) {
 								s.addCount(1.0);
+								overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s));
 							}
 						}
 					}

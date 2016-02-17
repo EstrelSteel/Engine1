@@ -3,6 +3,8 @@ package com.estrelsteel.engine1.tile.shrine;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.menu.MenuItem;
+import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
@@ -16,6 +18,7 @@ public class Shrine {
 	private double count;
 	private double resetCount;
 	private double maxCount;
+	private int increasing;
 	
 	public Shrine(int id, Team team, Location loc) {
 		this.id = id;
@@ -97,6 +100,10 @@ public class Shrine {
 		return maxCount;
 	}
 	
+	public int getIncreasing() {
+		return increasing;
+	}
+	
 	public Team getLowerTeam() {
 		if(team == Team.BLUE) {
 			return Team.BLUE;
@@ -127,6 +134,47 @@ public class Shrine {
 		}
 	}
 	
+	public static MenuItem getHUDShrineItem(Shrine s) {
+		MenuItem i = new MenuItem(MenuItemType.SHRINE_OFF, new Location(37 + (128 * s.getID()), 16, 64, 64));
+		if(s.getIncreasing() > 0) {
+			if(s.getTeam() == s.getHigherTeam()) {
+				i.setType(MenuItemType.SHRINE_R);
+			}
+			else if(s.getTeam() == Team.NEUTRAL) {
+				i.setType(MenuItemType.SHRINE_RAN);
+			}
+			else if(s.getTeam() == Team.BLUE) {
+				i.setType(MenuItemType.SHRINE_RAB);
+			}
+		}
+		else if(s.getIncreasing() < 0) {
+			if(s.getTeam() == s.getLowerTeam()) {
+				i.setType(MenuItemType.SHRINE_B);
+			}
+			else if(s.getTeam() == Team.NEUTRAL) {
+				i.setType(MenuItemType.SHRINE_BAN);
+			}
+			else if(s.getTeam() == Team.RED) {
+				i.setType(MenuItemType.SHRINE_BAR);
+			}
+		}
+		else {
+			if(s.getTeam() == Team.NEUTRAL) {
+				i.setType(MenuItemType.SHRINE_N);
+			}
+			else if(s.getTeam() == Team.RED) {
+				i.setType(MenuItemType.SHRINE_R);
+			}
+			else if(s.getTeam() == Team.BLUE) {
+				i.setType(MenuItemType.SHRINE_B);
+			}
+			else {
+				i.setType(MenuItemType.SHRINE_OFF);
+			}
+		}
+		return i;
+	}
+	
 	public double getResetCount() {
 		return resetCount;
 	}
@@ -136,6 +184,7 @@ public class Shrine {
 			count = 0.0;
 		}
 		count = count + c;
+		increasing = 1;
 		hasConverted();
 		return;
 	}
@@ -145,6 +194,7 @@ public class Shrine {
 			count = maxCount;
 		}
 		count = count - c;
+		increasing = -1;
 		hasConverted();
 		return;
 	}
@@ -229,6 +279,11 @@ public class Shrine {
 	
 	public void setResetCount(double resetCount) {
 		this.resetCount = resetCount;
+		return;
+	}
+	
+	public void setIncreasing(int increasing) {
+		this.increasing = increasing;
 		return;
 	}
 }
