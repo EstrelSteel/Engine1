@@ -62,6 +62,7 @@ public class Server extends Thread {
 			packetArgs = Packets.packetArgs(packetData);
 			System.out.println("id=" + id + " data=" + packetData);
 			if(id.equalsIgnoreCase(Packets.LOGIN.getID())) {
+				System.out.println(packetArgs[0]);
 				if(Engine1.stringtoint(packetArgs[2].trim()) != engine.build) {
 					System.out.println("USER JOIN FAILED: OUTDATED CLIENT OR SERVER");
 					Packets.sendPacketToAllUsers(Packets.KICKED.getID() + "✂Outdated client or server.", this);

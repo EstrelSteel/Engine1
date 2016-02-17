@@ -28,6 +28,9 @@ public enum Packets {
 	}
 	
 	public static String[] packetArgs(String msg) {
+		if(msg == null) {
+			return null;
+		}
 		return msg.split("✂");
 	}
 	

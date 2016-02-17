@@ -107,6 +107,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Mine mine = new Mine();
 	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu respawn = new Menu("respawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	
 	public void start() {
@@ -255,7 +256,7 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.setOpen(true);
 		menus.add(hud);
 		
-		respawn.addMenuItem(new MenuItem(MenuItemType.RESPAWN_TEXT, new Location((650  - 448) / 2, 650 / 3, 64, 448)));
+		respawn.addMenuItem(new MenuItem(MenuItemType.YOU_DIED_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		respawn.setOpen(false);
 		menus.add(respawn);
 		
@@ -419,46 +420,56 @@ public class Engine1 extends Canvas implements Runnable {
 	public void tick() {
 		tickCount++;
 		if(world != null) {
+			Player p;
+			Location sl;
 			for(Entity e : world.getEntities()) {
 				if(e.getControls() != null) {
 					if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.moveUp(world);
-						e.setActiveAnimationNum(1);
+						if(!PlayerControls.USE.isPressed()) {
+							e.setActiveAnimationNum(1);
+						}
 					}
 					if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.moveDown(world);
-						e.setActiveAnimationNum(0);
+						if(!PlayerControls.USE.isPressed()) {
+							e.setActiveAnimationNum(0);
+						}
 					}
 					if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.moveRight(world);
-						e.setActiveAnimationNum(2);
+						if(!PlayerControls.USE.isPressed()) {
+							e.setActiveAnimationNum(2);
+						}
 					}
 					if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.moveLeft(world);
-						e.setActiveAnimationNum(3);
+						if(!PlayerControls.USE.isPressed()) {
+							e.setActiveAnimationNum(3);
+						}
 					}
-					if(e.getActiveAnimationNum() == 1 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					if((e.getActiveAnimationNum() == 1 || e.getActiveAnimationNum() == 5) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(5);
 						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
 						e.setTopEquip(true);
 						slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-						attackLoc = new Location(e.getLocation().getX() - 64, e.getLocation().getY(), 64, 64, 0);
+						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - 64, 64, 64, 0);
 					}
-					else if(e.getActiveAnimationNum() == 0 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					else if((e.getActiveAnimationNum() == 0 || e.getActiveAnimationNum() == 4) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(4);
 						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 						e.setTopEquip(false);
 						slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() + e.getLocation().getHeight(), 64, 64, 0);
 					}
-					else if(e.getActiveAnimationNum() == 2 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					else if((e.getActiveAnimationNum() == 2 || e.getActiveAnimationNum() == 6) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(6);
 						e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
 						e.setTopEquip(true);
 						slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
 						attackLoc = new Location(e.getLocation().getX() + e.getLocation().getWidth(), e.getLocation().getY(), 64, 64, 0);
 					}
-					else if(e.getActiveAnimationNum() == 3 && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					else if((e.getActiveAnimationNum() == 3 || e.getActiveAnimationNum() == 7) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(7);
 						e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
 						e.setTopEquip(true);
@@ -498,8 +509,6 @@ public class Engine1 extends Canvas implements Runnable {
 				}
 				e.getCurrentAnimation().run();
 			}
-			Player p;
-			Location sl;
 			for(Entity e : world.getEntities()) {
 				e.getCurrentAnimation().setRan(false);
 				if(e instanceof Player) {
@@ -511,31 +520,22 @@ public class Engine1 extends Canvas implements Runnable {
 								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
 									p.getLocation().setX(stringtoint(packetArgs[2].trim()));
 									p.getLocation().setY(stringtoint(packetArgs[3].trim()));
-									client.packetCache.remove(i);
-									i--;
-								}
-							}
-							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.ANIMATION.getID())) {
-								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.setGhostActiveAnimationNum(stringtoint(packetArgs[2].trim()));
-									client.packetCache.remove(i);
-									i--;
-									if(p.getActiveAnimationNum() == 4) {
+									if(e.getActiveAnimationNum() == 4) {
 										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 										e.setTopEquip(false);
 										sl = new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90);
 									}
-									else if(p.getActiveAnimationNum() == 5) {
-										p.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-										p.setTopEquip(true);
+									else if(e.getActiveAnimationNum() == 5) {
+										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+										e.setTopEquip(true);
 										sl = new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270);
 									}
-									else if(p.getActiveAnimationNum() == 6) {
+									else if(e.getActiveAnimationNum() == 6) {
 										e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
 										e.setTopEquip(true);
 										sl = new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0);
 									}
-									else if(p.getActiveAnimationNum() == 7) {
+									else if(e.getActiveAnimationNum() == 7) {
 										e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
 										e.setTopEquip(true);
 										sl = new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180);
@@ -550,6 +550,45 @@ public class Engine1 extends Canvas implements Runnable {
 											s.setLocation(sl);
 										}
 									}
+									client.packetCache.remove(i);
+									i--;
+								}
+							}
+							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.setGhostActiveAnimationNum(stringtoint(packetArgs[2].trim()));
+									if(e.getActiveAnimationNum() == 4) {
+										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
+										e.setTopEquip(false);
+										sl = new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90);
+									}
+									else if(e.getActiveAnimationNum() == 5) {
+										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
+										e.setTopEquip(true);
+										sl = new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270);
+									}
+									else if(e.getActiveAnimationNum() == 6) {
+										e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
+										e.setTopEquip(true);
+										sl = new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0);
+									}
+									else if(e.getActiveAnimationNum() == 7) {
+										e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
+										e.setTopEquip(true);
+										sl = new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180);
+									}
+									else {
+										e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
+										e.setTopEquip(false);
+										sl = new Location(1000, 1000, 0, 0, 90);
+									}
+									for(Entity s : world.getEntities()) {
+										if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+											s.setLocation(sl);
+										}
+									}
+									client.packetCache.remove(i);
+									i--;
 								}
 							}
 							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {

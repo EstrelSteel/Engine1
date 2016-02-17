@@ -99,7 +99,7 @@ public class Player extends Entity {
 	
 	public void attack(Engine1 engine, Location location, double damage) {
 		for(Entity e : engine.world.getEntities()) {
-			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation()))) {
+			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation())) && e != engine.player) {
 				((Player) e).setHealth(((Player) e).getHealth() - damage);
 				if(engine.multiplayer) {
 					engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage +  "✂" + getName()).getBytes());
