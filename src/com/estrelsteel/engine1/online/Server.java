@@ -16,6 +16,7 @@ public class Server extends Thread {
 	protected ArrayList<String> ports;
 	private ArrayList<String> cachedPlayerPackets;
 	private ArrayList<String> cachedLoginPackets;
+	private ArrayList<String> cachedShrinePackets;
 	private boolean join;
 	private int port;
 	private Engine1 engine;
@@ -31,6 +32,7 @@ public class Server extends Thread {
 		this.ports = new ArrayList<String>();
 		this.cachedPlayerPackets = new ArrayList<String>();
 		this.cachedLoginPackets = new ArrayList<String>();
+		this.cachedShrinePackets = new ArrayList<String>();
 		this.join = false;
 		this.engine = engine;
 		System.out.println("Online Server");
@@ -83,6 +85,9 @@ public class Server extends Thread {
 				for(int i = 0; i < cachedPlayerPackets.size(); i++) {
 					Packets.sendPacketToUser(packetArgs[1].trim(), cachedPlayerPackets.get(i), this);
 				}
+				for(int i = 0; i < cachedShrinePackets.size(); i++) {
+					Packets.sendPacketToUser(packetArgs[1].trim(), cachedShrinePackets.get(i), this);
+				}
 				cachedLoginPackets.add(msg);
 				System.out.println("User " + packetArgs[1].trim() + " has joined");
 			}
@@ -116,6 +121,7 @@ public class Server extends Thread {
 				}
 				else if(id.equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
+					cachedShrinePackets.add(msg);
 				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {

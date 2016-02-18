@@ -27,8 +27,8 @@ import com.estrelsteel.engine1.handler.CoreHandler;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
+import com.estrelsteel.engine1.handler.RespawnHandler;
 import com.estrelsteel.engine1.handler.Selector;
-import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Mine;
 import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuImage;
@@ -110,6 +110,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu respawn = new Menu("respawn", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public RespawnHandler respawnHandler = new RespawnHandler(overlayRespawn, "RespawnHandler", this);
 	
 	public void start() {
 		running = true;
@@ -125,6 +126,7 @@ public class Engine1 extends Canvas implements Runnable {
 		player.setSlowWalkspeed(1);
 		player.setTeam(Team.BLUE);
 		player.setEngine(this);
+		player.setMaxHealth(100.0);
 		
 		EntityType.WALPOLE.getAnimations().get(0).setMaxWait(15);
 		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
@@ -266,9 +268,20 @@ public class Engine1 extends Canvas implements Runnable {
 		menus.add(overlayHud);
 		
 		respawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 650 / 2 + 650 / 8, 576, 64)));
+		respawn.addMenuItem(new MenuItem(MenuItemType.RESPAWN_TEXT, new Location((650 - 512) / 2, 650 / 2 + 650 / 4, 512, 32)));
 		respawn.addMenuItem(new MenuItem(MenuItemType.YOU_DIED_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		respawn.setOpen(false);
 		menus.add(respawn);
+		
+
+		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 0), 650 / 2 + 650 / 8, 64, 64)));
+		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 1), 650 / 2 + 650 / 8, 64, 64)));
+		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_N, new Location(37 + (128 * 2), 650 / 2 + 650 / 8, 64, 64)));
+		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 650 / 2 + 650 / 8, 64, 64)));
+		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 650 / 2 + 650 / 8, 64, 64)));
+		overlayRespawn.setController(respawnHandler);
+		overlayRespawn.setOpen(false);
+		menus.add(overlayRespawn);
 		
 		player.setEquiped(weapon);
 //		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));
@@ -292,6 +305,7 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		world = mine.load();
 		world = addBasics(world);
+		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
 		TEMPStartClientServer();
 	}
@@ -496,9 +510,11 @@ public class Engine1 extends Canvas implements Runnable {
 						}
 					}
 					if(attackLoc != null && PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.setWalkspeed(2);
-						if(e instanceof Player) {
-							((Player) e).attack(this, attackLoc, 10.0);
+						if(e.getWalkspeed() != 0) {
+							e.setWalkspeed(2);
+							if(e instanceof Player) {
+								((Player) e).attack(this, attackLoc, 10.0);
+							}
 						}
 					}
 					if(e instanceof Player) {
@@ -642,16 +658,20 @@ public class Engine1 extends Canvas implements Runnable {
 						if(s.getLocation().collidesWith(p.getLocation())) {
 							if(p.getTeam() == Team.BLUE) {
 								s.subtractCount(1.0);
-								overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s));
 							}
 							else if(p.getTeam() == Team.RED) {
 								s.addCount(1.0);
-								overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s));
 							}
 						}
 					}
 				}
 			}
+		}
+		
+		for(Shrine s : world.getShrines()) {
+			overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 16));
+			overlayRespawn.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 650 / 2 + 650 / 8));
+			s.setIncreasing(0);
 		}
 		WIDTH = getWidth();
 		HEIGHT = getHeight();

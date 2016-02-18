@@ -134,8 +134,8 @@ public class Shrine {
 		}
 	}
 	
-	public static MenuItem getHUDShrineItem(Shrine s) {
-		MenuItem i = new MenuItem(MenuItemType.SHRINE_OFF, new Location(37 + (128 * s.getID()), 16, 64, 64));
+	public static MenuItem getHUDShrineItem(Shrine s, int y) {
+		MenuItem i = new MenuItem(MenuItemType.SHRINE_OFF, new Location(37 + (128 * s.getID()), y, 64, 64));
 		if(s.getIncreasing() > 0) {
 			if(s.getTeam() == s.getHigherTeam()) {
 				i.setType(MenuItemType.SHRINE_R);
@@ -184,7 +184,7 @@ public class Shrine {
 			count = 0.0;
 		}
 		count = count + c;
-		increasing = 1;
+		increasing++;
 		hasConverted();
 		return;
 	}
@@ -194,7 +194,7 @@ public class Shrine {
 			count = maxCount;
 		}
 		count = count - c;
-		increasing = -1;
+		increasing--;
 		hasConverted();
 		return;
 	}
