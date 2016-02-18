@@ -29,6 +29,8 @@ import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.RespawnHandler;
 import com.estrelsteel.engine1.handler.Selector;
+import com.estrelsteel.engine1.maps.Lobby;
+import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Mine;
 import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuImage;
@@ -60,7 +62,7 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public int tickCount = 0;
 	public int frames;
-	public boolean debug = false;
+	public boolean debug = true;
 	private boolean showFPS = true;
 	public int fps;
 	public int tps;
@@ -105,6 +107,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Font fpsFont;
 	
 	public Mine mine = new Mine();
+	public Lobby lobby = new Lobby();
 	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
@@ -256,7 +259,7 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FOUR, new Location(144 + (60) * 3, 650 - 80, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FIVE, new Location(144 + (60) * 4, 650 - 80, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 16, 576, 64)));
-		hud.setOpen(true);
+		hud.setOpen(false);
 		menus.add(hud);
 		
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 0), 16, 64, 64)));
@@ -264,7 +267,7 @@ public class Engine1 extends Canvas implements Runnable {
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_N, new Location(37 + (128 * 2), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 16, 64, 64)));
-		overlayHud.setOpen(true);
+		overlayHud.setOpen(false);
 		menus.add(overlayHud);
 		
 		respawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 650 / 2 + 650 / 8, 576, 64)));
@@ -303,7 +306,7 @@ public class Engine1 extends Canvas implements Runnable {
 		fpsFont = new Font();
 		fpsFont.getTextLocation().setWidth(128);
 		
-		world = mine.load();
+		world = lobby.load();
 		world = addBasics(world);
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
@@ -368,7 +371,7 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public void stop() throws IOException {
-		//Map.generateFile("Mine", world);
+		Map.generateFile("Lobby", world);
 		running = false;
 		if(client != null && server == null) {
 			client.sendData((Packets.DISCONNECT.getID() + "✂" + player.getName()).getBytes());

@@ -27,8 +27,11 @@ public class MenuItem {
 		SHRINE_B(16, "SHRINE_B", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(6 * 16, 3 * 16, 16, 16)),
 		SHRINE_OFF(17, "SHRINE_OFF", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(7 * 16, 3 * 16, 16, 16)),
 		RESPAWN_TEXT(18, "RESPAWN_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 5 * 16, 256, 16)),
-		YOU_DIED_TEXT(19, "YOU_DIED_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 6 * 16, 128, 16)),;
-		
+		YOU_DIED_TEXT(19, "YOU_DIED_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 6 * 16, 128, 16)),
+		VICTORY_TEXT(20, "VICTORY_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 7 * 16, 128, 16)),
+		DEFEAT_TEXT(21, "DEFEAT_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 8 * 16, 112, 16)),
+		LOBBY_TEXT(22, "LOBBY_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 9 * 16, 80, 16)),
+		QUIT_TEXT(23, "QUIT_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 10 * 16, 80, 16)),;
 		
 		private int id;
 		private String name;
