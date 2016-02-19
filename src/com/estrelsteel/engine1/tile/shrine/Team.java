@@ -4,7 +4,8 @@ public enum Team {
 	NEUTRAL(0, "NEUTRAL", "WHITE"),
 	RED(1, "RED", "RED"),
 	BLUE(2, "BLUE", "BLUE"),
-	OFF(3, "OFF", "BLACK");
+	OFF(3, "OFF", "BLACK"),
+	HIDDEN(4, "HIDDEN", "HIDDEN");
 	
 	private int id;
 	private String name;

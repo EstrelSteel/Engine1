@@ -90,8 +90,6 @@ public class Engine1 extends Canvas implements Runnable {
 	public Entity weapon = new Entity(EntityType.SWORD_RUBY, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
 	public Location attackLoc;
-	public World staticMines = new World(WIDTH * SCALE, HEIGHT * SCALE);
-	public World mines = staticMines;
 	public World multiWorld = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	
 	@SuppressWarnings("unused")
@@ -114,6 +112,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu respawn = new Menu("respawn", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public RespawnHandler respawnHandler = new RespawnHandler(overlayRespawn, "RespawnHandler", this);
+	public Menu victory =  new Menu("victory", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu defeat =  new Menu("defeat", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	
 	public void start() {
 		running = true;
@@ -285,6 +285,18 @@ public class Engine1 extends Canvas implements Runnable {
 		overlayRespawn.setController(respawnHandler);
 		overlayRespawn.setOpen(false);
 		menus.add(overlayRespawn);
+		
+		victory.addMenuItem(new MenuItem(MenuItemType.VICTORY_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
+		victory.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
+		victory.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
+		victory.setOpen(false);
+		menus.add(victory);
+		
+		defeat.addMenuItem(new MenuItem(MenuItemType.DEFEAT_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
+		defeat.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
+		defeat.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
+		defeat.setOpen(true);
+		menus.add(defeat);
 		
 		player.setEquiped(weapon);
 //		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));

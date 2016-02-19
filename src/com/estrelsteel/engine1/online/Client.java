@@ -110,6 +110,16 @@ public class Client extends Thread {
 			else if(id.equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
 				packetCache.add(msg);
 			}
+			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
+				if(packetArgs[1].trim().equalsIgnoreCase("mines")) {
+					engine.world = engine.mine.load();
+					engine.world = engine.addBasics(engine.world);
+				}
+				else if(packetArgs[1].trim().equalsIgnoreCase("lobby")) {
+					engine.world = engine.lobby.load();
+					engine.world = engine.addBasics(engine.world);
+				}
+			}
 			if(msg.trim().equalsIgnoreCase("pong")) {
 				sendData("Computer 2 Pong Reply".getBytes());
 			}

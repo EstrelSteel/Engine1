@@ -17,6 +17,7 @@ public class Server extends Thread {
 	private ArrayList<String> cachedPlayerPackets;
 	private ArrayList<String> cachedLoginPackets;
 	private ArrayList<String> cachedShrinePackets;
+	private String map;
 	private boolean join;
 	private int port;
 	private Engine1 engine;
@@ -79,6 +80,7 @@ public class Server extends Thread {
 				users.add(packetArgs[1].trim());
 				ips.add(packet.getAddress());
 				ports.add(packet.getPort() + "");
+				Packets.sendPacketToUser(packetArgs[1].trim(), map, this);
 				for(int i = 0; i < cachedLoginPackets.size(); i++) {
 					Packets.sendPacketToUser(packetArgs[1].trim(), cachedLoginPackets.get(i), this);
 				}
@@ -122,6 +124,10 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
 					cachedShrinePackets.add(msg);
+				}
+				else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
+					map = msg;
 				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {

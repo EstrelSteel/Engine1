@@ -28,51 +28,53 @@ public class Shrine {
 		this.count = 300.0;
 		this.maxCount = 600.0;
 		this.tiles = new ArrayList<Tile>();
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 270), false, null));
-		
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 64, loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 64, loc.getY(), 64, 64, 0), false, null));
-		
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 128, loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY(), 64, 64, 90), false, null));
-		
-		//NEXT
-
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY() + 64, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY() + 64, 64, 64, 270), false, null));
-		
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 64, loc.getY() + 64, 64, 64, 0), false, null));
-		
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 128, loc.getY() + 64, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 64, 64, 64, 90), false, null));
-		
-		//NEXT
-
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY() + 128, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY() + 128, 64, 64, 180), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY() + 128, 64, 64, 270), false, null));
-		
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 64, loc.getY() + 128, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 64, loc.getY() + 128, 64, 64, 180), false, null));
-		
-		tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 180), false, null));
-		tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 90), false, null));
-		
-		// EH!!!
-		
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 64, loc.getY() + 128, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 128, loc.getY() + 64, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 128, loc.getY(), 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY() + 64, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 64, loc.getY() + 64, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY() + 128, 64, 64, 0), false, null));
-		tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 64, loc.getY(), 64, 64, 0), false, null));
+		if(team == Team.HIDDEN) {
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 270), false, null));
+			
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 64, loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 64, loc.getY(), 64, 64, 0), false, null));
+			
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 128, loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY(), 64, 64, 90), false, null));
+			
+			//NEXT
+	
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY() + 64, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY() + 64, 64, 64, 270), false, null));
+			
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 64, loc.getY() + 64, 64, 64, 0), false, null));
+			
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 128, loc.getY() + 64, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 64, 64, 64, 90), false, null));
+			
+			//NEXT
+	
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY() + 128, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY() + 128, 64, 64, 180), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY() + 128, 64, 64, 270), false, null));
+			
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 64, loc.getY() + 128, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 64, loc.getY() + 128, 64, 64, 180), false, null));
+			
+			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 180), false, null));
+			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 90), false, null));
+			
+			// EH!!!
+			
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 64, loc.getY() + 128, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 128, loc.getY() + 64, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 128, loc.getY(), 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY() + 64, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 64, loc.getY() + 64, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY() + 128, 64, 64, 0), false, null));
+			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX() + 64, loc.getY(), 64, 64, 0), false, null));
+		}
 		update();
 	}
 
