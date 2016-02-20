@@ -34,6 +34,7 @@ public class Server extends Thread {
 		this.cachedPlayerPackets = new ArrayList<String>();
 		this.cachedLoginPackets = new ArrayList<String>();
 		this.cachedShrinePackets = new ArrayList<String>();
+		this.map = Packets.MAP.getID() + "✂LOBBY";
 		this.join = false;
 		this.engine = engine;
 		System.out.println("Online Server");

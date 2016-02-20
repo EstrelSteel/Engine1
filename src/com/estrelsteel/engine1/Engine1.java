@@ -24,6 +24,7 @@ import com.estrelsteel.engine1.entitiy.Player;
 import com.estrelsteel.engine1.estrelian.Estrelian;
 import com.estrelsteel.engine1.font.Font;
 import com.estrelsteel.engine1.handler.CoreHandler;
+import com.estrelsteel.engine1.handler.EndHandler;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
@@ -114,6 +115,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public RespawnHandler respawnHandler = new RespawnHandler(overlayRespawn, "RespawnHandler", this);
 	public Menu victory =  new Menu("victory", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu defeat =  new Menu("defeat", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public EndHandler victoryHandler = new EndHandler(victory, "VictoryHandler", this);
+	public EndHandler defeatHandler = new EndHandler(defeat, "DefeatHandler", this);
 	
 	public void start() {
 		running = true;
@@ -289,13 +292,15 @@ public class Engine1 extends Canvas implements Runnable {
 		victory.addMenuItem(new MenuItem(MenuItemType.VICTORY_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		victory.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
 		victory.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
-		victory.setOpen(false);
+		victory.setController(victoryHandler);
+		victory.setOpen(true);
 		menus.add(victory);
 		
 		defeat.addMenuItem(new MenuItem(MenuItemType.DEFEAT_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		defeat.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
 		defeat.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
-		defeat.setOpen(true);
+		defeat.setController(defeatHandler);
+		defeat.setOpen(false);
 		menus.add(defeat);
 		
 		player.setEquiped(weapon);

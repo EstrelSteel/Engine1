@@ -93,7 +93,6 @@ public class RespawnHandler extends MenuController {
 	}
 
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
