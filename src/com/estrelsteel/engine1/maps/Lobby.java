@@ -4,6 +4,7 @@ import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
+import com.estrelsteel.engine1.tile.shrine.BlankShrine;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
 import com.estrelsteel.engine1.tile.shrine.Team;
 
@@ -422,11 +423,11 @@ public class Lobby extends Map {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-64, -256, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-128, -256, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-192, -256, 64, 64, 0.0), true, null));
-		world.addShrine(new Shrine(0, Team.BLUE, new Location(0, 0, 0, 0, 0.0)));
-		world.addShrine(new Shrine(1, Team.BLUE, new Location(0, 0, 0, 0, 0.0)));
-		world.addShrine(new Shrine(2, Team.NEUTRAL, new Location(0, 0, 0, 0, 0.0)));
-		world.addShrine(new Shrine(3, Team.RED, new Location(0, 0, 0, 0, 0.0)));
-		world.addShrine(new Shrine(4, Team.RED, new Location(0, 0, 0, 0, 0.0)));
+		world.addShrine(new BlankShrine(0, new Location(0, 0, 0, 0, 0.0)));
+		world.addShrine(new BlankShrine(1, new Location(0, 0, 0, 0, 0.0)));
+		world.addShrine(new BlankShrine(2, new Location(0, 0, 0, 0, 0.0)));
+		world.addShrine(new BlankShrine(3, new Location(0, 0, 0, 0, 0.0)));
+		world.addShrine(new BlankShrine(4, new Location(0, 0, 0, 0, 0.0)));
 		return world;
 	}
 }

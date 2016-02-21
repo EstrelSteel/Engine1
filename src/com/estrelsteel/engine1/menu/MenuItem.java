@@ -31,7 +31,15 @@ public class MenuItem {
 		VICTORY_TEXT(20, "VICTORY_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 7 * 16, 128, 16)),
 		DEFEAT_TEXT(21, "DEFEAT_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 8 * 16, 112, 16)),
 		LOBBY_TEXT(22, "LOBBY_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 9 * 16, 80, 16)),
-		QUIT_TEXT(23, "QUIT_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 10 * 16, 80, 16)),;
+		QUIT_TEXT(23, "QUIT_TEXT", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 10 * 16, 80, 16)),
+		BUTTON_NOT_SELECTED(24, "NOT_SELECTED", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 0 * 16, 16, 16)),
+		BUTTON_SELECTED_1(25, "SELECTED_1", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(1 * 16, 0 * 16, 16, 16)),
+		BUTTON_SELECTED_2(26, "SELECTED_2", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(2 * 16, 0 * 16, 16, 16)),
+		START_BUTTON(27, "START_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 1 * 16, 80, 16)),
+		VOTE_BUTTON(28, "VOTE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(6 * 16, 1 * 16, 64, 16)),
+		MAPS_BUTTON(29, "MAPS_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(11 * 16, 1 * 16, 64, 16)),
+		GAMEMODE_BUTTON(30, "GAMEMODE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 2 * 16, 160, 16)),
+		ADMIN_BUTTON(31, "ADMIN_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(10 * 16, 2 * 16, 96, 16)),;
 		
 		private int id;
 		private String name;

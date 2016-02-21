@@ -26,7 +26,8 @@ public abstract class Map {
 		bw.write("import com.estrelsteel.engine1.world.Location;\n");
 		bw.write("import com.estrelsteel.engine1.world.World;\n");
 		bw.write("import com.estrelsteel.engine1.tile.shrine.Shrine;\n");
-		bw.write("import com.estrelsteel.engine1.tile.shrine.Team;\n\n");
+		bw.write("import com.estrelsteel.engine1.tile.shrine.Team;\n");
+		bw.write("import com.estrelsteel.engine1.tile.shrine.BlankShrine;\n\n");
 		bw.write("public class " + name + " extends Map {\n");
 		bw.write("\tpublic World load1(World world) {\n");
 		ArrayList<String> worldJava = world.convertToJava(new ArrayList<String>());

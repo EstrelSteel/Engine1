@@ -293,7 +293,7 @@ public class Engine1 extends Canvas implements Runnable {
 		victory.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
 		victory.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
 		victory.setController(victoryHandler);
-		victory.setOpen(true);
+		victory.setOpen(false);
 		menus.add(victory);
 		
 		defeat.addMenuItem(new MenuItem(MenuItemType.DEFEAT_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));

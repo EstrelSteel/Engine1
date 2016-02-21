@@ -28,7 +28,7 @@ public class Shrine {
 		this.count = 300.0;
 		this.maxCount = 600.0;
 		this.tiles = new ArrayList<Tile>();
-		if(team == Team.HIDDEN) {
+		if(team != Team.HIDDEN) {
 			tiles.add(new Tile(TileType.SHRINE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
 			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
 			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX(), loc.getY(), 64, 64, 270), false, null));
