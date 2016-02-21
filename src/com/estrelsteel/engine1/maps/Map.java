@@ -5,9 +5,41 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.world.World;
 
 public abstract class Map {
+	
+	public enum Maps {
+		INVALID(-1, null),
+		LOBBY(0, new Lobby()),
+		MINES(1, new Mine());
+		
+		private int id;
+		private Map map;
+		
+		Maps(int id, Map map) {
+			this.id = id;
+			this.map = map;
+		}
+		
+		public int getID() {
+			return id;
+		}
+		
+		public Map getMap() {
+			return map;
+		}
+		
+		public static Maps findByID(int id) {
+			for(Maps map : Maps.values()) {
+				if(map.getID() == id) {
+					return map;
+				}
+			}
+			return Maps.MINES;
+		}
+	}
 	
 	public abstract World load1(World world);
 	

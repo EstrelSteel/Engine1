@@ -12,6 +12,8 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
 
 public class Client extends Thread {
@@ -63,17 +65,15 @@ public class Client extends Thread {
 				
 				player.setEquiped(weapon);
 				
-				engine.multiWorld.addPlayer(player);
+				engine.world.addEntity(slash);
+				engine.world.addEntity(weapon);
+				engine.world.addEntity(player);
 				engine.world.addPlayer(player);
 				
-				engine.world.addEntity(weapon);
-				engine.world.addEntity(slash);
-				
-				engine.multiWorld.addEntity(player);
-				engine.world.addEntity(player);
-				
-				engine.multiWorld.addEntity(weapon);
 				engine.multiWorld.addEntity(slash);
+				engine.multiWorld.addEntity(weapon);
+				engine.multiWorld.addEntity(player);
+				engine.multiWorld.addPlayer(player);
 			}
 			else if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
 				if(engine.server == null) {
@@ -111,14 +111,44 @@ public class Client extends Thread {
 				packetCache.add(msg);
 			}
 			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
-				if(packetArgs[1].trim().equalsIgnoreCase("mines")) {
-					engine.world = engine.mine.load();
-					engine.world = engine.addBasics(engine.world);
+				engine.world = Maps.findByID(Engine1.stringtoint(packetArgs[1].trim())).getMap().load();
+				engine.world = engine.addBasics(engine.world);
+				if(engine.player.getTeam() == Team.BLUE) {
+					engine.player.setHealth(engine.player.getMaxHealth());
+					engine.player.setActiveAnimationNum(0);
+					engine.player.getLocation().setX(engine.world.getShrines().get(0).getLocation().getX());
+					engine.player.getLocation().setY(engine.world.getShrines().get(0).getLocation().getY());
+					engine.player.moveDown(engine.world);
+					engine.player.setWalkspeed(5);
+					engine.player.setSlowWalkspeed(1);
 				}
-				else if(packetArgs[1].trim().equalsIgnoreCase("lobby")) {
-					engine.world = engine.lobby.load();
-					engine.world = engine.addBasics(engine.world);
+				else if(engine.player.getTeam() == Team.RED) {
+					engine.player.setHealth(engine.player.getMaxHealth());
+					engine.player.setActiveAnimationNum(0);
+					engine.player.getLocation().setX(engine.world.getShrines().get(4).getLocation().getX());
+					engine.player.getLocation().setY(engine.world.getShrines().get(4).getLocation().getY());
+					engine.player.moveDown(engine.world);
+					engine.player.setWalkspeed(5);
+					engine.player.setSlowWalkspeed(1);
 				}
+				else {
+					engine.player.setHealth(engine.player.getMaxHealth());
+					engine.player.setActiveAnimationNum(0);
+					engine.player.getLocation().setX(engine.world.getShrines().get(2).getLocation().getX());
+					engine.player.getLocation().setY(engine.world.getShrines().get(2).getLocation().getY());
+					engine.player.moveDown(engine.world);
+					engine.player.setWalkspeed(5);
+					engine.player.setSlowWalkspeed(1);
+				}
+			}
+			else if(id.equalsIgnoreCase(Packets.REQUEST_VOTES.getID())) {
+				sendData((Packets.VOTE.getID() + "✂" + Engine1.vote.getID()).getBytes());
+				engine.hud.setOpen(true);
+				engine.overlayHud.setOpen(true);
+				engine.lobbyMainHud.setOpen(false);
+				engine.lobbyVoteHud.setOpen(false);
+				engine.lobbyMapHud.setOpen(false);
+				
 			}
 			if(msg.trim().equalsIgnoreCase("pong")) {
 				sendData("Computer 2 Pong Reply".getBytes());

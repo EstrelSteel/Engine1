@@ -15,7 +15,9 @@ public enum Packets {
 	PLAYER_DATA("005"),		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID
 	DAMAGE("006"),			//NAME (hit), DAMAGE, NAME (sender) 
 	SHRINE_CAP("007"),		//SHRINE ID, TEAM ID
-	MAP("008"); 			//MAP NAME
+	MAP("008"), 			//MAP ID
+	VOTE("009"),			//VOTE ID
+	REQUEST_VOTES("010");	//
 	
 	private String packetID;
 	

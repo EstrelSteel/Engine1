@@ -39,7 +39,13 @@ public class MenuItem {
 		VOTE_BUTTON(28, "VOTE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(6 * 16, 1 * 16, 64, 16)),
 		MAPS_BUTTON(29, "MAPS_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(11 * 16, 1 * 16, 64, 16)),
 		GAMEMODE_BUTTON(30, "GAMEMODE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 2 * 16, 160, 16)),
-		ADMIN_BUTTON(31, "ADMIN_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(10 * 16, 2 * 16, 96, 16)),;
+		ADMIN_BUTTON(31, "ADMIN_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(10 * 16, 2 * 16, 96, 16)),
+		BACK_BUTTON(32, "BACK_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 3 * 16, 64, 16)),
+		ISLAND_MINES_BUTTON(33, "ISLAND_MINES_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 5 * 16, 208, 16)),
+		MINES_BUTTON(34, "MINES_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 6 * 16, 80, 16)),
+		HEALTH_FULL(35, "HEALTH_FULL", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 2 * 16, 16, 16)),
+		HEALTH_HALF(36, "HEALTH_HALF", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(1 * 16, 2 * 16, 16, 16)),
+		HEALTH_EMPTY(37, "HEALTH_EMPTY", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(2 * 16, 2 * 16, 16, 16));
 		
 		private int id;
 		private String name;

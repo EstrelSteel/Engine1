@@ -12,6 +12,7 @@ public class Player extends Entity {
 	private Team team;
 	private double health;
 	private double maxHealth;
+	private double damage;
 	private Engine1 engine;
 	
 	public Player() {
@@ -19,6 +20,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
+		this.damage = 10.0;
 	}
 	
 	public Player(EntityType type, Location loc) {
@@ -26,6 +28,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
+		this.damage = 10.0;
 	}
 	
 	public Player(EntityType type, Location loc, Handler controls) {
@@ -33,6 +36,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
+		this.damage = 10.0;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, Handler controls) {
@@ -40,6 +44,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
+		this.damage = 10.0;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, boolean collide, Handler controls, String name) {
@@ -47,6 +52,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
+		this.damage = 10.0;
 	}
 	
 	public Team getTeam() {
@@ -63,6 +69,10 @@ public class Player extends Entity {
 	
 	public Engine1 getEngine() {
 		return engine;
+	}
+	
+	public double getDamage() {
+		return damage;
 	}
 	
 	public boolean moveUp(World world) {
@@ -107,7 +117,7 @@ public class Player extends Entity {
 		return;
 	}
 	
-	public void attack(Engine1 engine, Location location, double damage) {
+	public void attack(Engine1 engine, Location location) {
 		for(Entity e : engine.world.getEntities()) {
 			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation())) && e != engine.player) {
 				((Player) e).setHealth(((Player) e).getHealth() - damage);
@@ -140,6 +150,11 @@ public class Player extends Entity {
 	
 	public void setEngine(Engine1 engine) {
 		this.engine = engine;
+		return;
+	}
+	
+	public void setDamage(double damage) {
+		this.damage = damage;
 		return;
 	}
 }

@@ -8,6 +8,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.tile.shrine.Team;
 
 public class Server extends Thread {
 	private DatagramSocket socket;
@@ -17,6 +20,8 @@ public class Server extends Thread {
 	private ArrayList<String> cachedPlayerPackets;
 	private ArrayList<String> cachedLoginPackets;
 	private ArrayList<String> cachedShrinePackets;
+	private ArrayList<Vote> votes;
+	private String minotaur;
 	private String map;
 	private boolean join;
 	private int port;
@@ -34,9 +39,11 @@ public class Server extends Thread {
 		this.cachedPlayerPackets = new ArrayList<String>();
 		this.cachedLoginPackets = new ArrayList<String>();
 		this.cachedShrinePackets = new ArrayList<String>();
-		this.map = Packets.MAP.getID() + "✂LOBBY";
+		this.votes = new ArrayList<Vote>();
+		this.map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID();
 		this.join = false;
 		this.engine = engine;
+		this.minotaur = "";
 		System.out.println("Online Server");
 		try {
 			this.socket = new DatagramSocket(port);
@@ -129,6 +136,52 @@ public class Server extends Thread {
 				else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
 					map = msg;
+				}
+				else if(id.equalsIgnoreCase(Packets.VOTE.getID())) {
+					boolean found = false;
+					int total = 0;
+					for(Vote v : votes) {
+						if(v.getID() == Engine1.stringtoint(packetArgs[1].trim())) {
+							v.addCount();
+							found = true;
+						}
+						total = total + v.getCount();
+					}
+					if(!found) {
+						votes.add(new Vote(Engine1.stringtoint(packetArgs[1].trim()), 1));
+					}
+					if(total >= users.size()) {
+						Vote vote = votes.get(0);
+						for(int i = 1; i < votes.size(); i++) {
+							if(votes.get(i).getCount() > vote.getCount()) {
+								vote = votes.get(i);
+							}
+							else if(votes.get(i).getCount() == vote.getCount()) {
+								if(Math.random() * 2 > 1) {
+									vote = votes.get(i);
+								}
+							}
+						}
+						if(vote.getID() > 0) {
+							vote.setID((int) (Math.random() * (Maps.values().length - 2)));
+						}
+						
+						if(!minotaur.equalsIgnoreCase("")) {
+							for(String user : users) {
+								if(minotaur.equalsIgnoreCase(user)) {
+									Packets.sendPacketToAllUsers(Packets.PLAYER_DATA.getID() + "✂" + minotaur
+											+ "✂" + EntityType.JOHN_SNOW.getID() + "✂" + Team.RED.getID()
+											+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID(), this);
+								}
+							}
+						}
+						else {
+							Packets.sendPacketToAllUsers(Packets.PLAYER_DATA.getID() + "✂" + users.get((int) (Math.random() * users.size()))
+									+ "✂" + EntityType.JOHN_SNOW.getID() + "✂" + Team.RED.getID()
+									+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID(), this);
+						}
+						Packets.sendPacketToAllUsers(Packets.MAP.getID() + "✂" + vote.getID(), this);
+					}
 				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {

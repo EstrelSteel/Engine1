@@ -1,23 +1,20 @@
-package com.estrelsteel.engine1.handler;
+package com.estrelsteel.engine1.menu;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.menu.Menu;
-import com.estrelsteel.engine1.menu.MenuController;
-import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
 
-public class RespawnHandler extends MenuController {
+public class RespawnController extends MenuController {
 	
 	private Engine1 engine;
 	private MenuItem item;
 	
-	public RespawnHandler(Menu menu, String name, Engine1 engine) {
+	public RespawnController(Menu menu, String name, Engine1 engine) {
 		super(menu, name);
 		this.engine = engine;
 	}

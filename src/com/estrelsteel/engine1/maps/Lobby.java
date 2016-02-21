@@ -4,9 +4,9 @@ import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
-import com.estrelsteel.engine1.tile.shrine.BlankShrine;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
 import com.estrelsteel.engine1.tile.shrine.Team;
+import com.estrelsteel.engine1.tile.shrine.BlankShrine;
 
 public class Lobby extends Map {
 	public World load1(World world) {

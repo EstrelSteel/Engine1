@@ -24,19 +24,21 @@ import com.estrelsteel.engine1.entitiy.Player;
 import com.estrelsteel.engine1.estrelian.Estrelian;
 import com.estrelsteel.engine1.font.Font;
 import com.estrelsteel.engine1.handler.CoreHandler;
-import com.estrelsteel.engine1.handler.EndHandler;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
-import com.estrelsteel.engine1.handler.RespawnHandler;
 import com.estrelsteel.engine1.handler.Selector;
-import com.estrelsteel.engine1.maps.Lobby;
 import com.estrelsteel.engine1.maps.Map;
-import com.estrelsteel.engine1.maps.Mine;
+import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.menu.EndController;
+import com.estrelsteel.engine1.menu.LobbyMainController;
+import com.estrelsteel.engine1.menu.LobbyMapController;
+import com.estrelsteel.engine1.menu.LobbyVoteController;
 import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.menu.RespawnController;
 import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.Server;
@@ -98,6 +100,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public static Server server;
 	public static Client client;
 	public static boolean multiplayer = false;
+	public static Maps vote = Maps.INVALID;
 	private String[] packetArgs;
 	
 	public Selector selector = new Selector("SELECTOR", this);
@@ -105,18 +108,21 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public Font fpsFont;
 	
-	public Mine mine = new Mine();
-	public Lobby lobby = new Lobby();
-	
 	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu respawn = new Menu("respawn", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public RespawnHandler respawnHandler = new RespawnHandler(overlayRespawn, "RespawnHandler", this);
+	public Menu lobbyMainHud = new Menu("lobbyMainHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyVoteHud = new Menu("lobbyVoteHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyMapHud = new Menu("lobbyMapHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public RespawnController respawnHandler = new RespawnController(overlayRespawn, "RespawnHandler", this);
 	public Menu victory =  new Menu("victory", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu defeat =  new Menu("defeat", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public EndHandler victoryHandler = new EndHandler(victory, "VictoryHandler", this);
-	public EndHandler defeatHandler = new EndHandler(defeat, "DefeatHandler", this);
+	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
+	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
+	public LobbyMainController lobbyMainHandler = new LobbyMainController(lobbyMainHud, "LobbyMainHandler", this);
+	public LobbyVoteController lobbyVoteHandler = new LobbyVoteController(lobbyVoteHud, "LobbyVoteHandler", this);
+	public LobbyMapController lobbyMapHandler = new LobbyMapController(lobbyMapHud, "LobbyMapHandler", this);
 	
 	public void start() {
 		running = true;
@@ -262,6 +268,8 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FOUR, new Location(144 + (60) * 3, 650 - 80, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_FIVE, new Location(144 + (60) * 4, 650 - 80, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 16, 576, 64)));
+		hud.addMenuItem(new MenuItem(MenuItemType.HEALTH_FULL, new Location(144 + (60) * 5, 650 - 80, 64, 64)));
+		hud.addText("health", new Location(144 + (60) * 5 + 64, 650 - 40, 0, 0));
 		hud.setOpen(false);
 		menus.add(hud);
 		
@@ -303,6 +311,28 @@ public class Engine1 extends Canvas implements Runnable {
 		defeat.setOpen(false);
 		menus.add(defeat);
 		
+		lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
+		lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.VOTE_BUTTON, new Location(0, 0, 256, 64)));
+		lobbyMainHud.setController(lobbyMainHandler);
+		lobbyMainHud.setOpen(true);
+		menus.add(lobbyMainHud);
+		
+		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
+		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BACK_BUTTON, new Location(0, 0, 256, 64)));
+		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
+		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.MAPS_BUTTON, new Location(0, 64, 256, 64)));
+		lobbyVoteHud.setController(lobbyVoteHandler);
+		lobbyVoteHud.setOpen(false);
+		menus.add(lobbyVoteHud);
+		
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BACK_BUTTON, new Location(0, 0, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.MINES_BUTTON, new Location(0, 64, 256, 64)));
+		lobbyMapHud.setController(lobbyMapHandler);
+		lobbyMapHud.setOpen(false);
+		menus.add(lobbyMapHud);
+		
 		player.setEquiped(weapon);
 //		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));
 //		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), false, null));
@@ -323,7 +353,7 @@ public class Engine1 extends Canvas implements Runnable {
 		fpsFont = new Font();
 		fpsFont.getTextLocation().setWidth(128);
 		
-		world = lobby.load();
+		world = Maps.LOBBY.getMap().load();
 		world = addBasics(world);
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
@@ -366,9 +396,17 @@ public class Engine1 extends Canvas implements Runnable {
 		catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		if(ui.equalsIgnoreCase("y")) {			//Desktop		Laptop		School
-			server = new Server(this, 5006); 	//10.0.1.25 or 10.0.1.16 or 164.104.186.67
+		if(ui.equalsIgnoreCase("y")) {
+			server = new Server(this, 5006);
 			client = new Client(this, localIP.split("/")[1], 5006);
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.ADMIN_BUTTON, new Location(0, 64, 256, 64)));
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
 		}
 		else {
 			client = new Client(this, localIP.split("/")[1], 5006);
@@ -388,7 +426,7 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public void stop() throws IOException {
-		Map.generateFile("Lobby", world);
+		//Map.generateFile("Lobby", world);
 		running = false;
 		if(client != null && server == null) {
 			client.sendData((Packets.DISCONNECT.getID() + "✂" + player.getName()).getBytes());
@@ -533,7 +571,7 @@ public class Engine1 extends Canvas implements Runnable {
 						if(e.getWalkspeed() != 0) {
 							e.setWalkspeed(2);
 							if(e instanceof Player) {
-								((Player) e).attack(this, attackLoc, 10.0);
+								((Player) e).attack(this, attackLoc);
 							}
 						}
 					}
@@ -590,7 +628,7 @@ public class Engine1 extends Canvas implements Runnable {
 									}
 									else {
 										e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
-										e.setTopEquip(false);
+										//e.setTopEquip(false);
 										sl = new Location(1000, 1000, 0, 0, 90);
 									}
 									for(Entity s : world.getEntities()) {
@@ -693,6 +731,16 @@ public class Engine1 extends Canvas implements Runnable {
 			overlayRespawn.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 650 / 2 + 650 / 8));
 			s.setIncreasing(0);
 		}
+		hud.getText().set(0, player.getHealth() + " / " + player.getMaxHealth());
+		if(player.getHealth() / player.getMaxHealth() > 51.0) {
+			hud.getMenuItems().get(hud.getMenuItems().size() - 1).setType(MenuItemType.HEALTH_FULL); 
+		}
+		else if(player.getHealth() / player.getMaxHealth() > 1.0) {
+			hud.getMenuItems().get(hud.getMenuItems().size() - 1).setType(MenuItemType.HEALTH_HALF); 
+		}
+		else {
+			hud.getMenuItems().get(hud.getMenuItems().size() - 1).setType(MenuItemType.HEALTH_EMPTY);
+		}
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
 	}
@@ -746,6 +794,9 @@ public class Engine1 extends Canvas implements Runnable {
 							ctx.drawString(line, item.getTextLocation().getX(), item.getTextLocation().getY() + (item.getLineSpace() * i));
 						}
 					}
+				}
+				for(int i = 0; i < menu.getText().size(); i++) {
+					ctx.drawString(menu.getText().get(i), menu.getTextLocation().get(i).getX(), menu.getTextLocation().get(i).getY());
 				}
 			}
 		}
