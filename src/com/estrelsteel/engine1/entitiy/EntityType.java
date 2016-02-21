@@ -9,7 +9,7 @@ public enum EntityType {
 	PLAYER(0, "PLAYER", "/com/estrelsteel/engine1/res/texture.png", new Location(1 * 16, 0 * 16, 16, 16)),
 	WALPOLE(1, "WALPOLE", "/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
 	JOHN_SNOW(2, "JOHN_SNOW", "/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
-	//ID 3
+	MINOTAUR(3, "MINOTAUR", "/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
 	CLOUD(4, "CLOUD", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 0 * 16, 16, 16)),
 	SLASH(5, "SLASH", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 1 * 16, 16, 16)),
 	SLASH_GOLD(6, "SLASH_GOLD", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 2 * 16, 16, 16)),

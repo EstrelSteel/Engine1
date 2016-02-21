@@ -142,6 +142,9 @@ public class Client extends Thread {
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.REQUEST_VOTES.getID())) {
+				if(Engine1.vote == Maps.INVALID || Engine1.vote == Maps.LOBBY) {
+					Engine1.vote = Maps.getRandomMap();
+				}
 				sendData((Packets.VOTE.getID() + "✂" + Engine1.vote.getID()).getBytes());
 				engine.hud.setOpen(true);
 				engine.overlayHud.setOpen(true);

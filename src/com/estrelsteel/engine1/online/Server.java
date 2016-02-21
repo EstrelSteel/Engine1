@@ -20,8 +20,8 @@ public class Server extends Thread {
 	private ArrayList<String> cachedPlayerPackets;
 	private ArrayList<String> cachedLoginPackets;
 	private ArrayList<String> cachedShrinePackets;
-	private ArrayList<Vote> votes;
-	private String minotaur;
+	public ArrayList<Vote> votes;
+	public String minotaur;
 	private String map;
 	private boolean join;
 	private int port;
@@ -161,23 +161,20 @@ public class Server extends Thread {
 									vote = votes.get(i);
 								}
 							}
+							
 						}
-						if(vote.getID() > 0) {
-							vote.setID((int) (Math.random() * (Maps.values().length - 2)));
-						}
-						
 						if(!minotaur.equalsIgnoreCase("")) {
 							for(String user : users) {
 								if(minotaur.equalsIgnoreCase(user)) {
 									Packets.sendPacketToAllUsers(Packets.PLAYER_DATA.getID() + "✂" + minotaur
-											+ "✂" + EntityType.JOHN_SNOW.getID() + "✂" + Team.RED.getID()
+											+ "✂" + EntityType.MINOTAUR.getID() + "✂" + Team.RED.getID()
 											+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID(), this);
 								}
 							}
 						}
 						else {
 							Packets.sendPacketToAllUsers(Packets.PLAYER_DATA.getID() + "✂" + users.get((int) (Math.random() * users.size()))
-									+ "✂" + EntityType.JOHN_SNOW.getID() + "✂" + Team.RED.getID()
+									+ "✂" + EntityType.MINOTAUR.getID() + "✂" + Team.RED.getID()
 									+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID(), this);
 						}
 						Packets.sendPacketToAllUsers(Packets.MAP.getID() + "✂" + vote.getID(), this);

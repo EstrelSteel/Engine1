@@ -4,9 +4,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JOptionPane;
+
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Packets;
+import com.estrelsteel.engine1.online.Vote;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyMainController extends MenuController implements MouseMotionListener {
@@ -38,7 +42,16 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.ADMIN_BUTTON) {
-						//TODO: Add admin commands
+						String[] args = JOptionPane.showInputDialog("Enter a command", "").split(" ");
+						
+						if(args[0].trim().equalsIgnoreCase("pick") && args.length >= 3) {
+							if(args[1].trim().equalsIgnoreCase("map")) {
+								Engine1.server.votes.add(new Vote(Maps.findByID(Engine1.stringtoint(args[2].trim())).getID(), 999999));
+							}
+						}
+						else if(args[0].trim().equalsIgnoreCase("minotaur") && args.length >= 2) {
+							Engine1.server.minotaur = args[1].trim();
+						}
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
 						Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), engine.server);

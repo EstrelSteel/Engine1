@@ -11,9 +11,9 @@ import com.estrelsteel.engine1.world.World;
 public abstract class Map {
 	
 	public enum Maps {
-		INVALID(-1, null),
-		LOBBY(0, new Lobby()),
-		MINES(1, new Mine());
+		INVALID(-2, null),
+		LOBBY(-1, new Lobby()),
+		MINES(0, new Mine());
 		
 		private int id;
 		private Map map;
@@ -38,6 +38,10 @@ public abstract class Map {
 				}
 			}
 			return Maps.MINES;
+		}
+		
+		public static Maps getRandomMap() {
+			return Maps.findByID((int) (Math.random() * (Maps.values().length - 2)));
 		}
 	}
 	

@@ -46,7 +46,7 @@ public class LobbyMapController extends LobbyMainController implements MouseMoti
 						e.consume();
 					}
 				}
-				if(item.getClickLocation().getY() == (64 * Engine1.vote.getID()) && (item.getType() == MenuItemType.BUTTON_NOT_SELECTED)) {
+				if(item.getClickLocation().getY() == (64 * (Engine1.vote.getID() + 1)) && (item.getType() == MenuItemType.BUTTON_NOT_SELECTED)) {
 					item.setType(MenuItemType.BUTTON_SELECTED_2);
 					e.consume();
 				}
