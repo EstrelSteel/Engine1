@@ -47,7 +47,9 @@ public class MenuItem {
 		HEALTH_HALF(36, "HEALTH_HALF", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(1 * 16, 2 * 16, 16, 16)),
 		HEALTH_EMPTY(37, "HEALTH_EMPTY", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(2 * 16, 2 * 16, 16, 16)),
 		KEY_SPACE(38, "KEY_SPACE", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(8 * 16, 2 * 16, 80, 16)),
-		KEY_SPACE_CLEAR(39, "KEY_SPACE_CLEAR", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(8 * 16, 3 * 16, 80, 16));
+		KEY_SPACE_CLEAR(39, "KEY_SPACE_CLEAR", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(8 * 16, 3 * 16, 80, 16)),
+		REVERSE_BUTTON(40, "REVERSE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(5 * 16, 3 * 16, 112, 16)),
+		MODE_BUTTON(41, "MODE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(5 * 16, 2 * 16, 80, 16));
 		
 		private int id;
 		private String name;
