@@ -7,6 +7,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JOptionPane;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Packets;
@@ -47,6 +48,9 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 						if(args[0].trim().equalsIgnoreCase("pick") && args.length >= 3) {
 							if(args[1].trim().equalsIgnoreCase("map")) {
 								Engine1.server.votes.add(new Vote(Maps.findByID(Engine1.stringtoint(args[2].trim())).getID(), 999999));
+							}
+							else if(args[1].trim().equalsIgnoreCase("gm")) {
+								Engine1.server.gmVotes.add(new Vote(Gamemode.findByID(Engine1.stringtoint(args[2].trim())).getID(), 999999));
 							}
 						}
 						else if(args[0].trim().equalsIgnoreCase("minotaur") && args.length >= 2) {

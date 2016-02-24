@@ -48,8 +48,18 @@ public class MenuItem {
 		HEALTH_EMPTY(37, "HEALTH_EMPTY", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(2 * 16, 2 * 16, 16, 16)),
 		KEY_SPACE(38, "KEY_SPACE", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(8 * 16, 2 * 16, 80, 16)),
 		KEY_SPACE_CLEAR(39, "KEY_SPACE_CLEAR", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(8 * 16, 3 * 16, 80, 16)),
-		REVERSE_BUTTON(40, "REVERSE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(5 * 16, 3 * 16, 112, 16)),
-		MODE_BUTTON(41, "MODE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(5 * 16, 2 * 16, 80, 16));
+		MODE_BUTTON(40, "MODE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(5 * 16, 2 * 16, 80, 16)),
+		CLASSIC_BUTTON(41, "CLASSIC_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 15 * 16, 112, 16)),
+		REVERSE_BUTTON(42, "REVERSE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 14 * 16, 112, 16)),
+		TEAM(43, "TEAM", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 0 * 16, 256, 16)),
+		TEAM_BLUE_COLOUR(44, "TEAM_BLUE_COLOUR", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 1 * 16, 64, 16)),
+		TEAM_RED_COLOUR(45, "TEAM_RED_COLOUR", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 2 * 16, 48, 16)),
+		TEAM_BLUE(46, "TEAM_BLUE", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(5 * 16, 1 * 16, 64, 16)),
+		TEAM_RED(47, "TEAM_RED", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(5 * 16, 2 * 16, 48, 16)),
+		GOAL_TEXT(48, "GOAL_TEXT", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(11 * 16, 1 * 16, 80, 16)),
+		VIC_1_TEXT(49, "VIC_1_TEXT", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 3 * 16, 256, 48)),
+		VIC_2_TEXT(50, "VIC_2_TEXT", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 7 * 16, 256, 32)),
+		PRESS_ENTER(51, "PRESS_ENTER", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 10 * 16, 176, 16));
 		
 		private int id;
 		private String name;

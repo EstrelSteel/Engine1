@@ -77,9 +77,9 @@ public class Player extends Entity {
 	
 	public boolean moveUp(World world) {
 		boolean moved = super.moveUp(world);
-		if(moved && engine != null && engine.multiplayer) {
-			engine.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
-		}
+//		if(moved && engine != null && engine.multiplayer) {
+//			engine.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
+//		}
 		return moved;
 	}
 	

@@ -34,10 +34,10 @@ public class TileImage extends Image {
 	}
 	
 	public BufferedImage getTile() {
-		if(getImage() == null) {
-			System.out.println("" + getSRC());
-			System.out.println(loc.getX() + loc.getY() + loc.getWidth() + loc.getHeight());
-		}
+//		if(getImage() == null) {
+//			System.out.println("" + getSRC());
+//			System.out.println(loc.getX() + loc.getY() + loc.getWidth() + loc.getHeight());
+//		}
 		if(!isImageLoaded()) {
 			loadImage();
 		}

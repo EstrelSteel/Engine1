@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.tile.shrine.Team;
 
@@ -21,6 +22,7 @@ public class Server extends Thread {
 	private ArrayList<String> cachedLoginPackets;
 	private ArrayList<String> cachedShrinePackets;
 	public ArrayList<Vote> votes;
+	public ArrayList<Vote> gmVotes;
 	public String minotaur;
 	private String map;
 	private boolean join;
@@ -40,7 +42,8 @@ public class Server extends Thread {
 		this.cachedLoginPackets = new ArrayList<String>();
 		this.cachedShrinePackets = new ArrayList<String>();
 		this.votes = new ArrayList<Vote>();
-		this.map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID();
+		this.gmVotes = new ArrayList<Vote>();
+		this.map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID() + "✂" + Gamemode.CLASSIC.getID();
 		this.join = false;
 		this.engine = engine;
 		this.minotaur = "";
@@ -67,11 +70,11 @@ public class Server extends Thread {
 				return;
 			}
 			msg = new String(packet.getData());
-			System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
+			//System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
 			id = Packets.trimToID(msg);
 			packetData = Packets.trimToData(msg);
 			packetArgs = Packets.packetArgs(packetData);
-			System.out.println("id=" + id + " data=" + packetData);
+			//System.out.println("id=" + id + " data=" + packetData);
 			if(id.equalsIgnoreCase(Packets.LOGIN.getID())) {
 				System.out.println(packetArgs[0]);
 				if(Engine1.stringtoint(packetArgs[2].trim()) != engine.build) {
@@ -139,6 +142,7 @@ public class Server extends Thread {
 				}
 				else if(id.equalsIgnoreCase(Packets.VOTE.getID())) {
 					boolean found = false;
+					boolean gfound = false;
 					int total = 0;
 					for(Vote v : votes) {
 						if(v.getID() == Engine1.stringtoint(packetArgs[1].trim())) {
@@ -147,11 +151,22 @@ public class Server extends Thread {
 						}
 						total = total + v.getCount();
 					}
+					for(Vote v : gmVotes) {
+						if(v.getID() == Engine1.stringtoint(packetArgs[2].trim())) {
+							v.addCount();
+							found = true;
+						}
+						total = total + v.getCount();
+					}
 					if(!found) {
 						votes.add(new Vote(Engine1.stringtoint(packetArgs[1].trim()), 1));
 					}
+					if(!gfound) {
+						gmVotes.add(new Vote(Engine1.stringtoint(packetArgs[2].trim()), 1));
+					}
 					if(total >= users.size()) {
 						Vote vote = votes.get(0);
+						Vote gmVote = gmVotes.get(0);
 						for(int i = 1; i < votes.size(); i++) {
 							if(votes.get(i).getCount() > vote.getCount()) {
 								vote = votes.get(i);
@@ -159,6 +174,17 @@ public class Server extends Thread {
 							else if(votes.get(i).getCount() == vote.getCount()) {
 								if(Math.random() * 2 > 1) {
 									vote = votes.get(i);
+								}
+							}
+							
+						}
+						for(int i = 1; i < gmVotes.size(); i++) {
+							if(gmVotes.get(i).getCount() > gmVote.getCount()) {
+								gmVote = gmVotes.get(i);
+							}
+							else if(gmVotes.get(i).getCount() == gmVote.getCount()) {
+								if(Math.random() * 2 > 1) {
+									gmVote = gmVotes.get(i);
 								}
 							}
 							
@@ -177,7 +203,7 @@ public class Server extends Thread {
 									+ "✂" + EntityType.MINOTAUR.getID() + "✂" + Team.RED.getID()
 									+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID(), this);
 						}
-						Packets.sendPacketToAllUsers(Packets.MAP.getID() + "✂" + vote.getID(), this);
+						Packets.sendPacketToAllUsers(Packets.MAP.getID() + "✂" + vote.getID() + "✂" + gmVote.getID(), this);
 					}
 				}
 			}

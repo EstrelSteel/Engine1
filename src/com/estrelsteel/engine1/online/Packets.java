@@ -16,7 +16,7 @@ public enum Packets {
 	DAMAGE("006"),			//NAME (hit), DAMAGE, NAME (sender) 
 	SHRINE_CAP("007"),		//SHRINE ID, TEAM ID
 	MAP("008"), 			//MAP ID
-	VOTE("009"),			//VOTE ID
+	VOTE("009"),			//MAP ID, GM ID
 	REQUEST_VOTES("010");	//
 	
 	private String packetID;

@@ -34,16 +34,16 @@ public class EntityImage extends Image {
 	}
 	
 	public BufferedImage getEntity() {
-		if(getImage() == null) {
-			System.out.println("" + getSRC());
-			System.out.println(loc.getX() + loc.getY() + loc.getWidth() + loc.getHeight());
-		}
+//		if(getImage() == null) {
+//			System.out.println("" + getSRC());
+//			System.out.println(loc.getX() + loc.getY() + loc.getWidth() + loc.getHeight());
+//		}
 		if(!isImageLoaded()) {
 			loadImage();
 		}
 		if(eImg == null) {
 			eImg = getImage().getSubimage(loc.getX(), loc.getY(), loc.getWidth(), loc.getHeight());
-			System.out.println("updating eImg");
+//			System.out.println("updating eImg");
 			if(getScan()) {
 				boolean keepScan = false;
 				for(int x = 0; x < eImg.getWidth(); x++) {

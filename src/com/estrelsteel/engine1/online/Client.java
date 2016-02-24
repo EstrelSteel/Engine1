@@ -12,6 +12,7 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
@@ -25,11 +26,11 @@ public class Client extends Thread {
 	private String id;
 	private String packetData;
 	private String[] packetArgs;
-	public ArrayList<String> packetCache;
+	public ArrayList<PendingPacket> packetCache;
 	
 	public Client(Engine1 engine, String ipAddress, int port) {
 		this.engine = engine;
-		this.packetCache =  new ArrayList<String>();
+		this.packetCache =  new ArrayList<PendingPacket>();
 		try {
 			this.socket = new DatagramSocket();
 			this.port = port;
@@ -54,7 +55,7 @@ public class Client extends Thread {
 				e.printStackTrace();
 			}
 			msg = new String(packet.getData());
-			System.out.println(msg);
+			//System.out.println(msg);
 			id = Packets.trimToID(msg);
 			packetData = Packets.trimToData(msg);
 			packetArgs = Packets.packetArgs(packetData);
@@ -90,67 +91,50 @@ public class Client extends Thread {
 			}
 			else if(id.equalsIgnoreCase(Packets.MOVE.getID())) {
 				if(packetArgs.length > 2 && !packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
-					packetCache.add(msg);
+					packetCache.add(new PendingPacket(msg, true, 2000l));
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
 				if(!packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
-					packetCache.add(msg);
+					packetCache.add(new PendingPacket(msg));
+					System.out.println("\tRECIEVD ANIMATION");
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
-				packetCache.add(msg);
+				packetCache.add(new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
 				if(packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
 					engine.player.setHealth(engine.player.getHealth() - Engine1.stringtodouble(packetArgs[2].trim()));
-					packetCache.add(msg);
+					packetCache.add(new PendingPacket(msg));
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
-				packetCache.add(msg);
+				packetCache.add(new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
-				engine.world = Maps.findByID(Engine1.stringtoint(packetArgs[1].trim())).getMap().load();
-				engine.world = engine.addBasics(engine.world);
-				if(engine.player.getTeam() == Team.BLUE) {
-					engine.player.setHealth(engine.player.getMaxHealth());
-					engine.player.setActiveAnimationNum(0);
-					engine.player.getLocation().setX(engine.world.getShrines().get(0).getLocation().getX());
-					engine.player.getLocation().setY(engine.world.getShrines().get(0).getLocation().getY());
-					engine.player.moveDown(engine.world);
-					engine.player.setWalkspeed(5);
-					engine.player.setSlowWalkspeed(1);
-				}
-				else if(engine.player.getTeam() == Team.RED) {
-					engine.player.setHealth(engine.player.getMaxHealth());
-					engine.player.setActiveAnimationNum(0);
-					engine.player.getLocation().setX(engine.world.getShrines().get(4).getLocation().getX());
-					engine.player.getLocation().setY(engine.world.getShrines().get(4).getLocation().getY());
-					engine.player.moveDown(engine.world);
-					engine.player.setWalkspeed(5);
-					engine.player.setSlowWalkspeed(1);
-				}
-				else {
-					engine.player.setHealth(engine.player.getMaxHealth());
-					engine.player.setActiveAnimationNum(0);
-					engine.player.getLocation().setX(engine.world.getShrines().get(2).getLocation().getX());
-					engine.player.getLocation().setY(engine.world.getShrines().get(2).getLocation().getY());
-					engine.player.moveDown(engine.world);
-					engine.player.setWalkspeed(5);
-					engine.player.setSlowWalkspeed(1);
+				packetCache.add(new PendingPacket(msg));
+				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + ""))
+				for(Player pl : engine.world.getPlayers()) {
+					if(pl.getTeam() == Team.BLUE) {
+						pl.setTeam(Team.RED);
+					}
+					else if(pl.getTeam() == Team.RED) {
+						pl.setTeam(Team.BLUE);
+					}
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.REQUEST_VOTES.getID())) {
 				if(Engine1.vote == Maps.INVALID || Engine1.vote == Maps.LOBBY) {
 					Engine1.vote = Maps.getRandomMap();
 				}
-				sendData((Packets.VOTE.getID() + "✂" + Engine1.vote.getID()).getBytes());
+				sendData((Packets.VOTE.getID() + "✂" + Engine1.vote.getID() + "✂" + Engine1.gmVote.getID()).getBytes());
 				engine.hud.setOpen(true);
 				engine.overlayHud.setOpen(true);
 				engine.lobbyMainHud.setOpen(false);
 				engine.lobbyVoteHud.setOpen(false);
 				engine.lobbyMapHud.setOpen(false);
+				engine.lobbyModeHud.setOpen(false);
 				
 			}
 			if(msg.trim().equalsIgnoreCase("pong")) {

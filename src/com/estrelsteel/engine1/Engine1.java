@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
@@ -29,19 +28,22 @@ import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.Selector;
-import com.estrelsteel.engine1.maps.Map;
+import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.EndController;
 import com.estrelsteel.engine1.menu.LobbyMainController;
 import com.estrelsteel.engine1.menu.LobbyMapController;
+import com.estrelsteel.engine1.menu.LobbyModeController;
 import com.estrelsteel.engine1.menu.LobbyVoteController;
 import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.menu.RespawnController;
+import com.estrelsteel.engine1.menu.WinController;
 import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Packets;
+import com.estrelsteel.engine1.online.PendingPacket;
 import com.estrelsteel.engine1.online.Server;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
@@ -102,7 +104,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public static Client client;
 	public static boolean multiplayer = false;
 	public static Maps vote = Maps.INVALID;
-	private String[] packetArgs;
+	public static Gamemode gmVote = Gamemode.CLASSIC;
+	private PendingPacket packet;
 	
 	public Selector selector = new Selector("SELECTOR", this);
 	private AffineTransform selectTrans;
@@ -116,14 +119,21 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu lobbyMainHud = new Menu("lobbyMainHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu lobbyVoteHud = new Menu("lobbyVoteHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public Menu lobbyMapHud = new Menu("lobbyMapHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyModeHud = new Menu("lobbyModeHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public RespawnController respawnHandler = new RespawnController(overlayRespawn, "RespawnHandler", this);
 	public Menu victory =  new Menu("victory", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu defeat =  new Menu("defeat", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu vic1text = new Menu("vic1text", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu vic2text = new Menu("vic2text", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
 	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
 	public LobbyMainController lobbyMainHandler = new LobbyMainController(lobbyMainHud, "LobbyMainHandler", this);
 	public LobbyVoteController lobbyVoteHandler = new LobbyVoteController(lobbyVoteHud, "LobbyVoteHandler", this);
 	public LobbyMapController lobbyMapHandler = new LobbyMapController(lobbyMapHud, "LobbyMapHandler", this);
+	public LobbyModeController lobbyModeHandler = new LobbyModeController(lobbyModeHud, "LobbyMapHandler", this);
+	public WinController vic1Handler = new WinController(vic1text, "vic1Handler");
+	public WinController vic2Handler = new WinController(vic2text, "vic1Handler");
 	
 	public void start() {
 		running = true;
@@ -352,6 +362,8 @@ public class Engine1 extends Canvas implements Runnable {
 		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BACK_BUTTON, new Location(0, 0, 256, 64)));
 		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
 		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.MAPS_BUTTON, new Location(0, 64, 256, 64)));
+		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 128, 256, 64)));
+		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.MODE_BUTTON, new Location(0, 128, 256, 64)));
 		lobbyVoteHud.setController(lobbyVoteHandler);
 		lobbyVoteHud.setOpen(false);
 		menus.add(lobbyVoteHud);
@@ -363,6 +375,32 @@ public class Engine1 extends Canvas implements Runnable {
 		lobbyMapHud.setController(lobbyMapHandler);
 		lobbyMapHud.setOpen(false);
 		menus.add(lobbyMapHud);
+		
+		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
+		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BACK_BUTTON, new Location(0, 0, 256, 64)));
+		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
+		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.CLASSIC_BUTTON, new Location(0, 64, 256, 64)));
+		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 128, 256, 64)));
+		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.REVERSE_BUTTON, new Location(0, 128, 256, 64)));
+		lobbyModeHud.setController(lobbyModeHandler);
+		lobbyModeHud.setOpen(false);
+		menus.add(lobbyModeHud);
+		
+		vic1text.addMenuItem(new MenuItem(MenuItemType.TEAM, new Location((650 - 512) / 2, (650 / 6), 512, 32)));
+		vic1text.addMenuItem(new MenuItem(MenuItemType.TEAM_BLUE_COLOUR, new Location((650 - 256) / 2, (650 / 6) + 64, 256, 64)));
+		vic1text.addMenuItem(new MenuItem(MenuItemType.VIC_1_TEXT, new Location((650 - 512) / 2, (650 / 2), 512, 96)));
+		vic1text.addMenuItem(new MenuItem(MenuItemType.PRESS_ENTER, new Location((650 - 352) / 2, 650 - (650 / 8), 352, 32)));
+		vic1text.setController(vic1Handler);
+		vic1text.setOpen(false);
+		menus.add(vic1text);
+		
+		vic2text.addMenuItem(new MenuItem(MenuItemType.TEAM, new Location((650 - 512) / 2, (650 / 6), 512, 32)));
+		vic2text.addMenuItem(new MenuItem(MenuItemType.TEAM_RED_COLOUR, new Location((650 - 256) / 2, (650 / 6) + 64, 256, 64)));
+		vic2text.addMenuItem(new MenuItem(MenuItemType.VIC_2_TEXT, new Location((650 - 512) / 2, (650 / 2), 512, 64)));
+		vic2text.addMenuItem(new MenuItem(MenuItemType.PRESS_ENTER, new Location((650 - 352) / 2, 650 - (650 / 8), 352, 32)));
+		vic2text.setController(vic2Handler);
+		vic2text.setOpen(false);
+		menus.add(vic2text);
 		
 		player.setEquiped(weapon);
 //		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));
@@ -413,6 +451,33 @@ public class Engine1 extends Canvas implements Runnable {
 		return world;
 	}
 	
+	public void updateHelpMenu() {
+		for(int i = 0; i < vic1text.getMenuItems().size(); i++) {
+			if(vic1text.getMenuItems().get(i).getType().getID() >= 44 && vic1text.getMenuItems().get(i).getType().getID() <= 47) {
+				if(player.getTeam() == Team.BLUE) {
+					vic1text.getMenuItems().get(i).setType(MenuItemType.TEAM_BLUE_COLOUR);
+					break;
+				}
+				else if(player.getTeam() == Team.RED) {
+					vic1text.getMenuItems().get(i).setType(MenuItemType.TEAM_RED_COLOUR);
+					break;
+				}
+			}
+		}
+		for(int i = 0; i < vic2text.getMenuItems().size(); i++) {
+			if(vic2text.getMenuItems().get(i).getType().getID() >= 44 && vic2text.getMenuItems().get(i).getType().getID() <= 47) {
+				if(player.getTeam() == Team.BLUE) {
+					vic2text.getMenuItems().get(i).setType(MenuItemType.TEAM_BLUE_COLOUR);
+					break;
+				}
+				else if(player.getTeam() == Team.RED) {
+					vic2text.getMenuItems().get(i).setType(MenuItemType.TEAM_RED_COLOUR);
+					break;
+				}
+			}
+		}
+	}
+	
 	public synchronized void TEMPStartClientServer() {
 		String username;
 		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
@@ -438,6 +503,8 @@ public class Engine1 extends Canvas implements Runnable {
 			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
 			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
 			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+			lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
 		}
 		else {
 			client = new Client(this, localIP.split("/")[1], 5006);
@@ -531,32 +598,55 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public void tick() {
+		boolean moved = false;
+		int lastAnimation = -1;
 		tickCount++;
 		if(world != null) {
 			Player p;
 			Location sl;
 			for(Entity e : world.getEntities()) {
+				lastAnimation = e.getActiveAnimationNum();
 				if(e.getControls() != null) {
 					if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.moveUp(world);
+						if(!moved) {
+							moved = e.moveUp(world);
+						}
+						else {
+							e.moveUp(world);
+						}
 						if(!PlayerControls.USE.isPressed()) {
 							e.setActiveAnimationNum(1);
 						}
 					}
 					if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.moveDown(world);
+						if(!moved) {
+							moved = e.moveDown(world);
+						}
+						else {
+							e.moveDown(world);
+						}
 						if(!PlayerControls.USE.isPressed()) {
 							e.setActiveAnimationNum(0);
 						}
 					}
 					if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.moveRight(world);
+						if(!moved) {
+							moved = e.moveRight(world);
+						}
+						else {
+							e.moveRight(world);
+						}
 						if(!PlayerControls.USE.isPressed()) {
 							e.setActiveAnimationNum(2);
 						}
 					}
 					if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.moveLeft(world);
+						if(!moved) {
+							moved = e.moveLeft(world);
+						}
+						else {
+							e.moveLeft(world);
+						}
 						if(!PlayerControls.USE.isPressed()) {
 							e.setActiveAnimationNum(3);
 						}
@@ -632,11 +722,15 @@ public class Engine1 extends Canvas implements Runnable {
 					p = (Player) e;
 					if(client != null && client.packetCache != null) {
 						for(int i = 0; i < client.packetCache.size(); i++) {
-							packetArgs = Packets.packetArgs(client.packetCache.get(i));
-							if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.MOVE.getID())) {
-								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.getLocation().setX(stringtoint(packetArgs[2].trim()));
-									p.getLocation().setY(stringtoint(packetArgs[3].trim()));
+							packet = client.packetCache.get(i);
+							if(packet.shouldDelete()) {
+								client.packetCache.remove(i);
+								i--;
+							}
+							if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MOVE.getID())) {
+								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.getLocation().setX(stringtoint(packet.getPacketArgs()[2].trim()));
+									p.getLocation().setY(stringtoint(packet.getPacketArgs()[3].trim()));
 									if(e.getActiveAnimationNum() == 4) {
 										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 										e.setTopEquip(false);
@@ -663,7 +757,7 @@ public class Engine1 extends Canvas implements Runnable {
 										sl = new Location(1000, 1000, 0, 0, 90);
 									}
 									for(Entity s : world.getEntities()) {
-										if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+										if(s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
 											s.setLocation(sl);
 										}
 									}
@@ -671,9 +765,9 @@ public class Engine1 extends Canvas implements Runnable {
 									i--;
 								}
 							}
-							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.ANIMATION.getID())) {
-								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.setGhostActiveAnimationNum(stringtoint(packetArgs[2].trim()));
+							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.setGhostActiveAnimationNum(stringtoint(packet.getPacketArgs()[2].trim()));
 									if(e.getActiveAnimationNum() == 4) {
 										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 										e.setTopEquip(false);
@@ -700,7 +794,7 @@ public class Engine1 extends Canvas implements Runnable {
 										sl = new Location(1000, 1000, 0, 0, 90);
 									}
 									for(Entity s : world.getEntities()) {
-										if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
+										if(s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
 											s.setLocation(sl);
 										}
 									}
@@ -708,35 +802,90 @@ public class Engine1 extends Canvas implements Runnable {
 									i--;
 								}
 							}
-							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
-								if(packetArgs[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.setType(EntityType.findByID(stringtoint(packetArgs[2].trim())));
-									p.setTeam(Team.findByID(stringtoint(packetArgs[3].trim())));
-									p.getEquiped().setType(EntityType.findByID(stringtoint(packetArgs[4].trim())));
+							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
+								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(p.getName().trim())) {
+									p.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
+									p.setTeam(Team.findByID(stringtoint(packet.getPacketArgs()[3].trim())));
+									p.getEquiped().setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[4].trim())));
+									updateHelpMenu();
 									for(Entity s : world.getEntities()) {
-										if(s.getName().equalsIgnoreCase("s_" + packetArgs[1].trim())) {
-											s.setType(EntityType.findByID(stringtoint(packetArgs[5].trim())));
+										if(s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
+											s.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[5].trim())));
 										}
 									}
 									client.packetCache.remove(i);
 									i--;
 								}
 							}
-							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.DAMAGE.getID())) {
+							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.DAMAGE.getID())) {
 								for(Entity s : world.getEntities()) {
-									if(s.getName().equalsIgnoreCase(packetArgs[3].trim())) {
+									if(s.getName().equalsIgnoreCase(packet.getPacketArgs()[3].trim())) {
 										killCam.setEntity(s);
 									}
 								}
 								client.packetCache.remove(i);
 								i--;
 							}
-							else if(Packets.trimToID(client.packetCache.get(i)).equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
+							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
 								for(Shrine s : world.getShrines()) {
-									if(s.getID() == stringtoint(packetArgs[1].trim())) {
-										s.update(Team.findByID(stringtoint(packetArgs[2].trim())));
+									if(s.getID() == stringtoint(packet.getPacketArgs()[1].trim())) {
+										s.update(Team.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
 										s.setCount(s.getResetCount());
 									}
+								}
+								client.packetCache.remove(i);
+								i--;
+							}
+							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MAP.getID())) {
+								world = Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())).getMap().load();
+								world = addBasics(world);
+								if(Gamemode.findByID(stringtoint(packet.getPacketArgs()[2].trim())) == Gamemode.REVERSE) {
+									if(Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())) != Maps.LOBBY) {
+										updateHelpMenu();
+										if(player.getTeam() == Team.BLUE) {
+											vic2text.setOpen(true);
+										}
+										else if(player.getTeam() == Team.RED) {
+											vic1text.setOpen(true);
+										}
+									}
+								}
+								else {
+									if(Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())) != Maps.LOBBY) {
+										if(player.getTeam() == Team.BLUE) {
+											vic1text.setOpen(true);
+										}
+										else if(player.getTeam() == Team.RED) {
+											vic2text.setOpen(true);
+										}
+									}
+								}
+								if(player.getTeam() == Team.RED) {
+									player.setHealth(player.getMaxHealth());
+									player.setActiveAnimationNum(0);
+									player.getLocation().setX(world.getShrines().get(4).getLocation().getX());
+									player.getLocation().setY(world.getShrines().get(4).getLocation().getY());
+									player.moveDown(world);
+									player.setWalkspeed(5);
+									player.setSlowWalkspeed(1);
+								}
+								else if(player.getTeam() == Team.BLUE) {
+									player.setHealth(player.getMaxHealth());
+									player.setActiveAnimationNum(0);
+									player.getLocation().setX(world.getShrines().get(0).getLocation().getX());
+									player.getLocation().setY(world.getShrines().get(0).getLocation().getY());
+									player.moveDown(world);
+									player.setWalkspeed(5);
+									player.setSlowWalkspeed(1);
+								}
+								else {
+									player.setHealth(player.getMaxHealth());
+									player.setActiveAnimationNum(0);
+									player.getLocation().setX(world.getShrines().get(2).getLocation().getX());
+									player.getLocation().setY(world.getShrines().get(2).getLocation().getY());
+									player.moveDown(world);
+									player.setWalkspeed(5);
+									player.setSlowWalkspeed(1);
 								}
 								client.packetCache.remove(i);
 								i--;
@@ -776,6 +925,12 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
+		if(moved && multiplayer) {
+			client.sendData((Packets.MOVE.getID() + "✂" + player.getName() + "✂" + player.getLocation().getX() + "✂" + player.getLocation().getY()).getBytes());
+		}
+//		if(lastAnimation != player.getActiveAnimationNum() && multiplayer) {
+//			client.sendData((Packets.ANIMATION.getID() + "✂" + getName() + "✂" + player.getActiveAnimationNum()).getBytes());
+//		}
 	}
 	
 	public void render() {
@@ -843,7 +998,6 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		ctx.dispose();
 		bs.show();
-		
 	}
 	
 	public static int stringtoint(String s) {

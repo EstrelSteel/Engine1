@@ -345,7 +345,7 @@ public class World {
 				chunk = new Chunk(new Location((t.getLocation().getX() / (8 * 64)) * (8 * 16), (t.getLocation().getY() / (8 * 64)) * (8 * 16), 8 * 64, 8 * 64));
 				
 				if(chunk.addTile(tiles.get(i))) {
-					System.out.println("chunk created");
+					//System.out.println("chunk created");
 					chunks.add(chunk);
 					tiles.remove(i);
 					i--;
@@ -355,7 +355,7 @@ public class World {
 				}
 			}
 		}
-		System.out.println("chunks " + chunks.size());
+		//System.out.println("chunks " + chunks.size());
 	}
 	
 	public boolean equals(World world) {
