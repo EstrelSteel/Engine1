@@ -59,7 +59,15 @@ public class MenuItem {
 		GOAL_TEXT(48, "GOAL_TEXT", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(11 * 16, 1 * 16, 80, 16)),
 		VIC_1_TEXT(49, "VIC_1_TEXT", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 3 * 16, 256, 48)),
 		VIC_2_TEXT(50, "VIC_2_TEXT", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 7 * 16, 256, 32)),
-		PRESS_ENTER(51, "PRESS_ENTER", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 10 * 16, 176, 16));
+		PRESS_ENTER(51, "PRESS_ENTER", "null", "/com/estrelsteel/engine1/res/goal.png", new Location(0 * 16, 10 * 16, 176, 16)),
+		SWORD_DIAMOND_HUD(52, "SWORD_DIAMOND_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 0 * 16, 16, 16)),
+		SWORD_GOLD_HUD(53, "SWORD_GOLD_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(1 * 16, 0 * 16, 16, 16)),
+		SWORD_RUBY_HUD(54, "SWORD_RUBY_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(2 * 16, 0 * 16, 16, 16)),
+		WAR_AXE_DIAMOND_HUD(55, "WAR_AXE_DIAMOND_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 1 * 16, 16, 16)),
+		WAR_AXE_GOLD_HUD(56, "WAR_AXE_GOLD_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(1 * 16, 1 * 16, 16, 16)),
+		WAR_AXE_RUBY_HUD(57, "WAR_AXE_RUBY_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(2 * 16, 1 * 16, 16, 16)),
+		SPEAR_HUD(58, "SPEAR_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(3 * 16, 1 * 16, 16, 16)),
+		BOW_HUD(59, "BOW_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(3 * 16, 1 * 16, 16, 16));
 		
 		private int id;
 		private String name;
@@ -74,7 +82,7 @@ public class MenuItem {
 			String[] des = description.split("✂");
 			this.description = new ArrayList<String>();
 			for(String s : des) {
-				System.out.println(s);
+				//System.out.println(s);
 				this.description.add(s);
 			}
 			this.rawDescription = description;
@@ -87,7 +95,7 @@ public class MenuItem {
 			String[] des = description.split("✂");
 			this.description = new ArrayList<String>();
 			for(String s : des) {
-				System.out.println(s);
+				//System.out.println(s);
 				this.description.add(s);
 			}
 			this.rawDescription = description;

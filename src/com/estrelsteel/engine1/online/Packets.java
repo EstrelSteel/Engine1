@@ -17,7 +17,8 @@ public enum Packets {
 	SHRINE_CAP("007"),		//SHRINE ID, TEAM ID
 	MAP("008"), 			//MAP ID
 	VOTE("009"),			//MAP ID, GM ID
-	REQUEST_VOTES("010");	//
+	REQUEST_VOTES("010"),	//
+	WINNER("011");			//TEAM ID
 	
 	private String packetID;
 	

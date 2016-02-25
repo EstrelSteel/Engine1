@@ -97,7 +97,6 @@ public class Client extends Thread {
 			else if(id.equalsIgnoreCase(Packets.ANIMATION.getID())) {
 				if(!packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
 					packetCache.add(new PendingPacket(msg));
-					System.out.println("\tRECIEVD ANIMATION");
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {

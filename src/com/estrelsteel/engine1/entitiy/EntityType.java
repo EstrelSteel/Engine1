@@ -2,6 +2,7 @@ package com.estrelsteel.engine1.entitiy;
 
 import java.util.ArrayList;
 
+import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.world.Location;
 
 public enum EntityType {
@@ -14,12 +15,12 @@ public enum EntityType {
 	SLASH(5, "SLASH", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 1 * 16, 16, 16)),
 	SLASH_GOLD(6, "SLASH_GOLD", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 2 * 16, 16, 16)),
 	SLASH_RUBY(7, "SLASH_RUBY", "/com/estrelsteel/engine1/res/particle.png", new Location(0 * 16, 3 * 16, 16, 16)),
-	SWORD_DIAMOND(8, "SWORD_DIAMOND", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 0 * 16, 16, 16)),
-	SWORD_GOLD(9, "SWORD_GOLD", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 1 * 16, 16, 16)),
-	SWORD_RUBY(10, "SWORD_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 2 * 16, 16, 16)),
-	WAR_AXE_DIAMOND(11, "WAR_AXE_DIAMOND", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 3 * 16, 16, 16)),
-	WAR_AXE_GOLD(12, "WAR_AXE_GOLD", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 4 * 16, 16, 16)),
-	WAR_AXE_RUBY(13, "WAR_AXE_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 5 * 16, 16, 16)),
+	SWORD_DIAMOND(8, "SWORD_DIAMOND", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 0 * 16, 16, 16), MenuItemType.SWORD_DIAMOND_HUD),
+	SWORD_GOLD(9, "SWORD_GOLD", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 1 * 16, 16, 16), MenuItemType.SWORD_GOLD_HUD),
+	SWORD_RUBY(10, "SWORD_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 2 * 16, 16, 16), MenuItemType.SWORD_RUBY_HUD),
+	WAR_AXE_DIAMOND(11, "WAR_AXE_DIAMOND", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 3 * 16, 16, 16), MenuItemType.WAR_AXE_DIAMOND_HUD),
+	WAR_AXE_GOLD(12, "WAR_AXE_GOLD", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 4 * 16, 16, 16), MenuItemType.WAR_AXE_GOLD_HUD),
+	WAR_AXE_RUBY(13, "WAR_AXE_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 5 * 16, 16, 16), MenuItemType.WAR_AXE_RUBY_HUD),
 	SPEAR(14, "SPEAR", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 6 * 16, 32, 16)),
 	BOW(15, "BOW", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 7 * 16, 16, 16)),
 	LEVER(16, "LEVER", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 0 * 16, 16, 16));
@@ -29,6 +30,7 @@ public enum EntityType {
 	private EntityImage defaultImage;
 	private ArrayList<Animation> animations = new ArrayList<Animation>();
 	private Location loc;
+	private MenuItemType menuType;
 	
 	EntityType(int id, String name, String src, Location loc) {
 		this.id = id;
@@ -38,6 +40,18 @@ public enum EntityType {
 		this.animations = new ArrayList<Animation>();
 		this.animations.add(new Animation(30));
 		this.animations.get(0).addImage(defaultImage);
+		this.menuType = MenuItemType.UNKNOWN;
+	}
+	
+	EntityType(int id, String name, String src, Location loc, MenuItemType menuType) {
+		this.id = id;
+		this.name = name;
+		this.loc = loc;
+		this.defaultImage = new EntityImage(src, this.loc);
+		this.animations = new ArrayList<Animation>();
+		this.animations.add(new Animation(30));
+		this.animations.get(0).addImage(defaultImage);
+		this.menuType = menuType;
 	}
 	
 	public int getID() {
@@ -58,6 +72,10 @@ public enum EntityType {
 	
 	public Location getLocation() {
 		return loc;
+	}
+	
+	public MenuItemType getMenuItemType() {
+		return menuType;
 	}
 	
 	public void addAnimation(Animation animation) {

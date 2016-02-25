@@ -112,19 +112,19 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	//public Font fpsFont;
 	
-	public Menu hud = new Menu("hud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu respawn = new Menu("respawn", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyMainHud = new Menu("lobbyMainHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyVoteHud = new Menu("lobbyVoteHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyMapHud = new Menu("lobbyMapHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyModeHud = new Menu("lobbyModeHud", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu hud = new Menu("hud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu respawn = new Menu("respawn", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyMainHud = new Menu("lobbyMainHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyVoteHud = new Menu("lobbyVoteHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyMapHud = new Menu("lobbyMapHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyModeHud = new Menu("lobbyModeHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
 	public RespawnController respawnHandler = new RespawnController(overlayRespawn, "RespawnHandler", this);
-	public Menu victory =  new Menu("victory", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public Menu defeat =  new Menu("defeat", new Location(-10, -10, 670, 670), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public Menu vic1text = new Menu("vic1text", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
-	public Menu vic2text = new Menu("vic2text", new Location(0, 0, 650, 650), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu victory =  new Menu("victory", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu defeat =  new Menu("defeat", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu vic1text = new Menu("vic1text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
 	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
 	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
@@ -319,6 +319,7 @@ public class Engine1 extends Canvas implements Runnable {
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_N, new Location(37 + (128 * 2), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 16, 64, 64)));
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.SWORD_DIAMOND_HUD, new Location(144 + (60) * 0 + 150 - 32, 650 - 80, 64, 64)));
 		overlayHud.setOpen(false);
 		menus.add(overlayHud);
 		
@@ -403,18 +404,10 @@ public class Engine1 extends Canvas implements Runnable {
 		menus.add(vic2text);
 		
 		player.setEquiped(weapon);
-//		statictest.addTile(new Tile(TileType.TREE_PINE_TOP, new Location(200, 200, 64, 64, 0), false, null));
-//		statictest.addTile(new Tile(TileType.TREE_PINE_BOTTOM, new Location(200, 264, 64, 64, 0), false, null));
-//		statictest.addTile(new Tile(TileType.TREE_TOP, new Location(264, 200, 64, 64, 0), false, null));
-//		statictest.addTile(new Tile(TileType.TREE_BOTTOM, new Location(264, 264, 64, 64, 0), false, null));
 		statictest.addEntity(slash);
 		statictest.addEntity(player);
 		statictest.addPlayer(player);
 		
-//		statictest.addEntity(new Entity(EntityType.SLASH_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SLASH"));
-//		statictest.addEntity(new Entity(EntityType.SWORD_RUBY, new Location(400, 400, 64, 64), 0, true, null, "SWORD"));
-//		statictest.addEntity(new Entity(EntityType.CLOUD, new Location(336, 336, 64, 64), 0, true, null, "CLOUD"));
-		statictest.addCamera(playerCamera);
 		statictest.setMainCamera(playerCamera);
 		statictest.sortToChunks();
 		worlds.add(statictest);
@@ -811,6 +804,11 @@ public class Engine1 extends Canvas implements Runnable {
 									for(Entity s : world.getEntities()) {
 										if(s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
 											s.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[5].trim())));
+										}
+									}
+									if(p.getName().equalsIgnoreCase(player.getName())) {
+										if(player.getEquiped().getType().getMenuItemType() != MenuItemType.UNKNOWN) {
+											overlayHud.getMenuItems().get(5).setType(player.getEquiped().getType().getMenuItemType());
 										}
 									}
 									client.packetCache.remove(i);
