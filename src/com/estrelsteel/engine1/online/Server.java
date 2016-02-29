@@ -140,6 +140,9 @@ public class Server extends Thread {
 					Packets.sendPacketToAllUsers(msg, this);
 					map = msg;
 				}
+				else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
+				}
 				else if(id.equalsIgnoreCase(Packets.VOTE.getID())) {
 					boolean found = false;
 					boolean gfound = false;
@@ -209,6 +212,7 @@ public class Server extends Thread {
 						Packets.sendPacketToAllUsers(Packets.MAP.getID() + "✂" + vote.getID() + "✂" + gmVote.getID(), this);
 					}
 				}
+				
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {
 				sendData("pong".getBytes(), packet.getAddress(), packet.getPort());

@@ -5,8 +5,12 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.Player;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.online.Packets;
+import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
 
 public class EndController extends MenuController {
@@ -26,13 +30,27 @@ public class EndController extends MenuController {
 				item = getMenu().getMenuItems().get(i);
 				if(loc.collidesWith(item.getClickLocation())) {
 					if(item.getType() == MenuItemType.LOBBY_TEXT) {
+						engine.canWin = false;
 						engine.world = Maps.LOBBY.getMap().load();
 						engine.world = engine.addBasics(engine.world);
-						getMenu().setOpen(false);
+						engine.player.getLocation().setX(0);
+						engine.player.getLocation().setY(0);
+						engine.player.moveDown(engine.world);
+						engine.player.setHealth(engine.player.getMaxHealth());
+						engine.player.setActiveAnimationNum(0);
+						engine.victory.setOpen(false);
+						engine.defeat.setOpen(false);
+						engine.lobbyMainHud.setOpen(true);
+						engine.player.setWalkspeed(5);
+						engine.player.setSlowWalkspeed(1);
+						engine.world.setMainCamera(engine.playerCamera);
+						Engine1.client.sendData((Packets.PLAYER_DATA.getID() + "✂" + engine.player.getName() + "✂" + EntityType.WALPOLE.getID() + "✂" +
+								Team.BLUE.getID() + "✂" + EntityType.SWORD_DIAMOND.getID() + "✂" + EntityType.SLASH.getID()).getBytes());
 					}
 					else if(item.getType() == MenuItemType.QUIT_TEXT) {
 						//TODO: Link to main menu
-						getMenu().setOpen(false);
+						engine.victory.setOpen(false);
+						engine.defeat.setOpen(false);
 						try {
 							
 							engine.stop();

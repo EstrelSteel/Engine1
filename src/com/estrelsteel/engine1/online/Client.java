@@ -113,14 +113,34 @@ public class Client extends Thread {
 			}
 			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
 				packetCache.add(new PendingPacket(msg));
-				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + ""))
-				for(Player pl : engine.world.getPlayers()) {
-					if(pl.getTeam() == Team.BLUE) {
-						pl.setTeam(Team.RED);
+				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + "")) {
+					for(Player pl : engine.world.getPlayers()) {
+						if(pl.getTeam() == Team.BLUE) {
+							pl.setTeam(Team.RED);
+						}
+						else if(pl.getTeam() == Team.RED) {
+							pl.setTeam(Team.BLUE);
+						}
 					}
-					else if(pl.getTeam() == Team.RED) {
-						pl.setTeam(Team.BLUE);
-					}
+				}
+			}
+			else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {
+				engine.canWin = false;
+				engine.hud.setOpen(false);
+				engine.overlayHud.setOpen(false);
+				engine.respawn.setOpen(false);
+				engine.overlayRespawn.setOpen(false);
+				engine.lobbyMainHud.setOpen(false);
+				engine.lobbyVoteHud.setOpen(false);
+				engine.lobbyMapHud.setOpen(false);
+				engine.lobbyModeHud.setOpen(false);
+				if(Team.findByID(Engine1.stringtoint(packetArgs[1].trim())) == engine.player.getTeam()) {
+					engine.defeat.setOpen(false);
+					engine.victory.setOpen(true);
+				}
+				else {
+					engine.defeat.setOpen(true);
+					engine.victory.setOpen(false);
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.REQUEST_VOTES.getID())) {
@@ -136,6 +156,7 @@ public class Client extends Thread {
 				engine.lobbyModeHud.setOpen(false);
 				
 			}
+			
 			if(msg.trim().equalsIgnoreCase("pong")) {
 				sendData("Computer 2 Pong Reply".getBytes());
 			}

@@ -20,7 +20,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 10.0;
+		this.damage = 0.1;
 	}
 	
 	public Player(EntityType type, Location loc) {
@@ -28,7 +28,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 10.0;
+		this.damage = 0.1;
 	}
 	
 	public Player(EntityType type, Location loc, Handler controls) {
@@ -36,7 +36,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 10.0;
+		this.damage = 0.1;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, Handler controls) {
@@ -44,7 +44,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 10.0;
+		this.damage = 0.1;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, boolean collide, Handler controls, String name) {
@@ -52,7 +52,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 10.0;
+		this.damage = 0.1;
 	}
 	
 	public Team getTeam() {
@@ -122,7 +122,12 @@ public class Player extends Entity {
 			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation())) && e != engine.player) {
 				((Player) e).setHealth(((Player) e).getHealth() - damage);
 				if(engine.multiplayer) {
-					engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage +  "✂" + getName()).getBytes());
+					if(getType() == EntityType.MINOTAUR) {
+						engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage * 15 +  "✂" + getName()).getBytes());
+					}
+					else {
+						engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage +  "✂" + getName()).getBytes());
+					}
 				}
 			}
 		}

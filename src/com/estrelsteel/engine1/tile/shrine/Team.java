@@ -38,6 +38,16 @@ public enum Team {
 		return Team.OFF;
 	}
 	
+	public static Team getOpposedTeam(Team team) {
+		if(team == Team.RED) {
+			return Team.BLUE;
+		}
+		else if(team == Team.BLUE) {
+			return Team.RED;
+		}
+		return team;
+	}
+	
 	public static Team findByID(int id) {
 		for(Team type : Team.values()) {
 			if(type.getID() == id) {

@@ -8,6 +8,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -106,9 +111,15 @@ public class Engine1 extends Canvas implements Runnable {
 	public static Maps vote = Maps.INVALID;
 	public static Gamemode gmVote = Gamemode.CLASSIC;
 	private PendingPacket packet;
+	public Gamemode gm = Gamemode.CLASSIC;
+	public Maps map = Maps.INVALID;
+	public boolean canWin = false;
 	
 	public Selector selector = new Selector("SELECTOR", this);
 	private AffineTransform selectTrans;
+	
+	public Profile profile = new Profile();
+	private int profileNum = 0;
 	
 	//public Font fpsFont;
 	
@@ -136,6 +147,41 @@ public class Engine1 extends Canvas implements Runnable {
 	public WinController vic2Handler = new WinController(vic2text, "vic1Handler");
 	
 	public void start() {
+		
+		String profileChoice = JOptionPane.showInputDialog("Load profile number(1-3)", "");
+		if(profileChoice == null) {
+			try {
+				stop();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		profileNum = stringtoint(profileChoice);
+		if(profileNum > 3 || profileNum < 1) {
+			System.out.println("PROFILE OUT OF BOUNDS");
+			profileNum = 1;
+		}
+		try {
+			FileReader fr = new FileReader("profile" + profileNum + ".cu1");
+			@SuppressWarnings("resource")
+			BufferedReader br = new BufferedReader(fr);
+			ArrayList<String> lines = new ArrayList<String>();
+			String line = br.readLine();
+			while(line != null) {
+				lines.add(line);
+				line = br.readLine();
+			}
+			profile.load(lines);
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		running = true;
 		addFocusListener(coreHandler);
 		thread = new Thread(this, title + version + "_main");
@@ -411,6 +457,11 @@ public class Engine1 extends Canvas implements Runnable {
 		statictest.setMainCamera(playerCamera);
 		statictest.sortToChunks();
 		worlds.add(statictest);
+
+		
+		profile.loadForPlayer(this);
+		weapon.setName("w_" + player.getName());
+		slash.setName("s_" + player.getName());
 		
 		//fpsFont = new Font();
 		//fpsFont.getTextLocation().setWidth(128);
@@ -472,7 +523,6 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public synchronized void TEMPStartClientServer() {
-		String username;
 		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
 		if(ui == null) {
 			ui = "";
@@ -502,17 +552,12 @@ public class Engine1 extends Canvas implements Runnable {
 		else {
 			client = new Client(this, localIP.split("/")[1], 5006);
 		}
-		username = JOptionPane.showInputDialog("What would you like your username to be", "TEMP Start server...");
-		player.setName(username);
-		weapon.setName("w_" + username);
-		slash.setName("s_" + username);
 		if(server != null) {
 			server.start();
 		}
 		client.start();
-		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID 
-		client.sendData((Packets.LOGIN.getID() + "✂" + username + "✂" + build).getBytes());
-		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + username + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
+		client.sendData((Packets.LOGIN.getID() + "✂" + player.getName() + "✂" + build).getBytes());
+		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + player.getName() + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
 				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
 	}
 	
@@ -528,10 +573,25 @@ public class Engine1 extends Canvas implements Runnable {
 			}
 		}
 		try {
-			thread.join();
+			FileWriter fw = new FileWriter("profile" + profileNum + ".cu1");
+			BufferedWriter bw = new BufferedWriter(fw);
+			ArrayList<String> lines = profile.save();
+			for(String line : lines) {
+				bw.write(line + "\n");
+			}
+			bw.flush();
+			bw.close();
 		}
-		catch (InterruptedException e) {
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+		if(thread != null) {
+			try {
+				thread.join();
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		System.exit(0);
 	}
@@ -592,9 +652,17 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public void tick() {
 		boolean moved = false;
+		@SuppressWarnings("unused")
 		int lastAnimation = -1;
+		
 		tickCount++;
 		if(world != null) {
+			Team vicTeam = Victory.checkVicotry(world, gm);
+			if(vicTeam != Team.OFF && client != null) {
+				if(map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
+					client.sendData((Packets.VICTORY.getID() + "✂" + vicTeam.getID()).getBytes());
+				}
+			}
 			Player p;
 			Location sl;
 			for(Entity e : world.getEntities()) {
@@ -698,11 +766,16 @@ public class Engine1 extends Canvas implements Runnable {
 								e.setActiveAnimationNum(9);
 								e.setWalkspeed(0);
 								e.setSlowWalkspeed(0);
+								world.setMainCamera(killCam);
 								hud.setOpen(false);
 								overlayHud.setOpen(false);
-								respawn.setOpen(true);
-								overlayRespawn.setOpen(true);
-								world.setMainCamera(killCam);
+								if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
+									client.sendData((Packets.VICTORY.getID() + "✂" + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
+								}
+								else {
+									respawn.setOpen(true);
+									overlayRespawn.setOpen(true);
+								}
 							}
 						}
 					}
@@ -835,9 +908,12 @@ public class Engine1 extends Canvas implements Runnable {
 								i--;
 							}
 							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MAP.getID())) {
-								world = Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())).getMap().load();
+								canWin = true;
+								map = Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim()));
+								world = map.getMap().load();
 								world = addBasics(world);
-								if(Gamemode.findByID(stringtoint(packet.getPacketArgs()[2].trim())) == Gamemode.REVERSE) {
+								gm = Gamemode.findByID(stringtoint(packet.getPacketArgs()[2].trim()));
+								if(gm == Gamemode.REVERSE) {
 									if(Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())) != Maps.LOBBY) {
 										updateHelpMenu();
 										if(player.getTeam() == Team.BLUE) {
