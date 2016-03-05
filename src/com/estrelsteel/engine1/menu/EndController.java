@@ -38,9 +38,9 @@ public class EndController extends MenuController {
 						engine.player.moveDown(engine.world);
 						engine.player.setHealth(engine.player.getMaxHealth());
 						engine.player.setActiveAnimationNum(0);
-						engine.victory.setOpen(false);
-						engine.defeat.setOpen(false);
-						engine.lobbyMainHud.setOpen(true);
+						engine.victory.setOpen(false, engine);
+						engine.defeat.setOpen(false, engine);
+						engine.lobbyMainHud.setOpen(true, engine);
 						engine.player.setWalkspeed(5);
 						engine.player.setSlowWalkspeed(1);
 						engine.world.setMainCamera(engine.playerCamera);
@@ -48,16 +48,9 @@ public class EndController extends MenuController {
 								Team.BLUE.getID() + "✂" + EntityType.SWORD_DIAMOND.getID() + "✂" + EntityType.SLASH.getID()).getBytes());
 					}
 					else if(item.getType() == MenuItemType.QUIT_TEXT) {
-						//TODO: Link to main menu
-						engine.victory.setOpen(false);
-						engine.defeat.setOpen(false);
-						try {
-							
-							engine.stop();
-						}
-						catch (IOException e1) {
-							e1.printStackTrace();
-						}
+						engine.victory.setOpen(false, engine);
+						engine.defeat.setOpen(false, engine);
+						engine.mainMenu.setOpen(true, engine);
 					}
 				}
 			}
@@ -93,12 +86,10 @@ public class EndController extends MenuController {
 	}
 
 	public void execute(int id) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void execute(int id, double time) {
-		// TODO Auto-generated method stub
 		
 	}
 	

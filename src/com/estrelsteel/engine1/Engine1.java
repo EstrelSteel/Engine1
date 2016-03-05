@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,12 +35,14 @@ import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.Selector;
 import com.estrelsteel.engine1.maps.Gamemode;
+import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.EndController;
 import com.estrelsteel.engine1.menu.LobbyMainController;
 import com.estrelsteel.engine1.menu.LobbyMapController;
 import com.estrelsteel.engine1.menu.LobbyModeController;
 import com.estrelsteel.engine1.menu.LobbyVoteController;
+import com.estrelsteel.engine1.menu.MainMenuController;
 import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
@@ -50,6 +53,7 @@ import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.PendingPacket;
 import com.estrelsteel.engine1.online.Server;
+import com.estrelsteel.engine1.saves.Profile;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
@@ -74,7 +78,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public int tickCount = 0;
 	public int frames;
 	public boolean debug = false;
-	private boolean showFPS = true;
+	private boolean showFPS = false;
 	public int fps;
 	public int tps;
 	public int focused = 0;
@@ -83,11 +87,11 @@ public class Engine1 extends Canvas implements Runnable {
 	public CoreHandler coreHandler;
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
-	public String title = "Aeris";
-	public String version = "v0.1g";
-	public int build = 7;
+	public String title = "Minotaur";
+	public String version = "v0.1a-Pre1";
+	public static int build = 37;
 	public long time = System.currentTimeMillis();
-	
+	private String savesPath = "";
 	
 	ArrayList<World> worlds = new ArrayList<World>();
 	public World world;
@@ -136,6 +140,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu defeat =  new Menu("defeat", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu vic1text = new Menu("vic1text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
 	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	
 	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
 	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
@@ -145,9 +151,52 @@ public class Engine1 extends Canvas implements Runnable {
 	public LobbyModeController lobbyModeHandler = new LobbyModeController(lobbyModeHud, "LobbyMapHandler", this);
 	public WinController vic1Handler = new WinController(vic1text, "vic1Handler");
 	public WinController vic2Handler = new WinController(vic2text, "vic1Handler");
+	public MainMenuController mainMenuController = new MainMenuController(mainMenu, "MainMenuController", this);
 	
 	public void start() {
+		File saveFolder;
+		if(System.getProperty("os.name").startsWith("Windows")) {
+			savesPath = System.getProperty("user.home") + "/AppData/Roaming/Minotaur";
+		}
+		else if(System.getProperty("os.name").startsWith("Mac")) {
+			savesPath = System.getProperty("user.home") + "/Library/Application Support/Minotaur";
+		}
 		
+		saveFolder = new File(savesPath);
+		if(!saveFolder.exists()) {
+			saveFolder.mkdir();
+			FileReader fr;
+			try {
+				fr = new FileReader("src/com/estrelsteel/engine1/saves/profile0.cu1");
+				@SuppressWarnings("resource")
+				BufferedReader br = new BufferedReader(fr);
+				ArrayList<String> lines = new ArrayList<String>();
+				String line = br.readLine();
+				while(line != null) {
+					lines.add(line);
+					line = br.readLine();
+				}
+				FileWriter fw;
+				BufferedWriter bw;
+				for(int p = 1; p < 4; p++) {
+					fw = new FileWriter(savesPath + "/profile" + p + ".cu1");
+					bw = new BufferedWriter(fw);
+					for(String l : lines) {
+						bw.write(l + "\n");
+					}
+					bw.flush();
+					bw.close();
+				}
+			}
+			catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//END OF SAVE PREP...
 		String profileChoice = JOptionPane.showInputDialog("Load profile number(1-3)", "");
 		if(profileChoice == null) {
 			try {
@@ -164,7 +213,7 @@ public class Engine1 extends Canvas implements Runnable {
 			profileNum = 1;
 		}
 		try {
-			FileReader fr = new FileReader("profile" + profileNum + ".cu1");
+			FileReader fr = new FileReader(savesPath + "/profile" + profileNum + ".cu1");
 			@SuppressWarnings("resource")
 			BufferedReader br = new BufferedReader(fr);
 			ArrayList<String> lines = new ArrayList<String>();
@@ -357,7 +406,7 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 16, 576, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.HEALTH_FULL, new Location(144 + (60) * 5, 650 - 80, 64, 64)));
 		hud.addText("health", new Location(144 + (60) * 5 + 64, 650 - 40, 0, 0));
-		hud.setOpen(false);
+		hud.setOpen(false, this);
 		menus.add(hud);
 		
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 0), 16, 64, 64)));
@@ -366,13 +415,13 @@ public class Engine1 extends Canvas implements Runnable {
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SWORD_DIAMOND_HUD, new Location(144 + (60) * 0 + 150 - 32, 650 - 80, 64, 64)));
-		overlayHud.setOpen(false);
+		overlayHud.setOpen(false, this);
 		menus.add(overlayHud);
 		
 		respawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 650 / 2 + 650 / 8, 576, 64)));
 		respawn.addMenuItem(new MenuItem(MenuItemType.RESPAWN_TEXT, new Location((650 - 512) / 2, 650 / 2 + 650 / 4, 512, 32)));
 		respawn.addMenuItem(new MenuItem(MenuItemType.YOU_DIED_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
-		respawn.setOpen(false);
+		respawn.setOpen(false, this);
 		menus.add(respawn);
 		
 
@@ -382,27 +431,27 @@ public class Engine1 extends Canvas implements Runnable {
 		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 650 / 2 + 650 / 8, 64, 64)));
 		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 650 / 2 + 650 / 8, 64, 64)));
 		overlayRespawn.setController(respawnHandler);
-		overlayRespawn.setOpen(false);
+		overlayRespawn.setOpen(false, this);
 		menus.add(overlayRespawn);
 		
 		victory.addMenuItem(new MenuItem(MenuItemType.VICTORY_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		victory.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
 		victory.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
 		victory.setController(victoryHandler);
-		victory.setOpen(false);
+		victory.setOpen(false, this);
 		menus.add(victory);
 		
 		defeat.addMenuItem(new MenuItem(MenuItemType.DEFEAT_TEXT, new Location((650  - 512) / 2, 650 / 3, 512, 64)));
 		defeat.addMenuItem(new MenuItem(MenuItemType.LOBBY_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 8, 160, 32)));
 		defeat.addMenuItem(new MenuItem(MenuItemType.QUIT_TEXT, new Location((650 - 160) / 2, 650 / 2 + 650 / 4, 160, 32)));
 		defeat.setController(defeatHandler);
-		defeat.setOpen(false);
+		defeat.setOpen(false, this);
 		menus.add(defeat);
 		
 		lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
 		lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.VOTE_BUTTON, new Location(0, 0, 256, 64)));
 		lobbyMainHud.setController(lobbyMainHandler);
-		lobbyMainHud.setOpen(true);
+		lobbyMainHud.setOpen(false, this);
 		menus.add(lobbyMainHud);
 		
 		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
@@ -412,7 +461,7 @@ public class Engine1 extends Canvas implements Runnable {
 		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 128, 256, 64)));
 		lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.MODE_BUTTON, new Location(0, 128, 256, 64)));
 		lobbyVoteHud.setController(lobbyVoteHandler);
-		lobbyVoteHud.setOpen(false);
+		lobbyVoteHud.setOpen(false, this);
 		menus.add(lobbyVoteHud);
 		
 		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
@@ -420,7 +469,7 @@ public class Engine1 extends Canvas implements Runnable {
 		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
 		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.MINES_BUTTON, new Location(0, 64, 256, 64)));
 		lobbyMapHud.setController(lobbyMapHandler);
-		lobbyMapHud.setOpen(false);
+		lobbyMapHud.setOpen(false, this);
 		menus.add(lobbyMapHud);
 		
 		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 0, 256, 64)));
@@ -430,7 +479,7 @@ public class Engine1 extends Canvas implements Runnable {
 		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 128, 256, 64)));
 		lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.REVERSE_BUTTON, new Location(0, 128, 256, 64)));
 		lobbyModeHud.setController(lobbyModeHandler);
-		lobbyModeHud.setOpen(false);
+		lobbyModeHud.setOpen(false, this);
 		menus.add(lobbyModeHud);
 		
 		vic1text.addMenuItem(new MenuItem(MenuItemType.TEAM, new Location((650 - 512) / 2, (650 / 6), 512, 32)));
@@ -438,7 +487,7 @@ public class Engine1 extends Canvas implements Runnable {
 		vic1text.addMenuItem(new MenuItem(MenuItemType.VIC_1_TEXT, new Location((650 - 512) / 2, (650 / 2), 512, 96)));
 		vic1text.addMenuItem(new MenuItem(MenuItemType.PRESS_ENTER, new Location((650 - 352) / 2, 650 - (650 / 8), 352, 32)));
 		vic1text.setController(vic1Handler);
-		vic1text.setOpen(false);
+		vic1text.setOpen(false, this);
 		menus.add(vic1text);
 		
 		vic2text.addMenuItem(new MenuItem(MenuItemType.TEAM, new Location((650 - 512) / 2, (650 / 6), 512, 32)));
@@ -446,8 +495,18 @@ public class Engine1 extends Canvas implements Runnable {
 		vic2text.addMenuItem(new MenuItem(MenuItemType.VIC_2_TEXT, new Location((650 - 512) / 2, (650 / 2), 512, 64)));
 		vic2text.addMenuItem(new MenuItem(MenuItemType.PRESS_ENTER, new Location((650 - 352) / 2, 650 - (650 / 8), 352, 32)));
 		vic2text.setController(vic2Handler);
-		vic2text.setOpen(false);
+		vic2text.setOpen(false, this);
 		menus.add(vic2text);
+		
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.MINOTAUR_TITLE, new Location((WIDTH - 576) / 2, 64, 576, 64)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.MULTIPLAYER_BUTTON, new Location(40, (HEIGHT) / 3, 352, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(80, (HEIGHT) / 3 + 48, 224, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.HOST_BUTTON, new Location(80, (HEIGHT) / 3 + 48, 160, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(80, (HEIGHT) / 3 + 96, 224, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.CONNECT_BUTTON, new Location(80, (HEIGHT) / 3 + 96, 224, 32)));
+		mainMenu.setController(mainMenuController);
+		mainMenu.setOpen(true, this);
+		menus.add(mainMenu);
 		
 		player.setEquiped(weapon);
 		statictest.addEntity(slash);
@@ -470,7 +529,7 @@ public class Engine1 extends Canvas implements Runnable {
 		world = addBasics(world);
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
-		TEMPStartClientServer();
+		//TEMPStartClientServer();
 	}
 	
 	public World addBasics(World world) {
@@ -522,6 +581,54 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 	}
 	
+	public void StartClientServer(boolean startServer) {
+		multiplayer = true;
+		String ip = "";
+		String portStr = "";
+		int port = 5006;
+		if(!startServer) {
+			ip = JOptionPane.showInputDialog("Enter the IP Address", "0.0.0.0");
+		}
+		portStr = JOptionPane.showInputDialog("Enter the port", "5006");
+		port = Integer.parseInt(portStr);
+		if(port < 0) {
+			port = 5006;
+		}
+		if(ip.equalsIgnoreCase("") || ip == null || ip.equalsIgnoreCase("0.0.0.0") || ip.equalsIgnoreCase("localhost")) {
+			try {
+				ip = InetAddress.getLocalHost().toString();
+				ip = ip.split("/")[1];
+			}
+			catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		}
+		if(startServer) {
+			server = new Server(this, port);
+			client = new Client(this, ip, port);
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.ADMIN_BUTTON, new Location(0, 64, 256, 64)));
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+			lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
+			lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
+		}
+		else {
+			client = new Client(this, ip, port);
+		}
+		if(server != null) {
+			server.start();
+		}
+		client.start();
+		client.sendData((Packets.LOGIN.getID() + "✂" + player.getName() + "✂" + build).getBytes());
+		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + player.getName() + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
+				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
+	}
+	
 	public synchronized void TEMPStartClientServer() {
 		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
 		if(ui == null) {
@@ -562,7 +669,7 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public void stop() throws IOException {
-		//Map.generateFile("Lobby", world);
+		//Map.generateFile("Island", world);
 		running = false;
 		if(client != null && server == null) {
 			client.sendData((Packets.DISCONNECT.getID() + "✂" + player.getName()).getBytes());
@@ -573,7 +680,7 @@ public class Engine1 extends Canvas implements Runnable {
 			}
 		}
 		try {
-			FileWriter fw = new FileWriter("profile" + profileNum + ".cu1");
+			FileWriter fw = new FileWriter(savesPath + "/profile" + profileNum + ".cu1");
 			BufferedWriter bw = new BufferedWriter(fw);
 			ArrayList<String> lines = profile.save();
 			for(String line : lines) {
@@ -767,14 +874,14 @@ public class Engine1 extends Canvas implements Runnable {
 								e.setWalkspeed(0);
 								e.setSlowWalkspeed(0);
 								world.setMainCamera(killCam);
-								hud.setOpen(false);
-								overlayHud.setOpen(false);
+								hud.setOpen(false, this);
+								overlayHud.setOpen(false, this);
 								if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
 									client.sendData((Packets.VICTORY.getID() + "✂" + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
 								}
 								else {
-									respawn.setOpen(true);
-									overlayRespawn.setOpen(true);
+									respawn.setOpen(true, this);
+									overlayRespawn.setOpen(true, this);
 								}
 							}
 						}
@@ -917,20 +1024,20 @@ public class Engine1 extends Canvas implements Runnable {
 									if(Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())) != Maps.LOBBY) {
 										updateHelpMenu();
 										if(player.getTeam() == Team.BLUE) {
-											vic2text.setOpen(true);
+											vic2text.setOpen(true, this);
 										}
 										else if(player.getTeam() == Team.RED) {
-											vic1text.setOpen(true);
+											vic1text.setOpen(true, this);
 										}
 									}
 								}
 								else {
 									if(Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim())) != Maps.LOBBY) {
 										if(player.getTeam() == Team.BLUE) {
-											vic1text.setOpen(true);
+											vic1text.setOpen(true, this);
 										}
 										else if(player.getTeam() == Team.RED) {
-											vic2text.setOpen(true);
+											vic2text.setOpen(true, this);
 										}
 									}
 								}
@@ -980,13 +1087,13 @@ public class Engine1 extends Canvas implements Runnable {
 					}
 				}
 			}
+			for(Shrine s : world.getShrines()) {
+				overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 16));
+				overlayRespawn.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 650 / 2 + 650 / 8));
+				s.setIncreasing(0);
+			}
 		}
 		
-		for(Shrine s : world.getShrines()) {
-			overlayHud.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 16));
-			overlayRespawn.getMenuItems().set(s.getID(), Shrine.getHUDShrineItem(s, 650 / 2 + 650 / 8));
-			s.setIncreasing(0);
-		}
 		hud.getText().set(0, (int) player.getHealth() + "/" + (int) player.getMaxHealth());
 		if(player.getHealth() / player.getMaxHealth() < .1) {
 			hud.getMenuItems().get(hud.getMenuItems().size() - 1).setType(MenuItemType.HEALTH_EMPTY); 

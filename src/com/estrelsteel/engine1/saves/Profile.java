@@ -1,9 +1,10 @@
-package com.estrelsteel.engine1;
+package com.estrelsteel.engine1.saves;
 
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
 
@@ -88,6 +89,7 @@ public class Profile {
 	
 	public ArrayList<String> save() {
 		ArrayList<String> lines = new ArrayList<String>();
+		lines.add("version " + Engine1.build);
 		lines.add("username " + username);
 		lines.add("id " + id);
 		for(EntityType t : weapons) {

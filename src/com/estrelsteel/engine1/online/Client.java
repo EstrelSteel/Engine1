@@ -126,21 +126,21 @@ public class Client extends Thread {
 			}
 			else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {
 				engine.canWin = false;
-				engine.hud.setOpen(false);
-				engine.overlayHud.setOpen(false);
-				engine.respawn.setOpen(false);
-				engine.overlayRespawn.setOpen(false);
-				engine.lobbyMainHud.setOpen(false);
-				engine.lobbyVoteHud.setOpen(false);
-				engine.lobbyMapHud.setOpen(false);
-				engine.lobbyModeHud.setOpen(false);
+				engine.hud.setOpen(false, engine);
+				engine.overlayHud.setOpen(false, engine);
+				engine.respawn.setOpen(false, engine);
+				engine.overlayRespawn.setOpen(false, engine);
+				engine.lobbyMainHud.setOpen(false, engine);
+				engine.lobbyVoteHud.setOpen(false, engine);
+				engine.lobbyMapHud.setOpen(false, engine);
+				engine.lobbyModeHud.setOpen(false, engine);
 				if(Team.findByID(Engine1.stringtoint(packetArgs[1].trim())) == engine.player.getTeam()) {
-					engine.defeat.setOpen(false);
-					engine.victory.setOpen(true);
+					engine.defeat.setOpen(false, engine);
+					engine.victory.setOpen(true, engine);
 				}
 				else {
-					engine.defeat.setOpen(true);
-					engine.victory.setOpen(false);
+					engine.defeat.setOpen(true, engine);
+					engine.victory.setOpen(false, engine);
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.REQUEST_VOTES.getID())) {
@@ -148,12 +148,12 @@ public class Client extends Thread {
 					Engine1.vote = Maps.getRandomMap();
 				}
 				sendData((Packets.VOTE.getID() + "✂" + Engine1.vote.getID() + "✂" + Engine1.gmVote.getID()).getBytes());
-				engine.hud.setOpen(true);
-				engine.overlayHud.setOpen(true);
-				engine.lobbyMainHud.setOpen(false);
-				engine.lobbyVoteHud.setOpen(false);
-				engine.lobbyMapHud.setOpen(false);
-				engine.lobbyModeHud.setOpen(false);
+				engine.hud.setOpen(true, engine);
+				engine.overlayHud.setOpen(true, engine);
+				engine.lobbyMainHud.setOpen(false, engine);
+				engine.lobbyVoteHud.setOpen(false, engine);
+				engine.lobbyMapHud.setOpen(false, engine);
+				engine.lobbyModeHud.setOpen(false, engine);
 				
 			}
 			

@@ -142,6 +142,9 @@ public class Server extends Thread {
 				}
 				else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
+					gmVotes = new ArrayList<Vote>();
+					votes = new ArrayList<Vote>();
+					minotaur = "";
 				}
 				else if(id.equalsIgnoreCase(Packets.VOTE.getID())) {
 					boolean found = false;

@@ -29,8 +29,8 @@ public class LobbyModeController extends LobbyMainController implements MouseMot
 				}
 				if(item.getClickLocation().collidesWith(loc)) {
 					if((item.getType() == MenuItemType.BACK_BUTTON)) {
-						engine.lobbyModeHud.setOpen(false);
-						engine.lobbyVoteHud.setOpen(true);
+						engine.lobbyModeHud.setOpen(false, engine);
+						engine.lobbyVoteHud.setOpen(true, engine);
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.BUTTON_SELECTED_1 && item.getClickLocation().getY() > 0) {

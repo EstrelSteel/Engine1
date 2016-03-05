@@ -2,6 +2,7 @@ package com.estrelsteel.engine1.menu;
 
 import java.util.ArrayList;
 
+import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.world.Location;
 
 public class Menu {
@@ -99,6 +100,12 @@ public class Menu {
 	
 	public void setLocation(Location loc) {
 		this.loc = loc;
+		return;
+	}
+	
+	public void setOpen(boolean open, Engine1 engine) {
+		loc = new Location(0, 0, engine.getWidth(), engine.getHeight());
+		setOpen(open);
 		return;
 	}
 	

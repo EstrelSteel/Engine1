@@ -13,7 +13,9 @@ public abstract class Map {
 	public enum Maps {
 		INVALID(-2, null),
 		LOBBY(-1, new Lobby()),
-		MINES(0, new Mine());
+		MINES(0, new Mine()),
+		//ISLAND(1, new Island())
+		;
 		
 		private int id;
 		private Map map;

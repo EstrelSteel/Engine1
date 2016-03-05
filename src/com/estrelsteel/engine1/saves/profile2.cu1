@@ -1,5 +1,6 @@
+version 7
 username NULL
-id 0
+id -1
 weapons 8
 minotaurWeapons 11
 slashes 5

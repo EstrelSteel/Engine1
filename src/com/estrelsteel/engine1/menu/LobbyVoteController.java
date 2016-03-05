@@ -24,18 +24,18 @@ public class LobbyVoteController extends LobbyMainController implements MouseMot
 				item = getMenu().getMenuItems().get(i);
 				if(item.getClickLocation().collidesWith(loc)) {
 					if((item.getType() == MenuItemType.BACK_BUTTON)) {
-						engine.lobbyVoteHud.setOpen(false);
-						engine.lobbyMainHud.setOpen(true);
+						engine.lobbyVoteHud.setOpen(false, engine);
+						engine.lobbyMainHud.setOpen(true, engine);
 						e.consume();
 					}
 					else if((item.getType() == MenuItemType.MAPS_BUTTON)) {
-						engine.lobbyVoteHud.setOpen(false);
-						engine.lobbyMapHud.setOpen(true);
+						engine.lobbyVoteHud.setOpen(false, engine);
+						engine.lobbyMapHud.setOpen(true, engine);
 						e.consume();
 					}
 					else if((item.getType() == MenuItemType.MODE_BUTTON)) {
-						engine.lobbyVoteHud.setOpen(false);
-						engine.lobbyModeHud.setOpen(true);
+						engine.lobbyVoteHud.setOpen(false, engine);
+						engine.lobbyModeHud.setOpen(true, engine);
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {

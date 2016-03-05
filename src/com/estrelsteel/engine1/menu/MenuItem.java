@@ -67,7 +67,12 @@ public class MenuItem {
 		WAR_AXE_GOLD_HUD(56, "WAR_AXE_GOLD_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(1 * 16, 1 * 16, 16, 16)),
 		WAR_AXE_RUBY_HUD(57, "WAR_AXE_RUBY_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(2 * 16, 1 * 16, 16, 16)),
 		SPEAR_HUD(58, "SPEAR_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(3 * 16, 1 * 16, 16, 16)),
-		BOW_HUD(59, "BOW_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(3 * 16, 1 * 16, 16, 16));
+		BOW_HUD(59, "BOW_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(3 * 16, 1 * 16, 16, 16)),
+		MINOTAUR_TITLE(60, "MINOTAUR_TITLE", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 0 * 16, 144, 16)),
+		MULTIPLAYER_BUTTON(61, "MULTIPLAYER_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 2 * 16, 176, 16)),
+		HOST_BUTTON(62, "HOST_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 3 * 16, 80, 16)),
+		CONNECT_BUTTON(63, "CONNECT_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 4 * 16, 112, 16)),
+		SETTINGS_BUTTON(64, "SETTINGS_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 6 * 16, 144, 16));
 		
 		private int id;
 		private String name;

@@ -30,10 +30,10 @@ public class RespawnController extends MenuController {
 				engine.player.setWalkspeed(5);
 				engine.player.setSlowWalkspeed(1);
 				engine.world.setMainCamera(engine.playerCamera);
-				engine.respawn.setOpen(false);
-				engine.overlayRespawn.setOpen(false);
-				engine.hud.setOpen(true);
-				engine.overlayHud.setOpen(true);
+				engine.respawn.setOpen(false, engine);
+				engine.overlayRespawn.setOpen(false, engine);
+				engine.hud.setOpen(true, engine);
+				engine.overlayHud.setOpen(true, engine);
 			}
 		}
 	}

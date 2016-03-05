@@ -29,8 +29,8 @@ public class LobbyMapController extends LobbyMainController implements MouseMoti
 				}
 				if(item.getClickLocation().collidesWith(loc)) {
 					if((item.getType() == MenuItemType.BACK_BUTTON)) {
-						engine.lobbyMapHud.setOpen(false);
-						engine.lobbyVoteHud.setOpen(true);
+						engine.lobbyMapHud.setOpen(false, engine);
+						engine.lobbyVoteHud.setOpen(true, engine);
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.BUTTON_SELECTED_1 && item.getClickLocation().getY() > 0) {
