@@ -140,7 +140,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu defeat =  new Menu("defeat", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
 	public Menu vic1text = new Menu("vic1text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
 	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
-	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 0, 16, 16)));
 	
 	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
@@ -500,10 +500,11 @@ public class Engine1 extends Canvas implements Runnable {
 		
 		mainMenu.addMenuItem(new MenuItem(MenuItemType.MINOTAUR_TITLE, new Location((WIDTH - 576) / 2, 64, 576, 64)));
 		mainMenu.addMenuItem(new MenuItem(MenuItemType.MULTIPLAYER_BUTTON, new Location(40, (HEIGHT) / 3, 352, 32)));
-		mainMenu.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(80, (HEIGHT) / 3 + 48, 224, 32)));
-		mainMenu.addMenuItem(new MenuItem(MenuItemType.HOST_BUTTON, new Location(80, (HEIGHT) / 3 + 48, 160, 32)));
-		mainMenu.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(80, (HEIGHT) / 3 + 96, 224, 32)));
-		mainMenu.addMenuItem(new MenuItem(MenuItemType.CONNECT_BUTTON, new Location(80, (HEIGHT) / 3 + 96, 224, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(80, (HEIGHT) / 3 + 48, 288, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.HOST_BUTTON, new Location(80, (HEIGHT) / 3 + 48, 288, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(80, (HEIGHT) / 3 + 96, 288, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.CONNECT_BUTTON, new Location(80, (HEIGHT) / 3 + 96, 288, 32)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.ESTREL_ICON, new Location(WIDTH - 80, HEIGHT - 80, 64, 64)));
 		mainMenu.setController(mainMenuController);
 		mainMenu.setOpen(true, this);
 		menus.add(mainMenu);
@@ -590,8 +591,13 @@ public class Engine1 extends Canvas implements Runnable {
 			ip = JOptionPane.showInputDialog("Enter the IP Address", "0.0.0.0");
 		}
 		portStr = JOptionPane.showInputDialog("Enter the port", "5006");
-		port = Integer.parseInt(portStr);
-		if(port < 0) {
+		if(portStr != null && !portStr.equalsIgnoreCase("")) {
+			port = Integer.parseInt(portStr);
+			if(port < 0) {
+				port = 5006;
+			}
+		}
+		else {
 			port = 5006;
 		}
 		if(ip.equalsIgnoreCase("") || ip == null || ip.equalsIgnoreCase("0.0.0.0") || ip.equalsIgnoreCase("localhost")) {

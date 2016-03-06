@@ -14,12 +14,12 @@ import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.Vote;
 import com.estrelsteel.engine1.world.Location;
 
-public class MainMenuController extends MenuController implements MouseMotionListener {
+public class MainMenuController extends LobbyMainController implements MouseMotionListener {
 	private Engine1 engine;
 	private MenuItem item;
 	
 	public MainMenuController(Menu menu, String name, Engine1 engine) {
-		super(menu, name);
+		super(menu, name, engine);
 		this.engine = engine;
 	}
 

@@ -70,9 +70,10 @@ public class MenuItem {
 		BOW_HUD(59, "BOW_HUD", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(3 * 16, 1 * 16, 16, 16)),
 		MINOTAUR_TITLE(60, "MINOTAUR_TITLE", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 0 * 16, 144, 16)),
 		MULTIPLAYER_BUTTON(61, "MULTIPLAYER_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 2 * 16, 176, 16)),
-		HOST_BUTTON(62, "HOST_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 3 * 16, 80, 16)),
-		CONNECT_BUTTON(63, "CONNECT_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 4 * 16, 112, 16)),
-		SETTINGS_BUTTON(64, "SETTINGS_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 6 * 16, 144, 16));
+		HOST_BUTTON(62, "HOST_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 3 * 16, 144, 16)),
+		CONNECT_BUTTON(63, "CONNECT_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 4 * 16, 144, 16)),
+		SETTINGS_BUTTON(64, "SETTINGS_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 6 * 16, 144, 16)),
+		ESTREL_ICON(65, "ESTREL_ICON", "null", "/com/estrelsteel/engine1/res/logo.png", new Location(0 * 16, 0 * 16, 128, 128));
 		
 		private int id;
 		private String name;
