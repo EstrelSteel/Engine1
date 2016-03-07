@@ -42,7 +42,7 @@ public class LobbyMapController extends LobbyMainController implements MouseMoti
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
-						Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), engine.server);
+						Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
 						e.consume();
 					}
 				}

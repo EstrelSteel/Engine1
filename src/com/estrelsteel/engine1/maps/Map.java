@@ -5,20 +5,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.world.World;
 
 public abstract class Map {
 	
 	public enum Maps {
+		ISLAND(-3, new Island()),
 		INVALID(-2, null),
 		LOBBY(-1, new Lobby()),
-		MINES(0, new Mine()),
-		//ISLAND(1, new Island())
-		;
+		MINES(0, new Mine());
 		
 		private int id;
 		private Map map;
+		public static final int playableMaps = 1;
 		
 		Maps(int id, Map map) {
 			this.id = id;
@@ -43,7 +42,7 @@ public abstract class Map {
 		}
 		
 		public static Maps getRandomMap() {
-			return Maps.findByID((int) (Math.random() * (Maps.values().length - 2)));
+			return Maps.findByID((int) (Math.random() * playableMaps));
 		}
 	}
 	

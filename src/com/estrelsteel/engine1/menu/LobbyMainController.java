@@ -63,7 +63,9 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 						}
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
-						Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), engine.server);
+						if(Engine1.server.users.size() >= 2) {
+							Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
+						}
 						e.consume();
 					}
 				}

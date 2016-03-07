@@ -25,8 +25,8 @@ public class Server extends Thread {
 	public ArrayList<Vote> gmVotes;
 	public String minotaur;
 	private String map;
-	private boolean join;
 	private int port;
+	@SuppressWarnings("unused")
 	private Engine1 engine;
 	private String msg;
 	private String id;
@@ -44,7 +44,6 @@ public class Server extends Thread {
 		this.votes = new ArrayList<Vote>();
 		this.gmVotes = new ArrayList<Vote>();
 		this.map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID() + "✂" + Gamemode.CLASSIC.getID();
-		this.join = false;
 		this.engine = engine;
 		this.minotaur = "";
 		System.out.println("Online Server");
@@ -54,6 +53,10 @@ public class Server extends Thread {
 		catch (SocketException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getPort() {
+		return port;
 	}
 	
 	public void run() {
@@ -66,7 +69,7 @@ public class Server extends Thread {
 			catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("The server could not be opened because the port is in use.");
-				engine.server = null;
+				Engine1.server = null;
 				return;
 			}
 			msg = new String(packet.getData());
@@ -77,7 +80,7 @@ public class Server extends Thread {
 			//System.out.println("id=" + id + " data=" + packetData);
 			if(id.equalsIgnoreCase(Packets.LOGIN.getID())) {
 				System.out.println(packetArgs[0]);
-				if(Engine1.stringtoint(packetArgs[2].trim()) != engine.build) {
+				if(Engine1.stringtoint(packetArgs[2].trim()) != Engine1.build) {
 					System.out.println("USER JOIN FAILED: OUTDATED CLIENT OR SERVER");
 					Packets.sendPacketToAllUsers(Packets.KICKED.getID() + "✂Outdated client or server.", this);
 				}
@@ -145,6 +148,7 @@ public class Server extends Thread {
 					gmVotes = new ArrayList<Vote>();
 					votes = new ArrayList<Vote>();
 					minotaur = "";
+					map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID() + "✂" + Gamemode.CLASSIC.getID();
 				}
 				else if(id.equalsIgnoreCase(Packets.VOTE.getID())) {
 					boolean found = false;
@@ -212,7 +216,8 @@ public class Server extends Thread {
 									+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID());
 							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
 						}
-						Packets.sendPacketToAllUsers(Packets.MAP.getID() + "✂" + vote.getID() + "✂" + gmVote.getID(), this);
+						map = Packets.MAP.getID() + "✂" + vote.getID() + "✂" + gmVote.getID();
+						Packets.sendPacketToAllUsers(map, this);
 					}
 				}
 				

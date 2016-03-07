@@ -35,7 +35,6 @@ import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.Selector;
 import com.estrelsteel.engine1.maps.Gamemode;
-import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.EndController;
 import com.estrelsteel.engine1.menu.LobbyMainController;
@@ -88,8 +87,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v0.1a-Pre1";
-	public static int build = 37;
+	public String version = "v0.1a-RC3";
+	public static int build = 39;
 	public long time = System.currentTimeMillis();
 	private String savesPath = "";
 	
@@ -160,6 +159,9 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		else if(System.getProperty("os.name").startsWith("Mac")) {
 			savesPath = System.getProperty("user.home") + "/Library/Application Support/Minotaur";
+		}
+		else if(System.getProperty("os.name").startsWith("Linux")) {
+			savesPath = System.getProperty("user.home") + "/Minotaur";
 		}
 		
 		saveFolder = new File(savesPath);
@@ -590,8 +592,14 @@ public class Engine1 extends Canvas implements Runnable {
 		if(!startServer) {
 			ip = JOptionPane.showInputDialog("Enter the IP Address", "0.0.0.0");
 		}
+		if(ip == null) {
+			return;
+		}
 		portStr = JOptionPane.showInputDialog("Enter the port", "5006");
-		if(portStr != null && !portStr.equalsIgnoreCase("")) {
+		if(portStr == null) {
+			return;
+		}
+		if(!portStr.equalsIgnoreCase("")) {
 			port = Integer.parseInt(portStr);
 			if(port < 0) {
 				port = 5006;
@@ -600,7 +608,7 @@ public class Engine1 extends Canvas implements Runnable {
 		else {
 			port = 5006;
 		}
-		if(ip.equalsIgnoreCase("") || ip == null || ip.equalsIgnoreCase("0.0.0.0") || ip.equalsIgnoreCase("localhost")) {
+		if(ip.equalsIgnoreCase("")|| ip.equalsIgnoreCase("0.0.0.0") || ip.equalsIgnoreCase("localhost")) {
 			try {
 				ip = InetAddress.getLocalHost().toString();
 				ip = ip.split("/")[1];
@@ -633,6 +641,9 @@ public class Engine1 extends Canvas implements Runnable {
 		client.sendData((Packets.LOGIN.getID() + "✂" + player.getName() + "✂" + build).getBytes());
 		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + player.getName() + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
 				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
+
+		lobbyMainHud.setOpen(true, this);
+		mainMenu.setOpen(false, this);
 	}
 	
 	public synchronized void TEMPStartClientServer() {

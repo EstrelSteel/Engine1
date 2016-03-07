@@ -77,32 +77,32 @@ public class Player extends Entity {
 	
 	public boolean moveUp(World world) {
 		boolean moved = super.moveUp(world);
-//		if(moved && engine != null && engine.multiplayer) {
-//			engine.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
+//		if(moved && engine != null && Engine1.multiplayer) {
+//			Engine1.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
 //		}
 		return moved;
 	}
 	
 	public boolean moveDown(World world) {
 		boolean moved = super.moveDown(world);
-		if(moved && engine != null && engine.multiplayer) {
-			engine.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
+		if(moved && engine != null && Engine1.multiplayer) {
+			Engine1.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
 		}
 		return moved;
 	}
 	
 	public boolean moveRight(World world) {
 		boolean moved = super.moveRight(world);
-		if(moved && engine != null && engine.multiplayer) {
-			engine.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂"+ getLocation().getX() + "✂" + getLocation().getY()).getBytes());
+		if(moved && engine != null && Engine1.multiplayer) {
+			Engine1.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂"+ getLocation().getX() + "✂" + getLocation().getY()).getBytes());
 		}
 		return moved;
 	}
 	
 	public boolean moveLeft(World world) {
 		boolean moved = super.moveLeft(world);
-		if(moved && engine != null && engine.multiplayer) {
-			engine.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
+		if(moved && engine != null && Engine1.multiplayer) {
+			Engine1.client.sendData((Packets.MOVE.getID() + "✂" + getName() + "✂" + getLocation().getX() + "✂" + getLocation().getY()).getBytes());
 		}
 		return moved;
 	}
@@ -111,8 +111,8 @@ public class Player extends Entity {
 		int lastA = getActiveAnimationNum();
 		super.setActiveAnimationNum(activeAnimation);
 		int newA = getActiveAnimationNum();
-		if(newA != lastA && engine != null && engine.multiplayer) {
-			engine.client.sendData((Packets.ANIMATION.getID() + "✂" + getName() + "✂" + newA).getBytes());
+		if(newA != lastA && engine != null && Engine1.multiplayer) {
+			Engine1.client.sendData((Packets.ANIMATION.getID() + "✂" + getName() + "✂" + newA).getBytes());
 		}
 		return;
 	}
@@ -121,12 +121,12 @@ public class Player extends Entity {
 		for(Entity e : engine.world.getEntities()) {
 			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation())) && e != engine.player) {
 				((Player) e).setHealth(((Player) e).getHealth() - damage);
-				if(engine.multiplayer) {
+				if(Engine1.multiplayer) {
 					if(getType() == EntityType.MINOTAUR) {
-						engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage * 15 +  "✂" + getName()).getBytes());
+						Engine1.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage * 15 +  "✂" + getName()).getBytes());
 					}
 					else {
-						engine.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage +  "✂" + getName()).getBytes());
+						Engine1.client.sendData((Packets.DAMAGE.getID() + "✂" + ((Player) e).getName() + "✂" + damage +  "✂" + getName()).getBytes());
 					}
 				}
 			}

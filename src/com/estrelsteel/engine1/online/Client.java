@@ -77,13 +77,13 @@ public class Client extends Thread {
 				engine.multiWorld.addPlayer(player);
 			}
 			else if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
-				if(engine.server == null) {
+				if(Engine1.server == null) {
 					System.out.println("Disconnected...");
 					return;
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.KICKED.getID())) {
-				if(engine.server == null) {
+				if(Engine1.server == null) {
 					sendData((Packets.DISCONNECT.getID() + "✂" + packetArgs[1].trim()).getBytes());
 					System.out.println("Kicked from the Server: " + packetArgs[2].trim());
 					return;
@@ -122,6 +122,14 @@ public class Client extends Thread {
 							pl.setTeam(Team.BLUE);
 						}
 					}
+				}
+				if(!packetArgs[1].trim().equals(Maps.LOBBY.getID() + "") && !packetArgs[1].trim().equals(Maps.INVALID.getID() + "")) {
+					engine.hud.setOpen(true, engine);
+					engine.overlayHud.setOpen(true, engine);
+					engine.lobbyMainHud.setOpen(false, engine);
+					engine.lobbyVoteHud.setOpen(false, engine);
+					engine.lobbyMapHud.setOpen(false, engine);
+					engine.lobbyModeHud.setOpen(false, engine);
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {

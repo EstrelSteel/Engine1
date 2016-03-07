@@ -47,7 +47,7 @@ public class Launcher extends Applet {
 		engine.setMaximumSize(Engine1.dimension);
 		engine.setPreferredSize(Engine1.dimension);
 		
-		JFrame frame = new JFrame(engine.title + " " + engine.version + " (" + engine.build + ")");
+		JFrame frame = new JFrame(engine.title + " " + engine.version + " (" + Engine1.build + ")");
 		
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setLayout(new BorderLayout());

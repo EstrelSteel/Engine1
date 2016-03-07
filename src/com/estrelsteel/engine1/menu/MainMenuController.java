@@ -4,14 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.JOptionPane;
-
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.maps.Gamemode;
-import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
-import com.estrelsteel.engine1.online.Packets;
-import com.estrelsteel.engine1.online.Vote;
 import com.estrelsteel.engine1.world.Location;
 
 public class MainMenuController extends LobbyMainController implements MouseMotionListener {
@@ -39,14 +33,10 @@ public class MainMenuController extends LobbyMainController implements MouseMoti
 				if(item.getClickLocation().collidesWith(loc)) {
 					if(item.getType() == MenuItemType.HOST_BUTTON) {
 						engine.StartClientServer(true);
-						engine.lobbyMainHud.setOpen(true, engine);
-						engine.mainMenu.setOpen(false, engine);
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.CONNECT_BUTTON) {
 						engine.StartClientServer(false);
-						engine.lobbyMainHud.setOpen(true, engine);
-						engine.mainMenu.setOpen(false, engine);
 						e.consume();
 					}
 				}
