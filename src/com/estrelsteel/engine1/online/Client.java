@@ -16,6 +16,7 @@ import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
+import com.estrelsteel.engine1.world.World;
 
 public class Client extends Thread {
 	private InetAddress ipAddress;
@@ -79,13 +80,27 @@ public class Client extends Thread {
 			else if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
 				if(Engine1.server == null) {
 					System.out.println("Disconnected...");
+					for(int i = 0; i < engine.menus.size(); i++) {
+						engine.menus.get(i).setOpen(false, engine);
+					}
+					engine.mainMenu.setOpen(true, engine);
+					engine.multiWorld = new World(Engine1.WIDTH * Engine1.SCALE, Engine1.HEIGHT * Engine1.SCALE);
 					return;
 				}
+			}
+			else if(id.equalsIgnoreCase(Packets.JOINABLE.getID())) {
+				engine.lobbyMainHud.setOpen(true, engine);
+				engine.mainMenu.setOpen(false, engine);
 			}
 			else if(id.equalsIgnoreCase(Packets.KICKED.getID())) {
 				if(Engine1.server == null) {
 					sendData((Packets.DISCONNECT.getID() + "✂" + packetArgs[1].trim()).getBytes());
 					System.out.println("Kicked from the Server: " + packetArgs[2].trim());
+					for(int i = 0; i < engine.menus.size(); i++) {
+						engine.menus.get(i).setOpen(false, engine);
+					}
+					engine.mainMenu.setOpen(true, engine);
+					engine.multiWorld = new World(Engine1.WIDTH * Engine1.SCALE, Engine1.HEIGHT * Engine1.SCALE);
 					return;
 				}
 			}

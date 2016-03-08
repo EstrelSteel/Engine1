@@ -35,6 +35,7 @@ import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.Selector;
 import com.estrelsteel.engine1.maps.Gamemode;
+import com.estrelsteel.engine1.maps.Victory;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.EndController;
 import com.estrelsteel.engine1.menu.LobbyMainController;
@@ -87,8 +88,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v0.1a-RC3";
-	public static int build = 39;
+	public String version = "v0.1a-RC4";
+	public static int build = 40;
 	public long time = System.currentTimeMillis();
 	private String savesPath = "";
 	
@@ -641,9 +642,6 @@ public class Engine1 extends Canvas implements Runnable {
 		client.sendData((Packets.LOGIN.getID() + "✂" + player.getName() + "✂" + build).getBytes());
 		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + player.getName() + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
 				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
-
-		lobbyMainHud.setOpen(true, this);
-		mainMenu.setOpen(false, this);
 	}
 	
 	public synchronized void TEMPStartClientServer() {

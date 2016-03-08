@@ -1,6 +1,5 @@
-package com.estrelsteel.engine1;
+package com.estrelsteel.engine1.maps;
 
-import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.World;
 

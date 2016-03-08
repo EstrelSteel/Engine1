@@ -7,18 +7,19 @@ import com.estrelsteel.engine1.Engine1;
 
 public enum Packets {
 	INVALID("-01"),
-	LOGIN("000"),
-	DISCONNECT("001"),
-	KICKED("002"),
-	MOVE("003"),			//NAME, X, Y
-	ANIMATION("004"),		//NAME, ANIMATION ID
-	PLAYER_DATA("005"),		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID
-	DAMAGE("006"),			//NAME (hit), DAMAGE, NAME (sender) 
-	SHRINE_CAP("007"),		//SHRINE ID, TEAM ID
-	MAP("008"), 			//MAP ID
-	VOTE("009"),			//MAP ID, GM ID
-	REQUEST_VOTES("010"),	//
-	VICTORY("011");			//TEAM ID
+	LOGIN("000"),			//NAME, BUILD
+	DISCONNECT("001"),		//NAME
+	KICKED("002"),			//NAME, REASON
+	JOINABLE("003"),		//
+	MOVE("004"),			//NAME, X, Y
+	ANIMATION("005"),		//NAME, ANIMATION ID
+	PLAYER_DATA("006"),		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID
+	DAMAGE("007"),			//NAME (hit), DAMAGE, NAME (sender) 
+	SHRINE_CAP("008"),		//SHRINE ID, TEAM ID
+	MAP("009"), 			//MAP ID
+	VOTE("010"),			//MAP ID, GM ID
+	REQUEST_VOTES("011"),	//
+	VICTORY("012");			//TEAM ID
 	
 	private String packetID;
 	

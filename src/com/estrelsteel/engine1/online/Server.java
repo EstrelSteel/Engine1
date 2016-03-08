@@ -106,6 +106,7 @@ public class Server extends Thread {
 				}
 				cachedLoginPackets.add(msg);
 				System.out.println("User " + packetArgs[1].trim() + " has joined");
+				Packets.sendPacketToUser(packetArgs[1].trim(), Packets.JOINABLE.getID(), this);
 			}
 			if(ips.contains(packet.getAddress())) {
 				if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
