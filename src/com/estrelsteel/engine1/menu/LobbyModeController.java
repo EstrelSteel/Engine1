@@ -6,7 +6,6 @@ import java.awt.event.MouseMotionListener;
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
-import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyModeController extends LobbyMainController implements MouseMotionListener {
@@ -46,11 +45,11 @@ public class LobbyModeController extends LobbyMainController implements MouseMot
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
-						Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
+						startGame();
 						e.consume();
 					}
 				}
-				if(item.getClickLocation().getY() == (64 * (Engine1.gmVote.getID() + 1)) && (item.getType() == MenuItemType.BUTTON_NOT_SELECTED)) {
+				if(item.getClickLocation().getY() == (64 * (Engine1.gmVote.getID() + 1)) && (item.getType() == MenuItemType.BUTTON_SELECTED_1)) {
 					item.setType(MenuItemType.BUTTON_SELECTED_2);
 					e.consume();
 				}

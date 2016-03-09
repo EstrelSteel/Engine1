@@ -31,6 +31,12 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 	public void execute(int id, double time) {
 		
 	}
+	
+	public void startGame() {
+		if(Engine1.server.users.size() >= 2) {
+			Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
+		}
+	}
 
 	public void mouseClicked(MouseEvent e) {
 		if(getMenu().isOpen() && !e.isConsumed()) {
@@ -44,7 +50,12 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.ADMIN_BUTTON) {
-						String[] args = JOptionPane.showInputDialog("Enter a command", "").split(" ");
+						String cmd = JOptionPane.showInputDialog("Enter a command", "");
+						if(cmd == null) {
+							e.consume();
+							return;
+						}
+						String[] args = cmd.split(" ");
 						
 						if(args[0].trim().equalsIgnoreCase("pick") && args.length >= 3) {
 							if(args[1].trim().equalsIgnoreCase("map")) {
@@ -63,9 +74,7 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 						}
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
-						if(Engine1.server.users.size() >= 2) {
-							Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
-						}
+						startGame();
 						e.consume();
 					}
 				}

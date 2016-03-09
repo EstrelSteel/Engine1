@@ -20,7 +20,9 @@ public class RespawnController extends MenuController {
 	}
 
 	public void execute(int id) {
-		for(Shrine s : engine.world.getShrines()) {
+		Shrine s;
+		for(int i = 0; i < engine.world.getShrines().size(); i++) {
+			s = engine.world.getShrines().get(i);
 			if(s.getID() == id) {
 				engine.player.setHealth(engine.player.getMaxHealth());
 				engine.player.setActiveAnimationNum(0);
@@ -51,14 +53,21 @@ public class RespawnController extends MenuController {
 					if((item.getType() == MenuItemType.SHRINE_B && engine.player.getTeam() == Team.BLUE)
 							|| (item.getType() == MenuItemType.SHRINE_R && engine.player.getTeam() == Team.RED)
 							|| (item.getType() == MenuItemType.SHRINE_N && engine.player.getTeam() == Team.NEUTRAL)
-							|| (item.getType() == MenuItemType.SHRINE_RAB && engine.player.getTeam() == Team.BLUE)
-							|| (item.getType() == MenuItemType.SHRINE_BAR && engine.player.getTeam() == Team.RED)
 							|| (item.getType() == MenuItemType.SHRINE_BAN && engine.player.getTeam() == Team.NEUTRAL)
 							|| (item.getType() == MenuItemType.SHRINE_RAN && engine.player.getTeam() == Team.NEUTRAL)) {
 						execute(i);
 					}
 					else if(item.getType() == MenuItemType.SHRINE_N && engine.player.getTeam() == Team.NEUTRAL) {
 						execute(i);
+					}
+					else if((item.getType() == MenuItemType.SHRINE_RAB && engine.player.getTeam() == Team.BLUE)
+							|| (item.getType() == MenuItemType.SHRINE_BAR && engine.player.getTeam() == Team.RED)) {
+						if(i == 0) {
+							execute(i);
+						}
+						else if(i == 4) {
+							execute(i);
+						}
 					}
 				}
 			}

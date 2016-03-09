@@ -5,7 +5,6 @@ import java.awt.event.MouseMotionListener;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
-import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyVoteController extends LobbyMainController implements MouseMotionListener {
@@ -39,7 +38,7 @@ public class LobbyVoteController extends LobbyMainController implements MouseMot
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
-						Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
+						startGame();
 						e.consume();
 					}
 				}

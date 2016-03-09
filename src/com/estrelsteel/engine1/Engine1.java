@@ -88,8 +88,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v0.1a-RC4";
-	public static int build = 40;
+	public String version = "v0.1b";
+	public static int build = 41;
 	public long time = System.currentTimeMillis();
 	private String savesPath = "";
 	
@@ -1124,9 +1124,6 @@ public class Engine1 extends Canvas implements Runnable {
 		if(moved && multiplayer) {
 			client.sendData((Packets.MOVE.getID() + "✂" + player.getName() + "✂" + player.getLocation().getX() + "✂" + player.getLocation().getY()).getBytes());
 		}
-//		if(lastAnimation != player.getActiveAnimationNum() && multiplayer) {
-//			client.sendData((Packets.ANIMATION.getID() + "✂" + getName() + "✂" + player.getActiveAnimationNum()).getBytes());
-//		}
 	}
 	
 	public void render() {

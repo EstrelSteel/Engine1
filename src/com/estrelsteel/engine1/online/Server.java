@@ -200,11 +200,15 @@ public class Server extends Thread {
 							}
 							
 						}
+						Team minoTeam = Team.RED;
+						if(gmVote.getID() == Gamemode.REVERSE.getID()) {
+							minoTeam = Team.BLUE;
+						}
 						if(!minotaur.equalsIgnoreCase("")) {
 							for(int i = 0; i < users.size(); i++) {
 								if(minotaur.equalsIgnoreCase(users.get(i))) {
 									cachedPlayerPackets.set(i, Packets.PLAYER_DATA.getID() + "✂" + minotaur
-											+ "✂" + EntityType.MINOTAUR.getID() + "✂" + Team.RED.getID()
+											+ "✂" + EntityType.MINOTAUR.getID() + "✂" + minoTeam.getID()
 											+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID());
 									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(i), this);
 								}
@@ -213,7 +217,7 @@ public class Server extends Thread {
 						else {
 							int r = (int) (Math.random() * users.size());
 							cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + "✂" + users.get(r)
-									+ "✂" + EntityType.MINOTAUR.getID() + "✂" + Team.RED.getID()
+									+ "✂" + EntityType.MINOTAUR.getID() + "✂" + minoTeam.getID()
 									+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID());
 							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
 						}

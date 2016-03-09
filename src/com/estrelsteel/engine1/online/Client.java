@@ -127,7 +127,6 @@ public class Client extends Thread {
 				packetCache.add(new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
-				packetCache.add(new PendingPacket(msg));
 				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + "")) {
 					for(Player pl : engine.world.getPlayers()) {
 						if(pl.getTeam() == Team.BLUE) {
@@ -146,6 +145,8 @@ public class Client extends Thread {
 					engine.lobbyMapHud.setOpen(false, engine);
 					engine.lobbyModeHud.setOpen(false, engine);
 				}
+
+				packetCache.add(new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {
 				engine.canWin = false;

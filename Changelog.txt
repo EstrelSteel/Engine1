@@ -1,0 +1,8 @@
+>>> Minotaur v1.0b (build 41) <<<
+	~ Fixed visual glitch on mode selection menu
+	~ Fixed reverse mode not loading players correctly
+	~ Fixed crash from canceling the admin menu
+	~ Changed respawning to only work on non-attacked shrines, other than the first
+	~ Fixed being able to start server with less than two players on some menus
+	- Removed unused asset files
+	
