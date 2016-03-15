@@ -43,7 +43,7 @@ public class Server extends Thread {
 		this.cachedShrinePackets = new ArrayList<String>();
 		this.votes = new ArrayList<Vote>();
 		this.gmVotes = new ArrayList<Vote>();
-		this.map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID() + "✂" + Gamemode.CLASSIC.getID();
+		this.map = Packets.MAP.getID() + Packets.SPLIT.getID() + Maps.LOBBY.getID() + Packets.SPLIT.getID() + Gamemode.CLASSIC.getID();
 		this.engine = engine;
 		this.minotaur = "";
 		System.out.println("Online Server");
@@ -82,12 +82,12 @@ public class Server extends Thread {
 				System.out.println(packetArgs[0]);
 				if(Engine1.stringtoint(packetArgs[2].trim()) != Engine1.build) {
 					System.out.println("USER JOIN FAILED: OUTDATED CLIENT OR SERVER");
-					Packets.sendPacketToAllUsers(Packets.KICKED.getID() + "✂Outdated client or server.", this);
+					Packets.sendPacketToAllUsers(Packets.KICKED.getID() + Packets.SPLIT.getID() + "Outdated client or server.", this);
 				}
 				for(String username : users) {
 					if(username.equalsIgnoreCase(packetArgs[1].trim())) {
 						System.out.println("USER JOIN FAILED: USERNAME ALREADY IN USE");
-						Packets.sendPacketToAllUsers(Packets.KICKED.getID() + "✂Username already in use.", this);
+						Packets.sendPacketToAllUsers(Packets.KICKED.getID() + Packets.SPLIT.getID() + "Username already in use.", this);
 					}
 				}
 				Packets.sendPacketToAllUsers(msg, this);
@@ -149,7 +149,7 @@ public class Server extends Thread {
 					gmVotes = new ArrayList<Vote>();
 					votes = new ArrayList<Vote>();
 					minotaur = "";
-					map = Packets.MAP.getID() + "✂" + Maps.LOBBY.getID() + "✂" + Gamemode.CLASSIC.getID();
+					map = Packets.MAP.getID() + Packets.SPLIT.getID() + Maps.LOBBY.getID() + Packets.SPLIT.getID() + Gamemode.CLASSIC.getID();
 				}
 				else if(id.equalsIgnoreCase(Packets.VOTE.getID())) {
 					boolean found = false;
@@ -207,21 +207,21 @@ public class Server extends Thread {
 						if(!minotaur.equalsIgnoreCase("")) {
 							for(int i = 0; i < users.size(); i++) {
 								if(minotaur.equalsIgnoreCase(users.get(i))) {
-									cachedPlayerPackets.set(i, Packets.PLAYER_DATA.getID() + "✂" + minotaur
-											+ "✂" + EntityType.MINOTAUR.getID() + "✂" + minoTeam.getID()
-											+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID());
+									cachedPlayerPackets.set(i, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + minotaur
+											+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
+											+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
 									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(i), this);
 								}
 							}
 						}
 						else {
 							int r = (int) (Math.random() * users.size());
-							cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + "✂" + users.get(r)
-									+ "✂" + EntityType.MINOTAUR.getID() + "✂" + minoTeam.getID()
-									+ "✂" + EntityType.WAR_AXE_DIAMOND.getID() + "✂" + EntityType.SLASH.getID());
+							cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + users.get(r)
+									+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
+									+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
 							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
 						}
-						map = Packets.MAP.getID() + "✂" + vote.getID() + "✂" + gmVote.getID();
+						map = Packets.MAP.getID() + Packets.SPLIT.getID() + vote.getID() + Packets.SPLIT.getID() + gmVote.getID();
 						Packets.sendPacketToAllUsers(map, this);
 					}
 				}

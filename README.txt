@@ -1,14 +1,14 @@
 MINOTAUR by EstrelSteel
-version 1.0a-Gold
-build 40
+version 1.1a-Gold
+build 42
 
-release date: 07.03.2016
+release date: 15.03.2016
 
 ###
 
 Development info:
 	Derived from: Engine1 (build 6), Chatroom (build 3)
-	Period: 65 Days
+	Period: 72 Days
 
 
 ###
@@ -29,17 +29,21 @@ Administrator/Host Commands:
 ###
 
 Maps:
-	NAME	| ID
-	--------|----
-	ISLAND	| -3
-	INVALID	| -2
-	LOBBY	| -1
-	MINES	| 0
+	NAME		| ID
+	-----------	|----
+	ISLAND		| -3
+	INVALID		| -2
+	LOBBY		| -1
+	MINES		| 0
+	ISLAND		| 1
+	ISLAND_LOOP	| 2
+	SAND_BAR	| 3
+	ZIG_ZAG		| 4
 	
 ###
 
 Gamemodes:
 	NAME	| ID
-	-------	| ---
+	-------	|---
 	CLASSIC	| 0
 	REVERSE	| 1

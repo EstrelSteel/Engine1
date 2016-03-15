@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.camera.TestCameraControl;
+import com.estrelsteel.engine1.entitiy.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.Animation;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityImage;
@@ -35,6 +36,7 @@ import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.Selector;
 import com.estrelsteel.engine1.maps.Gamemode;
+import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Victory;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.EndController;
@@ -78,6 +80,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public int tickCount = 0;
 	public int frames;
 	public boolean debug = false;
+	private boolean hideDebugHud = false;
 	private boolean showFPS = false;
 	public int fps;
 	public int tps;
@@ -88,8 +91,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v0.1b";
-	public static int build = 41;
+	public String version = "v1.1a";
+	public static int build = 42;
 	public long time = System.currentTimeMillis();
 	private String savesPath = "";
 	
@@ -104,8 +107,10 @@ public class Engine1 extends Canvas implements Runnable {
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
 	public Entity weapon = new Entity(EntityType.SWORD_RUBY, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
 	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
+	public AlarmTrap alarmTrap = new AlarmTrap(new Location(-10000, -10000, 0, 0, 0), "ALARM_TRAP", this);
 	public Location attackLoc;
 	public World multiWorld = new World(WIDTH * SCALE, HEIGHT * SCALE);
+	private Maps devMap = Maps.SAND_BAR;
 	
 	@SuppressWarnings("unused")
 	private Estrelian es2 = new Estrelian();
@@ -141,7 +146,7 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu vic1text = new Menu("vic1text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
 	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
 	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 0, 16, 16)));
-	
+	public Menu alarmMenu = new Menu("alarmMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 0, 16, 16)));
 	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
 	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
@@ -210,7 +215,17 @@ public class Engine1 extends Canvas implements Runnable {
 			}
 			return;
 		}
-		profileNum = stringtoint(profileChoice);
+		try {
+			profileNum = stringtoint(profileChoice);
+		}
+		catch(NumberFormatException e) {
+			try {
+				stop();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 		if(profileNum > 3 || profileNum < 1) {
 			System.out.println("PROFILE OUT OF BOUNDS");
 			profileNum = 1;
@@ -418,6 +433,7 @@ public class Engine1 extends Canvas implements Runnable {
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 3), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SHRINE_R, new Location(37 + (128 * 4), 16, 64, 64)));
 		overlayHud.addMenuItem(new MenuItem(MenuItemType.SWORD_DIAMOND_HUD, new Location(144 + (60) * 0 + 150 - 32, 650 - 80, 64, 64)));
+		overlayHud.addMenuItem(new MenuItem(MenuItemType.ALARM_TRAP_BUTTON, new Location(144 + (60) * 0 + 16, 650 - 140 + 4, 48, 48)));
 		overlayHud.setOpen(false, this);
 		menus.add(overlayHud);
 		
@@ -427,6 +443,9 @@ public class Engine1 extends Canvas implements Runnable {
 		respawn.setOpen(false, this);
 		menus.add(respawn);
 		
+		alarmMenu.addMenuItem(new MenuItem(MenuItemType.ALARM_CLOCK_ICON, new Location(32, 96, 64, 64, 0)));
+		alarmMenu.setOpen(false, this);
+		menus.add(alarmMenu);
 
 		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 0), 650 / 2 + 650 / 8, 64, 64)));
 		overlayRespawn.addMenuItem(new MenuItem(MenuItemType.SHRINE_B, new Location(37 + (128 * 1), 650 / 2 + 650 / 8, 64, 64)));
@@ -471,6 +490,14 @@ public class Engine1 extends Canvas implements Runnable {
 		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BACK_BUTTON, new Location(0, 0, 256, 64)));
 		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
 		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.MINES_BUTTON, new Location(0, 64, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 128, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.ISLAND_BUTTON, new Location(0, 128, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(256, 128, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.ISLAND_LOOP_BUTTON, new Location(256, 128, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 192, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.SAND_BAR_BUTTON, new Location(0, 192, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 256, 256, 64)));
+		lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.ZIG_ZAG_BUTTON, new Location(0, 256, 256, 64)));
 		lobbyMapHud.setController(lobbyMapHandler);
 		lobbyMapHud.setOpen(false, this);
 		menus.add(lobbyMapHud);
@@ -525,11 +552,21 @@ public class Engine1 extends Canvas implements Runnable {
 		profile.loadForPlayer(this);
 		weapon.setName("w_" + player.getName());
 		slash.setName("s_" + player.getName());
+		alarmTrap.setName("at_" + player.getName());
+		alarmTrap.setParent(player);
 		
 		//fpsFont = new Font();
 		//fpsFont.getTextLocation().setWidth(128);
-		
-		world = Maps.LOBBY.getMap().load();
+		if(!debug) {
+			world = Maps.LOBBY.getMap().load();
+		}
+		else {
+			world = devMap.getMap().load();
+			map = devMap;
+			for(Menu m : menus) {
+				m.setOpen(false);
+			}
+		}
 		world = addBasics(world);
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
@@ -538,6 +575,7 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public World addBasics(World world) {
 		//ENTITIES
+		world.addEntity(alarmTrap);
 		world.addEntity(slash);
 		world.addEntity(weapon);
 		world.addEntity(player);
@@ -601,7 +639,12 @@ public class Engine1 extends Canvas implements Runnable {
 			return;
 		}
 		if(!portStr.equalsIgnoreCase("")) {
-			port = Integer.parseInt(portStr);
+			try {
+				port = Integer.parseInt(portStr);
+			}
+			catch(NumberFormatException e) {
+				return;
+			}
 			if(port < 0) {
 				port = 5006;
 			}
@@ -639,59 +682,23 @@ public class Engine1 extends Canvas implements Runnable {
 			server.start();
 		}
 		client.start();
-		client.sendData((Packets.LOGIN.getID() + "✂" + player.getName() + "✂" + build).getBytes());
-		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + player.getName() + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
-				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
-	}
-	
-	public synchronized void TEMPStartClientServer() {
-		String ui = JOptionPane.showInputDialog("Would you like to start a server(y/n)", "TEMP Start server...");
-		if(ui == null) {
-			ui = "";
-		}
-		multiplayer = true;
-		String localIP = "";
-		try {
-			localIP = InetAddress.getLocalHost().toString();
-		}
-		catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		if(ui.equalsIgnoreCase("y")) {
-			server = new Server(this, 5006);
-			client = new Client(this, localIP.split("/")[1], 5006);
-			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 64, 256, 64)));
-			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.ADMIN_BUTTON, new Location(0, 64, 256, 64)));
-			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
-			lobbyMainHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
-			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
-			lobbyVoteHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
-			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
-			lobbyMapHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
-			lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.BUTTON_NOT_SELECTED, new Location(0, 650 - 64, 256, 64)));
-			lobbyModeHud.addMenuItem(new MenuItem(MenuItemType.START_BUTTON, new Location(0, 650 - 64, 256, 64)));
-		}
-		else {
-			client = new Client(this, localIP.split("/")[1], 5006);
-		}
-		if(server != null) {
-			server.start();
-		}
-		client.start();
-		client.sendData((Packets.LOGIN.getID() + "✂" + player.getName() + "✂" + build).getBytes());
-		client.sendData((Packets.PLAYER_DATA.getID() + "✂" + player.getName() + "✂" + player.getType().getID() + "✂" + player.getTeam().getID() + 
-				"✂" + player.getEquiped().getType().getID() + "✂" + slash.getType().getID()).getBytes());
+		client.sendData((Packets.LOGIN.getID() + Packets.SPLIT.getID() + player.getName() + Packets.SPLIT.getID() + build).getBytes());
+		client.sendData((Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + player.getName() + Packets.SPLIT.getID() + player.getType().getID() + Packets.SPLIT.getID() + player.getTeam().getID() + 
+				Packets.SPLIT.getID() + player.getEquiped().getType().getID() + Packets.SPLIT.getID() + slash.getType().getID()).getBytes());
 	}
 	
 	public void stop() throws IOException {
-		//Map.generateFile("Island", world);
+		if(debug) {
+			Map.generateFile(map.name().substring(0, 1) + map.name().substring(1).toLowerCase(), world);
+			System.out.println(map.name().substring(0, 1) + map.name().substring(1).toLowerCase());
+		}
 		running = false;
 		if(client != null && server == null) {
-			client.sendData((Packets.DISCONNECT.getID() + "✂" + player.getName()).getBytes());
+			client.sendData((Packets.DISCONNECT.getID() + Packets.SPLIT.getID() + player.getName()).getBytes());
 		}
 		else if(server != null) {
 			for(String s : server.users) {
-				Packets.sendPacketToUser(s, Packets.KICKED.getID() + "✂" + s + "✂Server Closed...", server);
+				Packets.sendPacketToUser(s, Packets.KICKED.getID() + Packets.SPLIT.getID() + s + Packets.SPLIT.getID() + "Server Closed...", server);
 			}
 		}
 		try {
@@ -782,15 +789,17 @@ public class Engine1 extends Canvas implements Runnable {
 			Team vicTeam = Victory.checkVicotry(world, gm);
 			if(vicTeam != Team.OFF && client != null) {
 				if(map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
-					client.sendData((Packets.VICTORY.getID() + "✂" + vicTeam.getID()).getBytes());
+					client.sendData((Packets.VICTORY.getID() + Packets.SPLIT.getID() + vicTeam.getID()).getBytes());
 				}
 			}
-			Player p;
 			Location sl;
 			for(Entity e : world.getEntities()) {
+				if(e instanceof AlarmTrap) {
+					((AlarmTrap) e).act(world);
+				}
 				lastAnimation = e.getActiveAnimationNum();
 				if(e.getControls() != null) {
-					if(PlayerControls.UP.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					if(PlayerControls.UP.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						if(!moved) {
 							moved = e.moveUp(world);
 						}
@@ -801,7 +810,7 @@ public class Engine1 extends Canvas implements Runnable {
 							e.setActiveAnimationNum(1);
 						}
 					}
-					if(PlayerControls.DOWN.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					if(PlayerControls.DOWN.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						if(!moved) {
 							moved = e.moveDown(world);
 						}
@@ -812,7 +821,7 @@ public class Engine1 extends Canvas implements Runnable {
 							e.setActiveAnimationNum(0);
 						}
 					}
-					if(PlayerControls.RIGHT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					if(PlayerControls.RIGHT.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						if(!moved) {
 							moved = e.moveRight(world);
 						}
@@ -823,7 +832,7 @@ public class Engine1 extends Canvas implements Runnable {
 							e.setActiveAnimationNum(2);
 						}
 					}
-					if(PlayerControls.LEFT.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
+					if(PlayerControls.LEFT.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						if(!moved) {
 							moved = e.moveLeft(world);
 						}
@@ -833,6 +842,10 @@ public class Engine1 extends Canvas implements Runnable {
 						if(!PlayerControls.USE.isPressed()) {
 							e.setActiveAnimationNum(3);
 						}
+					}
+					if(PlayerControls.ONE.isPressed() && hud.isOpen()) {
+						alarmTrap.setTeam(player.getTeam());
+						alarmTrap.moveLocation(player.getLocation());
 					}
 					if((e.getActiveAnimationNum() == 1 || e.getActiveAnimationNum() == 5) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(5);
@@ -892,7 +905,7 @@ public class Engine1 extends Canvas implements Runnable {
 								hud.setOpen(false, this);
 								overlayHud.setOpen(false, this);
 								if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
-									client.sendData((Packets.VICTORY.getID() + "✂" + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
+									client.sendData((Packets.VICTORY.getID() + Packets.SPLIT.getID() + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
 								}
 								else {
 									respawn.setOpen(true, this);
@@ -906,19 +919,22 @@ public class Engine1 extends Canvas implements Runnable {
 			}
 			for(Entity e : world.getEntities()) {
 				e.getCurrentAnimation().setRan(false);
-				if(e instanceof Player) {
-					p = (Player) e;
-					if(client != null && client.packetCache != null) {
-						for(int i = 0; i < client.packetCache.size(); i++) {
-							packet = client.packetCache.get(i);
-							if(packet.shouldDelete()) {
-								client.packetCache.remove(i);
-								i--;
-							}
-							if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MOVE.getID())) {
-								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.getLocation().setX(stringtoint(packet.getPacketArgs()[2].trim()));
-									p.getLocation().setY(stringtoint(packet.getPacketArgs()[3].trim()));
+				if(client != null && client.packetCache != null) {
+					for(int i = 0; i < client.packetCache.size(); i++) {
+						packet = client.packetCache.get(i);
+						if(packet == null) {
+							packet = new PendingPacket(Packets.INVALID.getID(), true, 0);
+						}
+						if(packet.shouldDelete()) {
+							client.packetCache.remove(i);
+							i--;
+						}
+						if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MOVE.getID())) {
+							if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(e.getName().trim())) {
+								e.getLocation().setX(stringtoint(packet.getPacketArgs()[2].trim()));
+								e.getLocation().setY(stringtoint(packet.getPacketArgs()[3].trim()));
+								sl = null;
+								if(e instanceof Player) {
 									if(e.getActiveAnimationNum() == 4) {
 										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 										e.setTopEquip(false);
@@ -944,18 +960,26 @@ public class Engine1 extends Canvas implements Runnable {
 										//e.setTopEquip(false);
 										sl = new Location(1000, 1000, 0, 0, 90);
 									}
-									for(Entity s : world.getEntities()) {
-										if(s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
-											s.setLocation(sl);
+								}
+								for(Entity s : world.getEntities()) {
+									if(sl != null && s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
+										s.setLocation(sl);
+									}
+									else if(s.getName().equalsIgnoreCase(packet.getPacketArgs()[1].trim().substring(3))) {
+										if(e instanceof AlarmTrap && s instanceof Player && ((AlarmTrap) e) != alarmTrap) {
+											((AlarmTrap) e).setTeam(((Player) s).getTeam());
+											((AlarmTrap) e).ghostMoveLocation(((Player) s).getLocation());
 										}
 									}
-									client.packetCache.remove(i);
-									i--;
 								}
+								client.packetCache.remove(i);
+								i--;
 							}
-							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.ANIMATION.getID())) {
-								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.setGhostActiveAnimationNum(stringtoint(packet.getPacketArgs()[2].trim()));
+						}
+						else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.ANIMATION.getID())) {
+							if(e instanceof Player) {
+								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(e.getName().trim())) {
+									((Player) e).setGhostActiveAnimationNum(stringtoint(packet.getPacketArgs()[2].trim()));
 									if(e.getActiveAnimationNum() == 4) {
 										e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
 										e.setTopEquip(false);
@@ -990,18 +1014,20 @@ public class Engine1 extends Canvas implements Runnable {
 									i--;
 								}
 							}
-							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
-								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(p.getName().trim())) {
-									p.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
-									p.setTeam(Team.findByID(stringtoint(packet.getPacketArgs()[3].trim())));
-									p.getEquiped().setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[4].trim())));
+						}
+						else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
+							if(e instanceof Player) {
+								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(e.getName().trim())) {
+									e.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
+									((Player) e).setTeam(Team.findByID(stringtoint(packet.getPacketArgs()[3].trim())));
+									e.getEquiped().setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[4].trim())));
 									updateHelpMenu();
 									for(Entity s : world.getEntities()) {
 										if(s.getName().equalsIgnoreCase("s_" + packet.getPacketArgs()[1].trim())) {
 											s.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[5].trim())));
 										}
 									}
-									if(p.getName().equalsIgnoreCase(player.getName())) {
+									if(e.getName().equalsIgnoreCase(player.getName())) {
 										if(player.getEquiped().getType().getMenuItemType() != MenuItemType.UNKNOWN) {
 											overlayHud.getMenuItems().get(5).setType(player.getEquiped().getType().getMenuItemType());
 										}
@@ -1010,26 +1036,28 @@ public class Engine1 extends Canvas implements Runnable {
 									i--;
 								}
 							}
-							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.DAMAGE.getID())) {
-								for(Entity s : world.getEntities()) {
-									if(s.getName().equalsIgnoreCase(packet.getPacketArgs()[3].trim())) {
-										killCam.setEntity(s);
-									}
+						}
+						else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.DAMAGE.getID())) {
+							for(Entity s : world.getEntities()) {
+								if(s.getName().equalsIgnoreCase(packet.getPacketArgs()[3].trim())) {
+									killCam.setEntity(s);
 								}
-								client.packetCache.remove(i);
-								i--;
 							}
-							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
-								for(Shrine s : world.getShrines()) {
-									if(s.getID() == stringtoint(packet.getPacketArgs()[1].trim())) {
-										s.update(Team.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
-										s.setCount(s.getResetCount());
-									}
+							client.packetCache.remove(i);
+							i--;
+						}
+						else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.SHRINE_CAP.getID())) {
+							for(Shrine s : world.getShrines()) {
+								if(s.getID() == stringtoint(packet.getPacketArgs()[1].trim())) {
+									s.update(Team.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
+									s.setCount(s.getResetCount());
 								}
-								client.packetCache.remove(i);
-								i--;
 							}
-							else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MAP.getID())) {
+							client.packetCache.remove(i);
+							i--;
+						}
+						else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.MAP.getID())) {
+							if(e instanceof Player) {
 								canWin = true;
 								map = Maps.findByID(Engine1.stringtoint(packet.getPacketArgs()[1].trim()));
 								world = map.getMap().load();
@@ -1088,13 +1116,15 @@ public class Engine1 extends Canvas implements Runnable {
 							}
 						}
 					}
-					for(Shrine s : world.getShrines()) {
-						if(s.getLocation().collidesWith(p.getLocation())) {
-							if(p.getActiveAnimationNum() != 9) {
-								if(p.getTeam() == Team.BLUE) {
+				}
+				for(Shrine s : world.getShrines()) {
+					if(e instanceof Player) {
+						if(s.getLocation().collidesWith(e.getLocation())) {
+							if(((Player) e).getActiveAnimationNum() != 9) {
+								if(((Player) e).getTeam() == Team.BLUE) {
 									s.subtractCount(1.0);
 								}
-								else if(p.getTeam() == Team.RED) {
+								else if(((Player) e).getTeam() == Team.RED) {
 									s.addCount(1.0);
 								}
 							}
@@ -1122,7 +1152,7 @@ public class Engine1 extends Canvas implements Runnable {
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
 		if(moved && multiplayer) {
-			client.sendData((Packets.MOVE.getID() + "✂" + player.getName() + "✂" + player.getLocation().getX() + "✂" + player.getLocation().getY()).getBytes());
+			client.sendData((Packets.MOVE.getID() + Packets.SPLIT.getID() + player.getName() + Packets.SPLIT.getID() + player.getLocation().getX() + Packets.SPLIT.getID() + player.getLocation().getY()).getBytes());
 		}
 	}
 	
@@ -1143,12 +1173,12 @@ public class Engine1 extends Canvas implements Runnable {
 		if(world != null) {
 			ctx = world.renderWorld(ctx);
 		}
-		if(showFPS || debug) {
+		if((showFPS || debug) && !hideDebugHud) {
 			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
 			//ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
 		}
 		
-		if(debug && selector != null) {
+		if(debug && selector != null && !hideDebugHud) {
 			//if(selectTrans == null)  {
 			selectTrans = new AffineTransform();
 			selectTrans.translate(650 - 64, 0);

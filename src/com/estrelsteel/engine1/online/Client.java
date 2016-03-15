@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.entitiy.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.Player;
@@ -64,6 +65,9 @@ public class Client extends Thread {
 				Player player = new Player(EntityType.JOHN_SNOW, new Location(0, 0, 64, 64, 0), 5, false, null, packetArgs[1].trim());
 				Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "s_" + packetArgs[1].trim());
 				Entity weapon = new Entity(EntityType.SWORD_DIAMOND, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "w_" + packetArgs[1].trim());
+				AlarmTrap alarmTrap = new AlarmTrap(new Location(-10000, -10000, 0, 0, 0), "at_" + packetArgs[1].trim(), engine);
+				
+				alarmTrap.setParent(player);
 				
 				player.setEquiped(weapon);
 				
@@ -71,11 +75,13 @@ public class Client extends Thread {
 				engine.world.addEntity(weapon);
 				engine.world.addEntity(player);
 				engine.world.addPlayer(player);
+				engine.world.addEntity(alarmTrap);
 				
 				engine.multiWorld.addEntity(slash);
 				engine.multiWorld.addEntity(weapon);
 				engine.multiWorld.addEntity(player);
 				engine.multiWorld.addPlayer(player);
+				engine.multiWorld.addEntity(alarmTrap);
 			}
 			else if(id.equalsIgnoreCase(Packets.DISCONNECT.getID())) {
 				if(Engine1.server == null) {
@@ -94,7 +100,7 @@ public class Client extends Thread {
 			}
 			else if(id.equalsIgnoreCase(Packets.KICKED.getID())) {
 				if(Engine1.server == null) {
-					sendData((Packets.DISCONNECT.getID() + "✂" + packetArgs[1].trim()).getBytes());
+					sendData((Packets.DISCONNECT.getID() + Packets.SPLIT.getID() + packetArgs[1].trim()).getBytes());
 					System.out.println("Kicked from the Server: " + packetArgs[2].trim());
 					for(int i = 0; i < engine.menus.size(); i++) {
 						engine.menus.get(i).setOpen(false, engine);
@@ -115,7 +121,7 @@ public class Client extends Thread {
 				}
 			}
 			else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
-				packetCache.add(new PendingPacket(msg));
+				packetCache.add(0, new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
 				if(packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
@@ -146,7 +152,7 @@ public class Client extends Thread {
 					engine.lobbyModeHud.setOpen(false, engine);
 				}
 
-				packetCache.add(new PendingPacket(msg));
+				packetCache.add(packetCache.size(), new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.VICTORY.getID())) {
 				engine.canWin = false;
@@ -158,6 +164,7 @@ public class Client extends Thread {
 				engine.lobbyVoteHud.setOpen(false, engine);
 				engine.lobbyMapHud.setOpen(false, engine);
 				engine.lobbyModeHud.setOpen(false, engine);
+				engine.alarmMenu.setOpen(false, engine);
 				if(Team.findByID(Engine1.stringtoint(packetArgs[1].trim())) == engine.player.getTeam()) {
 					engine.defeat.setOpen(false, engine);
 					engine.victory.setOpen(true, engine);
@@ -171,7 +178,7 @@ public class Client extends Thread {
 				if(Engine1.vote == Maps.INVALID || Engine1.vote == Maps.LOBBY) {
 					Engine1.vote = Maps.getRandomMap();
 				}
-				sendData((Packets.VOTE.getID() + "✂" + Engine1.vote.getID() + "✂" + Engine1.gmVote.getID()).getBytes());
+				sendData((Packets.VOTE.getID() + Packets.SPLIT.getID() + Engine1.vote.getID() + Packets.SPLIT.getID() + Engine1.gmVote.getID()).getBytes());
 				engine.hud.setOpen(true, engine);
 				engine.overlayHud.setOpen(true, engine);
 				engine.lobbyMainHud.setOpen(false, engine);

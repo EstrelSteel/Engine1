@@ -7,7 +7,7 @@ import com.estrelsteel.engine1.world.World;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
 import com.estrelsteel.engine1.tile.shrine.Team;
 
-public class Island extends Map {
+public class Island_loop extends Map {
 	public World load1(World world) {
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(320, 64, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(320, 0, 64, 64, 0.0), false, null));
@@ -520,14 +520,8 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(-1024, -768, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-960, -832, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-896, -832, 64, 64, 0.0), false, null));
-		world.addTile(new Tile(TileType.WATER, new Location(-832, -832, 64, 64, 0.0), false, null));
-		world.addTile(new Tile(TileType.WATER, new Location(-768, -832, 64, 64, 0.0), false, null));
-		world.addTile(new Tile(TileType.WATER, new Location(-704, -832, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-640, -832, 64, 64, 0.0), false, null));
-		world.addTile(new Tile(TileType.WATER, new Location(-704, -768, 64, 64, 0.0), false, null));
-		world.addTile(new Tile(TileType.WATER, new Location(-832, -768, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-896, -768, 64, 64, 0.0), false, null));
-		world.addTile(new Tile(TileType.WATER, new Location(-768, -768, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-512, -768, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-576, -832, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-512, -832, 64, 64, 0.0), false, null));
@@ -683,15 +677,15 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2112, -896, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2240, -1088, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2176, -1088, 64, 64, 0.0), false, null));
-		world = load2(world);
-		return world;
-	}
-	public World load2(World world) {
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2112, -1088, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2048, -960, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2048, -896, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-2048, -1024, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-1600, -960, 64, 64, 0.0), false, null));
+		world = load2(world);
+		return world;
+	}
+	public World load2(World world) {
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-1600, -1024, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-1600, -896, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.STONE_BRICK, new Location(-960, -1088, 64, 64, 0.0), false, null));
@@ -1330,16 +1324,16 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.SAND, new Location(-640, -1856, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-640, -1984, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-768, -2048, 64, 64, 0.0), false, null));
-		world = load3(world);
-		return world;
-	}
-	public World load3(World world) {
 		world.addTile(new Tile(TileType.GRASS, new Location(-832, -2048, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-896, -2048, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-960, -2048, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-960, -2112, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-1024, -2112, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-1024, -2048, 64, 64, 0.0), false, null));
+		world = load3(world);
+		return world;
+	}
+	public World load3(World world) {
 		world.addTile(new Tile(TileType.GRASS, new Location(-1088, -2048, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-1088, -1984, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.GRASS, new Location(-1088, -1920, 64, 64, 0.0), false, null));
@@ -2032,16 +2026,16 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(0, -1152, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(64, -1216, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(64, -1152, 64, 64, 0.0), false, null));
-		world = load4(world);
-		return world;
-	}
-	public World load4(World world) {
 		world.addTile(new Tile(TileType.WATER, new Location(128, -1216, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(128, -1280, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(128, -1344, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(128, -1408, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(64, -1408, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(0, -1408, 64, 64, 0.0), false, null));
+		world = load4(world);
+		return world;
+	}
+	public World load4(World world) {
 		world.addTile(new Tile(TileType.WATER, new Location(0, -1344, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(0, -1472, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(0, -1536, 64, 64, 0.0), false, null));
@@ -2709,16 +2703,16 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-1792, -1728, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-1728, -2368, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-1792, -2368, 64, 64, 90.0), false, null));
-		world = load5(world);
-		return world;
-	}
-	public World load5(World world) {
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-1664, -2432, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-1600, -2432, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-1536, -2368, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-2112, -2368, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-2176, -2432, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-2240, -2432, 64, 64, 90.0), false, null));
+		world = load5(world);
+		return world;
+	}
+	public World load5(World world) {
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-2304, -2432, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-2368, -2304, 64, 64, 90.0), false, null));
 		world.addTile(new Tile(TileType.WATER_OVERLAY, new Location(-2304, -1024, 64, 64, 90.0), false, null));
@@ -3243,9 +3237,6 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-512, -896, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-576, -832, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-640, -832, 64, 64, 0.0), true, null));
-		world.addTile(new Tile(TileType.UNKOWN, new Location(-704, -832, 64, 64, 0.0), true, null));
-		world.addTile(new Tile(TileType.UNKOWN, new Location(-768, -832, 64, 64, 0.0), true, null));
-		world.addTile(new Tile(TileType.UNKOWN, new Location(-832, -832, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-896, -832, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-960, -832, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-960, -768, 64, 64, 0.0), true, null));
@@ -3368,10 +3359,6 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(0, -1408, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(0, -1344, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(64, -1408, 64, 64, 0.0), true, null));
-		world = load6(world);
-		return world;
-	}
-	public World load6(World world) {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(128, -1344, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(128, -1280, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(64, -1216, 64, 64, 0.0), true, null));
@@ -3382,6 +3369,10 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(64, -896, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(128, -896, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(192, -896, 64, 64, 0.0), true, null));
+		world = load6(world);
+		return world;
+	}
+	public World load6(World world) {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(256, -896, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(320, -960, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(384, -1024, 64, 64, 0.0), true, null));
@@ -3533,9 +3524,6 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-1152, -704, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-960, -768, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-896, -768, 64, 64, 0.0), true, null));
-		world.addTile(new Tile(TileType.UNKOWN, new Location(-832, -768, 64, 64, 0.0), true, null));
-		world.addTile(new Tile(TileType.UNKOWN, new Location(-768, -768, 64, 64, 0.0), true, null));
-		world.addTile(new Tile(TileType.UNKOWN, new Location(-704, -768, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-512, -768, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-448, -704, 64, 64, 0.0), true, null));
 		world.addTile(new Tile(TileType.UNKOWN, new Location(-384, -640, 64, 64, 0.0), true, null));
@@ -4069,10 +4057,6 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(960, -1088, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(960, -1152, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(960, -1216, 64, 64, 0.0), false, null));
-		world = load7(world);
-		return world;
-	}
-	public World load7(World world) {
 		world.addTile(new Tile(TileType.WATER, new Location(960, -1280, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(960, -1344, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(1024, -960, 64, 64, 0.0), false, null));
@@ -4086,6 +4070,10 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(832, -832, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(896, -832, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(960, -832, 64, 64, 0.0), false, null));
+		world = load7(world);
+		return world;
+	}
+	public World load7(World world) {
 		world.addTile(new Tile(TileType.WATER, new Location(1024, -832, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(1024, -768, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(960, -768, 64, 64, 0.0), false, null));
@@ -4772,10 +4760,6 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(-1600, -576, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1600, -512, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1600, -448, 64, 64, 0.0), false, null));
-		world = load8(world);
-		return world;
-	}
-	public World load8(World world) {
 		world.addTile(new Tile(TileType.WATER, new Location(-1664, -448, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1664, -512, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1664, -576, 64, 64, 0.0), false, null));
@@ -4789,6 +4773,10 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(-1792, -512, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1792, -576, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1792, -640, 64, 64, 0.0), false, null));
+		world = load8(world);
+		return world;
+	}
+	public World load8(World world) {
 		world.addTile(new Tile(TileType.WATER, new Location(-1792, -704, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1792, -768, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1856, -768, 64, 64, 0.0), false, null));
@@ -5051,11 +5039,23 @@ public class Island extends Map {
 		world.addTile(new Tile(TileType.WATER, new Location(-1664, -2624, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1664, -2688, 64, 64, 0.0), false, null));
 		world.addTile(new Tile(TileType.WATER, new Location(-1664, -2752, 64, 64, 0.0), false, null));
-		world.addShrine(new Shrine(0, Team.BLUE, new Location(-832, -1088, 192, 192, 0.0)));
-		world.addShrine(new Shrine(1, Team.BLUE, new Location(-896, -1920, 192, 192, 0.0)));
-		world.addShrine(new Shrine(2, Team.NEUTRAL, new Location(448, 0, 192, 192, 0.0)));
+		world.addTile(new Tile(TileType.WATER, new Location(-832, -768, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WATER, new Location(-832, -832, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WATER, new Location(-768, -832, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WATER, new Location(-768, -768, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WATER, new Location(-704, -768, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WATER, new Location(-704, -832, 64, 64, 0.0), false, null));
+		world.addTile(new Tile(TileType.WOODEN_BRIDGE_CENTRE2, new Location(-768, -768, 64, 64, 90.0), false, null));
+		world.addTile(new Tile(TileType.WOODEN_BRIDGE_CENTRE2, new Location(-768, -832, 64, 64, 90.0), false, null));
+		world.addTile(new Tile(TileType.WOODEN_BRIDGE_EDGE2, new Location(-832, -832, 64, 64, 90.0), false, null));
+		world.addTile(new Tile(TileType.WOODEN_BRIDGE_EDGE2, new Location(-832, -768, 64, 64, 90.0), false, null));
+		world.addTile(new Tile(TileType.WOODEN_BRIDGE_EDGE1, new Location(-704, -768, 64, 64, 270.0), false, null));
+		world.addTile(new Tile(TileType.WOODEN_BRIDGE_EDGE1, new Location(-704, -832, 64, 64, 270.0), false, null));
+		world.addShrine(new Shrine(0, Team.BLUE, new Location(-832, -640, 192, 192, 0.0)));
+		world.addShrine(new Shrine(1, Team.BLUE, new Location(-832, -1088, 192, 192, 0.0)));
+		world.addShrine(new Shrine(2, Team.NEUTRAL, new Location(-896, -1920, 192, 192, 0.0)));
 		world.addShrine(new Shrine(3, Team.RED, new Location(576, 1280, 192, 192, 0.0)));
-		world.addShrine(new Shrine(4, Team.RED, new Location(-832, -640, 192, 192, 0.0)));
+		world.addShrine(new Shrine(4, Team.RED, new Location(448, 0, 192, 192, 0.0)));
 		return world;
 	}
 }

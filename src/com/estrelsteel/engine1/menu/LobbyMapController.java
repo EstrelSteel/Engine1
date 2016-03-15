@@ -40,13 +40,33 @@ public class LobbyMapController extends LobbyMainController implements MouseMoti
 						Engine1.vote = Maps.MINES;
 						e.consume();
 					}
+					else if(item.getType() == MenuItemType.ISLAND_BUTTON) {
+						Engine1.vote = Maps.ISLAND;
+						e.consume();
+					}
+					else if(item.getType() == MenuItemType.ISLAND_LOOP_BUTTON) {
+						Engine1.vote = Maps.ISLAND_LOOP;
+						e.consume();
+					}
+					else if(item.getType() == MenuItemType.SAND_BAR_BUTTON) {
+						Engine1.vote = Maps.SAND_BAR;
+						e.consume();
+					}
+					else if(item.getType() == MenuItemType.ZIG_ZAG_BUTTON) {
+						Engine1.vote = Maps.ZIG_ZAG;
+						e.consume();
+					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
 						startGame();
 						e.consume();
 					}
 				}
-				if(item.getClickLocation().getY() == (64 * (Engine1.vote.getID() + 1)) && (item.getType() == MenuItemType.BUTTON_NOT_SELECTED)) {
-					item.setType(MenuItemType.BUTTON_SELECTED_2);
+				if(item.getType().getName().equalsIgnoreCase(Engine1.vote.name() + "_BUTTON")) {
+					for(int x = 0; x < getMenu().getMenuItems().size(); x++) {
+						if(getMenu().getMenuItems().get(x).getClickLocation().equals(item.getClickLocation()) && getMenu().getMenuItems().get(x) != item) {
+							getMenu().getMenuItems().get(x).setType(MenuItemType.BUTTON_SELECTED_2);
+						}
+					}
 					e.consume();
 				}
 			}

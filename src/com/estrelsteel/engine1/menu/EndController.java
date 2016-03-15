@@ -42,8 +42,8 @@ public class EndController extends MenuController {
 						engine.player.setWalkspeed(5);
 						engine.player.setSlowWalkspeed(1);
 						engine.world.setMainCamera(engine.playerCamera);
-						Engine1.client.sendData((Packets.PLAYER_DATA.getID() + "✂" + engine.player.getName() + "✂" + EntityType.WALPOLE.getID() + "✂" +
-								Team.BLUE.getID() + "✂" + EntityType.SWORD_DIAMOND.getID() + "✂" + EntityType.SLASH.getID()).getBytes());
+						Engine1.client.sendData((Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + engine.player.getName() + Packets.SPLIT.getID() + EntityType.WALPOLE.getID() + Packets.SPLIT.getID() +
+								Team.BLUE.getID() + Packets.SPLIT.getID() + EntityType.SWORD_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID()).getBytes());
 					}
 					else if(item.getType() == MenuItemType.QUIT_TEXT) {
 						engine.victory.setOpen(false, engine);

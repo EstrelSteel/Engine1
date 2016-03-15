@@ -23,7 +23,8 @@ public enum EntityType {
 	WAR_AXE_RUBY(13, "WAR_AXE_RUBY", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 5 * 16, 16, 16), MenuItemType.WAR_AXE_RUBY_HUD),
 	SPEAR(14, "SPEAR", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 6 * 16, 32, 16)),
 	BOW(15, "BOW", "/com/estrelsteel/engine1/res/weapon.png", new Location(0 * 16, 7 * 16, 16, 16)),
-	LEVER(16, "LEVER", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 0 * 16, 16, 16));
+	LEVER(16, "LEVER", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 0 * 16, 16, 16)),
+	ALARM_TRAP(17, "ALARM_TRAP", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 3 * 16, 48, 48));
 	
 	private int id;
 	private String name;

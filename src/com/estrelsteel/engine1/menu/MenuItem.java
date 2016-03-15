@@ -41,7 +41,7 @@ public class MenuItem {
 		GAMEMODE_BUTTON(30, "GAMEMODE_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 2 * 16, 160, 16)),
 		ADMIN_BUTTON(31, "ADMIN_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(10 * 16, 2 * 16, 96, 16)),
 		BACK_BUTTON(32, "BACK_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 3 * 16, 64, 16)),
-		ISLAND_MINES_BUTTON(33, "ISLAND_MINES_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 5 * 16, 208, 16)),
+		ISLAND_BUTTON(33, "ISLAND_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 5 * 16, 99, 16)),
 		MINES_BUTTON(34, "MINES_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 6 * 16, 80, 16)),
 		HEALTH_FULL(35, "HEALTH_FULL", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(0 * 16, 2 * 16, 16, 16)),
 		HEALTH_HALF(36, "HEALTH_HALF", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(1 * 16, 2 * 16, 16, 16)),
@@ -73,7 +73,12 @@ public class MenuItem {
 		HOST_BUTTON(62, "HOST_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 3 * 16, 144, 16)),
 		CONNECT_BUTTON(63, "CONNECT_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 4 * 16, 144, 16)),
 		SETTINGS_BUTTON(64, "SETTINGS_BUTTON", "null", "/com/estrelsteel/engine1/res/main_menu.png", new Location(0 * 16, 6 * 16, 144, 16)),
-		ESTREL_ICON(65, "ESTREL_ICON", "null", "/com/estrelsteel/engine1/res/logo.png", new Location(0 * 16, 0 * 16, 128, 128));
+		ESTREL_ICON(65, "ESTREL_ICON", "null", "/com/estrelsteel/engine1/res/logo.png", new Location(0 * 16, 0 * 16, 128, 128)),
+		ISLAND_LOOP_BUTTON(66, "ISLAND_LOOP_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 7 * 16, 64, 16)),
+		SAND_BAR_BUTTON(67, "SAND_BAR_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 8 * 16, 117, 16)),
+		ZIG_ZAG_BUTTON(68, "ZIG_ZAG_BUTTON", "null", "/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 9 * 16, 106, 16)),
+		ALARM_CLOCK_ICON(69, "ALARM_CLOCK_ICON", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(7 * 16, 2 * 16, 16, 16)),
+		ALARM_TRAP_BUTTON(70, "ALARM_TRAP_BUTTON", "null", "/com/estrelsteel/engine1/res/hud.png", new Location(9 * 16, 4 * 16, 16, 16));
 		
 		private int id;
 		private String name;

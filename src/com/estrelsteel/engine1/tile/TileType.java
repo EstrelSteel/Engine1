@@ -81,7 +81,12 @@ public enum TileType {
 	FILTER_BLUE(74, "FILTER_BLUE", "/com/estrelsteel/engine1/res/aeris.png", new Location(4 * 16, 1 * 16, 16, 16)),
 	FILTER_BLACK(75, "FILTER_BLACK", "/com/estrelsteel/engine1/res/aeris.png", new Location(5 * 16, 1 * 16, 16, 16)),
 	FILTER_GREEN(76, "FILTER_GREEN", "/com/estrelsteel/engine1/res/aeris.png", new Location(6 * 16, 1 * 16, 16, 16)),
-	FILTER_PURPLE(77, "FILTER_PURPLE", "/com/estrelsteel/engine1/res/aeris.png", new Location(7 * 16, 1 * 16, 16, 16));
+	FILTER_PURPLE(77, "FILTER_PURPLE", "/com/estrelsteel/engine1/res/aeris.png", new Location(7 * 16, 1 * 16, 16, 16)),
+	NUMBER_1(78, "NUMBER_1", "/com/estrelsteel/engine1/res/aeris.png", new Location(0 * 16, 2 * 16, 16, 16)),
+	NUMBER_2(79, "NUMBER_2", "/com/estrelsteel/engine1/res/aeris.png", new Location(1 * 16, 2 * 16, 16, 16)),
+	NUMBER_3(80, "NUMBER_3", "/com/estrelsteel/engine1/res/aeris.png", new Location(2 * 16, 2 * 16, 16, 16)),
+	NUMBER_4(81, "NUMBER_4", "/com/estrelsteel/engine1/res/aeris.png", new Location(3 * 16, 2 * 16, 16, 16)),
+	NUMBER_5(82, "NUMBER_5", "/com/estrelsteel/engine1/res/aeris.png", new Location(4 * 16, 2 * 16, 16, 16));
 	
 	private int id;
 	private String name;

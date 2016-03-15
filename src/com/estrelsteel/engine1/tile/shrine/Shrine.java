@@ -63,6 +63,22 @@ public class Shrine {
 			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 180), false, null));
 			tiles.add(new Tile(TileType.SHRINE_EDGE, new Location(loc.getX() + 128, loc.getY() + 128, 64, 64, 90), false, null));
 			
+			if(id + 1 == 1) {
+				tiles.add(new Tile(TileType.NUMBER_1, new Location(loc.getX() + 64, loc.getY() + 64, 176, 176, 0), false, null));
+			}
+			else if(id + 1 == 2) {
+				tiles.add(new Tile(TileType.NUMBER_2, new Location(loc.getX() + 64, loc.getY() + 64, 176, 176, 0), false, null));
+			}
+			else if(id + 1 == 3) {
+				tiles.add(new Tile(TileType.NUMBER_3, new Location(loc.getX() + 64, loc.getY() + 64, 176, 176, 0), false, null));
+			}
+			else if(id + 1 == 4) {
+				tiles.add(new Tile(TileType.NUMBER_4, new Location(loc.getX() + 64, loc.getY() + 64, 176, 176, 0), false, null));
+			}
+			else if(id + 1 == 5) {
+				tiles.add(new Tile(TileType.NUMBER_5, new Location(loc.getX() + 64, loc.getY() + 64, 176, 176, 0), false, null));
+			}
+			
 			// EH!!!
 			
 			tiles.add(new Tile(TileType.FILTER_GOLD, new Location(loc.getX(), loc.getY(), 64, 64, 0), false, null));
@@ -209,7 +225,7 @@ public class Shrine {
 				update();
 			}
 			if(Engine1.multiplayer) {
-				Engine1.client.sendData((Packets.SHRINE_CAP.getID() + "✂" + id + "✂" + team.getID()).getBytes());
+				Engine1.client.sendData((Packets.SHRINE_CAP.getID() + Packets.SPLIT.getID() + id + Packets.SPLIT.getID() + team.getID()).getBytes());
 			}
 			return true;
 		}
@@ -220,7 +236,7 @@ public class Shrine {
 				update();
 			}
 			if(Engine1.multiplayer) {
-				Engine1.client.sendData((Packets.SHRINE_CAP.getID() + "✂" + id + "✂" + team.getID()).getBytes());
+				Engine1.client.sendData((Packets.SHRINE_CAP.getID() + Packets.SPLIT.getID() + id + Packets.SPLIT.getID() + team.getID()).getBytes());
 			}
 			return true;
 		}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.estrelsteel.engine1.Engine1;
 
 public enum Packets {
+	SPLIT("~"),
 	INVALID("-01"),
 	LOGIN("000"),			//NAME, BUILD
 	DISCONNECT("001"),		//NAME
@@ -35,7 +36,7 @@ public enum Packets {
 		if(msg == null) {
 			return null;
 		}
-		return msg.split("✂");
+		return msg.split(Packets.SPLIT.getID());
 	}
 	
 	public static String trimToID(String packet) {

@@ -10,14 +10,17 @@ import com.estrelsteel.engine1.world.World;
 public abstract class Map {
 	
 	public enum Maps {
-		ISLAND(-3, new Island()),
 		INVALID(-2, null),
 		LOBBY(-1, new Lobby()),
-		MINES(0, new Mine());
+		MINES(0, new Mine()),
+		ISLAND(1, new Island()),
+		ISLAND_LOOP(2, new Island_loop()),
+		SAND_BAR(3, new Sand_bar()),
+		ZIG_ZAG(4, new Zig_zag());
 		
 		private int id;
 		private Map map;
-		public static final int playableMaps = 1;
+		public static final int playableMaps = 5;
 		
 		Maps(int id, Map map) {
 			this.id = id;

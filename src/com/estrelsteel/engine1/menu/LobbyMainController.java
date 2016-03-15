@@ -33,7 +33,7 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 	}
 	
 	public void startGame() {
-		if(Engine1.server.users.size() >= 2) {
+		if(Engine1.server.users.size() >= 2 || engine.debug) {
 			Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
 		}
 	}
