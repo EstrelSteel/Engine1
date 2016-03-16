@@ -12,7 +12,8 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
-import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.entitiy.player.Player;
+import com.estrelsteel.engine1.entitiy.player.PlayerClass;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.tile.shrine.Team;
@@ -186,6 +187,19 @@ public class Client extends Thread {
 				engine.lobbyMapHud.setOpen(false, engine);
 				engine.lobbyModeHud.setOpen(false, engine);
 				
+			}
+			else if(id.equalsIgnoreCase(Packets.CLASSIFY.getID())) {
+				for(PlayerClass c : engine.profile.getPlayerClasses()) {
+					try {
+						if(c.getPlayerType().getID() == Integer.parseInt(packetArgs[2].trim())) {
+							engine.player = c.convertPlayerToClass(engine.player);
+							break;
+						}	
+					}
+					catch(NumberFormatException e) {
+						System.out.println("NON-VALID ID");
+					}
+				}
 			}
 			
 			if(msg.trim().equalsIgnoreCase("pong")) {

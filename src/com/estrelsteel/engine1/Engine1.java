@@ -28,7 +28,7 @@ import com.estrelsteel.engine1.entitiy.Animation;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityImage;
 import com.estrelsteel.engine1.entitiy.EntityType;
-import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.estrelian.Estrelian;
 import com.estrelsteel.engine1.handler.CoreHandler;
 import com.estrelsteel.engine1.handler.Handler;
@@ -549,7 +549,7 @@ public class Engine1 extends Canvas implements Runnable {
 		worlds.add(statictest);
 
 		
-		profile.loadForPlayer(this);
+		player = profile.configPlayer(player);
 		weapon.setName("w_" + player.getName());
 		slash.setName("s_" + player.getName());
 		alarmTrap.setName("at_" + player.getName());
@@ -1017,7 +1017,7 @@ public class Engine1 extends Canvas implements Runnable {
 						}
 						else if(Packets.trimToID(packet.getMessage()).equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
 							if(e instanceof Player) {
-								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(e.getName().trim())) {
+								if(packet.getPacketArgs()[1].trim().equalsIgnoreCase(e.getName().trim()) && !e.getName().equalsIgnoreCase(player.getName())) {
 									e.setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[2].trim())));
 									((Player) e).setTeam(Team.findByID(stringtoint(packet.getPacketArgs()[3].trim())));
 									e.getEquiped().setType(EntityType.findByID(stringtoint(packet.getPacketArgs()[4].trim())));

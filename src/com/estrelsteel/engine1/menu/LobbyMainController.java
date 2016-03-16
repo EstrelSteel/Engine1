@@ -7,7 +7,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JOptionPane;
 
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;

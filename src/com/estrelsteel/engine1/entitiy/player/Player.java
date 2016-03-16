@@ -1,6 +1,8 @@
-package com.estrelsteel.engine1.entitiy;
+package com.estrelsteel.engine1.entitiy.player;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.entitiy.Entity;
+import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.handler.Handler;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.tile.shrine.Team;

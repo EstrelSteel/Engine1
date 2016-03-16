@@ -1,6 +1,7 @@
 package com.estrelsteel.engine1.entitiy;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;

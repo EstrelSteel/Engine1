@@ -6,6 +6,10 @@ import javax.swing.JOptionPane;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.player.Player;
+import com.estrelsteel.engine1.entitiy.player.PlayerClass;
+import com.estrelsteel.engine1.entitiy.player.PlayerTypes;
+import com.estrelsteel.engine1.tile.shrine.Team;
 
 public class Profile {
 	
@@ -18,6 +22,7 @@ public class Profile {
 	private EntityType weapon;
 	private EntityType minotaurWeapon;
 	private EntityType slash;
+	private ArrayList<PlayerClass> classes;
 	
 	public Profile() {
 		this.username = "NULL";
@@ -29,6 +34,10 @@ public class Profile {
 		this.weapon = EntityType.SWORD_DIAMOND;
 		this.minotaurWeapon = EntityType.WAR_AXE_DIAMOND;
 		this.slash = EntityType.SLASH;
+
+		classes = new ArrayList<PlayerClass>();
+		classes.add(new PlayerClass(PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
+		classes.add(new PlayerClass(PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon));
 	}
 	
 	public Profile(String username) {
@@ -41,6 +50,10 @@ public class Profile {
 		this.weapon = EntityType.SWORD_DIAMOND;
 		this.minotaurWeapon = EntityType.WAR_AXE_DIAMOND;
 		this.slash = EntityType.SLASH;
+
+		classes = new ArrayList<PlayerClass>();
+		classes.add(new PlayerClass(PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
+		classes.add(new PlayerClass(PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon));
 	}
 	
 	public String getUsername() {
@@ -75,15 +88,27 @@ public class Profile {
 		return slash;
 	}
 	
+	public ArrayList<PlayerClass> getPlayerClasses() {
+		return classes;
+	}
+	
 	public boolean isTransHud() {
 		return transHud;
 	}
 	
+	@Deprecated
 	public void loadForPlayer(Engine1 engine) {
 		engine.player.setName(username + "#" + id);
 		engine.player.getEquiped().setType(weapon);
 		engine.slash.setType(slash);
 		return;
+	}
+	
+	public Player configPlayer(Player player) {
+		player.setName(username + "#" + id);
+		ArrayList<PlayerClass> classes = getPlayerClasses();
+		player = classes.get(0).convertPlayerToClass(player);
+		return player;
 	}
 	
 	public ArrayList<String> save() {

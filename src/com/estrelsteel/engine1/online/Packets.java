@@ -20,7 +20,8 @@ public enum Packets {
 	MAP("009"), 			//MAP ID
 	VOTE("010"),			//MAP ID, GM ID
 	REQUEST_VOTES("011"),	//
-	VICTORY("012");			//TEAM ID
+	VICTORY("012"),			//TEAM ID
+	CLASSIFY("013");		//NAME, PLAYER TYPE
 	
 	private String packetID;
 	

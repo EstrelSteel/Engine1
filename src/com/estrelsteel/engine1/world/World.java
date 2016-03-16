@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.entitiy.Entity;
-import com.estrelsteel.engine1.entitiy.Player;
+import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.tile.shrine.Shrine;

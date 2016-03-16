@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.player.PlayerTypes;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.tile.shrine.Team;
@@ -73,7 +74,7 @@ public class Server extends Thread {
 				return;
 			}
 			msg = new String(packet.getData());
-			//System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
+			System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
 			id = Packets.trimToID(msg);
 			packetData = Packets.trimToData(msg);
 			packetArgs = Packets.packetArgs(packetData);
@@ -211,6 +212,8 @@ public class Server extends Thread {
 											+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
 											+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
 									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(i), this);
+									Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
+											users.get(i) + Packets.SPLIT.getID() + PlayerTypes.MINOTAUR.getID(), this);
 								}
 							}
 						}
@@ -220,12 +223,16 @@ public class Server extends Thread {
 									+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
 									+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
 							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
+							Packets.sendPacketToUser(users.get(r), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
+									users.get(r) + Packets.SPLIT.getID() + PlayerTypes.MINOTAUR.getID(), this);
 						}
 						map = Packets.MAP.getID() + Packets.SPLIT.getID() + vote.getID() + Packets.SPLIT.getID() + gmVote.getID();
 						Packets.sendPacketToAllUsers(map, this);
 					}
 				}
-				
+				else if(id.equalsIgnoreCase(Packets.CLASSIFY.getID())) {
+					Packets.sendPacketToUser(packetArgs[1].trim(), msg, this);
+				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {
 				sendData("pong".getBytes(), packet.getAddress(), packet.getPort());
