@@ -13,6 +13,7 @@ import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.Vote;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyMainController extends MenuController implements MouseMotionListener {
@@ -34,7 +35,11 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 	
 	public void startGame() {
 		if(Engine1.server.users.size() >= 2 || engine.debug) {
+			Effects.SELECT.getSound().play();
 			Packets.sendPacketToAllUsers(Packets.REQUEST_VOTES.getID(), Engine1.server);
+		}
+		else {
+			
 		}
 	}
 
@@ -47,9 +52,11 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 					if(item.getType() == MenuItemType.VOTE_BUTTON) {
 						engine.lobbyMainHud.setOpen(false, engine);
 						engine.lobbyVoteHud.setOpen(true, engine);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.ADMIN_BUTTON) {
+						Effects.SELECT.getSound().play();
 						String cmd = JOptionPane.showInputDialog("Enter a command", "");
 						if(cmd == null) {
 							e.consume();

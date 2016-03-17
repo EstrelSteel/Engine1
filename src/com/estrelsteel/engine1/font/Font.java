@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.world.Image;
 import com.estrelsteel.engine1.world.Location;
 
@@ -28,7 +29,7 @@ public class Font {
 		charBlock3 = "YZ123456";
 		charBlock4 = "7890.,!?";
 		charBlock5 = ";:-_ ###";
-		image = new Image("/com/estrelsteel/engine1/res/font.png");
+		image = new Image(Engine1.filesPath + "/assets/res/img/font.png");
 		charSize = new Location(0, 0, 16, 16);
 		textLoc = new Location(0, 0, 256, 32);
 		charSpace = new Location(0, 0, 2, 2);

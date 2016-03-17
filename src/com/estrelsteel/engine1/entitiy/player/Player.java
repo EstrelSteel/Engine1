@@ -16,6 +16,7 @@ public class Player extends Entity {
 	private double maxHealth;
 	private double damage;
 	private Engine1 engine;
+	private int normWalkspeed;
 	
 	public Player() {
 		super();
@@ -47,6 +48,7 @@ public class Player extends Entity {
 		this.health = 100.0;
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
+		this.normWalkspeed = walkspeed;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, boolean collide, Handler controls, String name) {
@@ -55,6 +57,7 @@ public class Player extends Entity {
 		this.health = 100.0;
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
+		this.normWalkspeed = walkspeed;
 	}
 	
 	public Team getTeam() {
@@ -75,6 +78,10 @@ public class Player extends Entity {
 	
 	public double getDamage() {
 		return damage;
+	}
+	
+	public int getNormalWalkspeed() {
+		return normWalkspeed;
 	}
 	
 	public boolean moveUp(World world) {
@@ -163,5 +170,9 @@ public class Player extends Entity {
 	public void setDamage(double damage) {
 		this.damage = damage;
 		return;
+	}
+	
+	public void setNormalWalkspeed(int normWalkspeed) {
+		this.normWalkspeed = normWalkspeed;
 	}
 }

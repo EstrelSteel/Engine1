@@ -3,6 +3,7 @@ package com.estrelsteel.engine1.entitiy;
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.online.Packets;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
@@ -45,9 +46,14 @@ public class AlarmTrap extends Entity {
 						if(getName().equalsIgnoreCase("at_" + engine.player.getName())) {
 							setLocation(new Location(-10000, -10000, 0, 0, 0));
 							engine.alarmMenu.setOpen(true, engine);
+							Effects.ALARM_TRAP_PLAY.getSound().play();
 						}
 						else {
 							setGhostLocation(new Location(-10000, -10000, 0, 0, 0));
+						}
+						
+						if(getName().equalsIgnoreCase("at_" + world.getMainCamera().getEntity().getName())) {
+							Effects.ALARM_TRAP_TRIGGER.getSound().play();
 						}
 						return true;
 					}

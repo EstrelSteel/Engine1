@@ -6,6 +6,7 @@ import java.awt.event.MouseMotionListener;
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyModeController extends LobbyMainController implements MouseMotionListener {
@@ -27,21 +28,26 @@ public class LobbyModeController extends LobbyMainController implements MouseMot
 					e.consume();
 				}
 				if(item.getClickLocation().collidesWith(loc)) {
+					Effects.SELECT.getSound().play();
 					if((item.getType() == MenuItemType.BACK_BUTTON)) {
 						engine.lobbyModeHud.setOpen(false, engine);
 						engine.lobbyVoteHud.setOpen(true, engine);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.BUTTON_SELECTED_1 && item.getClickLocation().getY() > 0) {
 						item.setType(MenuItemType.BUTTON_SELECTED_2);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.CLASSIC_BUTTON) {
 						Engine1.gmVote = Gamemode.CLASSIC;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.REVERSE_BUTTON) {
 						Engine1.gmVote = Gamemode.REVERSE;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {

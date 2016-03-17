@@ -1,14 +1,14 @@
 MINOTAUR by EstrelSteel
-version 1.1a-Gold
-build 42
+version 1.2a-Gold
+build 43
 
-release date: 15.03.2016
+release date: 16.03.2016
 
 ###
 
 Development info:
 	Derived from: Engine1 (build 6), Chatroom (build 3)
-	Period: 72 Days
+	Period: 73 Days
 
 
 ###

@@ -2,6 +2,8 @@ package com.estrelsteel.engine1.entitiy;
 
 import java.util.ArrayList;
 
+import com.estrelsteel.engine1.sound.Effects;
+
 public class Animation {
 	private ArrayList<EntityImage> images;
 	private int frame;
@@ -9,11 +11,19 @@ public class Animation {
 	private int maxWait;
 	private boolean paused;
 	private boolean ran;
+	private Effects sfx;
 	
 	public Animation(int maxWait) {
 		images = new ArrayList<EntityImage>();
 		this.maxWait = maxWait;
 		this.ran = false;
+	}
+	
+	public Animation(int maxWait, Effects sfx) {
+		images = new ArrayList<EntityImage>();
+		this.maxWait = maxWait;
+		this.ran = false;
+		this.sfx = sfx;
 	}
 	
 	public ArrayList<EntityImage> getImages() {
@@ -30,6 +40,10 @@ public class Animation {
 	
 	public int getMaxWait() {
 		return maxWait;
+	}
+	
+	public Effects getSoundEffect() {
+		return sfx;
 	}
 	
 	public boolean isPaused() {
@@ -97,5 +111,9 @@ public class Animation {
 	public void setRan(boolean ran) {
 		this.ran = ran;
 		return;
+	}
+	
+	public void setSoundEffect(Effects sfx) {
+		this.sfx = sfx;
 	}
 }

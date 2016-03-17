@@ -5,6 +5,7 @@ import java.awt.event.MouseMotionListener;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyVoteController extends LobbyMainController implements MouseMotionListener {
@@ -25,16 +26,19 @@ public class LobbyVoteController extends LobbyMainController implements MouseMot
 					if((item.getType() == MenuItemType.BACK_BUTTON)) {
 						engine.lobbyVoteHud.setOpen(false, engine);
 						engine.lobbyMainHud.setOpen(true, engine);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if((item.getType() == MenuItemType.MAPS_BUTTON)) {
 						engine.lobbyVoteHud.setOpen(false, engine);
 						engine.lobbyMapHud.setOpen(true, engine);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if((item.getType() == MenuItemType.MODE_BUTTON)) {
 						engine.lobbyVoteHud.setOpen(false, engine);
 						engine.lobbyModeHud.setOpen(true, engine);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {

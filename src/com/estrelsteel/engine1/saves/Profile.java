@@ -36,8 +36,8 @@ public class Profile {
 		this.slash = EntityType.SLASH;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
-		classes.add(new PlayerClass(PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon));
 	}
 	
 	public Profile(String username) {
@@ -52,8 +52,8 @@ public class Profile {
 		this.slash = EntityType.SLASH;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
-		classes.add(new PlayerClass(PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 7, minotaurWeapon));
 	}
 	
 	public String getUsername() {
@@ -171,6 +171,10 @@ public class Profile {
 		if(id <= 0) {
 			this.id = (int) (Math.random() * 1000000000);
 		}
+
+		classes = new ArrayList<PlayerClass>();
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR, Team.RED, 7, minotaurWeapon));
 	}
 	
 	public void setUsername(String username) {

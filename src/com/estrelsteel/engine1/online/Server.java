@@ -205,26 +205,33 @@ public class Server extends Thread {
 						if(gmVote.getID() == Gamemode.REVERSE.getID()) {
 							minoTeam = Team.BLUE;
 						}
+						int r = -1;
 						if(!minotaur.equalsIgnoreCase("")) {
-							for(int i = 0; i < users.size(); i++) {
-								if(minotaur.equalsIgnoreCase(users.get(i))) {
-									cachedPlayerPackets.set(i, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + minotaur
+							for(r = 0; r < users.size(); r++) {
+								if(minotaur.equalsIgnoreCase(users.get(r))) {
+									cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + minotaur
 											+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
 											+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
-									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(i), this);
-									Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
-											users.get(i) + Packets.SPLIT.getID() + PlayerTypes.MINOTAUR.getID(), this);
+									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
 								}
 							}
 						}
 						else {
-							int r = (int) (Math.random() * users.size());
+							r = (int) (Math.random() * users.size());
 							cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + users.get(r)
 									+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
 									+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
 							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
-							Packets.sendPacketToUser(users.get(r), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
-									users.get(r) + Packets.SPLIT.getID() + PlayerTypes.MINOTAUR.getID(), this);
+						}
+						for(int i = 0; i < users.size(); i++) {
+							if(i != r) {
+								Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
+										users.get(i) + Packets.SPLIT.getID() + PlayerTypes.HUMAN.getID(), this);
+							}
+							else {
+								Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
+										users.get(i) + Packets.SPLIT.getID() + PlayerTypes.MINOTAUR.getID(), this);
+							}
 						}
 						map = Packets.MAP.getID() + Packets.SPLIT.getID() + vote.getID() + Packets.SPLIT.getID() + gmVote.getID();
 						Packets.sendPacketToAllUsers(map, this);

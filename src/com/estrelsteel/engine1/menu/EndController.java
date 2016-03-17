@@ -4,11 +4,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
-import com.estrelsteel.engine1.online.Packets;
-import com.estrelsteel.engine1.tile.shrine.Team;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 
 public class EndController extends MenuController {
@@ -28,6 +26,7 @@ public class EndController extends MenuController {
 				item = getMenu().getMenuItems().get(i);
 				if(loc.collidesWith(item.getClickLocation())) {
 					if(item.getType() == MenuItemType.LOBBY_TEXT) {
+						Effects.SELECT.getSound().play();
 						engine.canWin = false;
 						engine.world = Maps.LOBBY.getMap().load();
 						engine.world = engine.addBasics(engine.world);
@@ -42,10 +41,11 @@ public class EndController extends MenuController {
 						engine.player.setWalkspeed(5);
 						engine.player.setSlowWalkspeed(1);
 						engine.world.setMainCamera(engine.playerCamera);
-						Engine1.client.sendData((Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + engine.player.getName() + Packets.SPLIT.getID() + EntityType.WALPOLE.getID() + Packets.SPLIT.getID() +
-								Team.BLUE.getID() + Packets.SPLIT.getID() + EntityType.SWORD_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID()).getBytes());
+						Engine1.client.sendData(engine.profile.getPlayerClasses().get(0).getPlayerDataPacket().getBytes());
+						engine.player = engine.profile.getPlayerClasses().get(0).convertPlayerToClass(engine.player);
 					}
 					else if(item.getType() == MenuItemType.QUIT_TEXT) {
+						Effects.SELECT.getSound().play();
 						engine.victory.setOpen(false, engine);
 						engine.defeat.setOpen(false, engine);
 						engine.mainMenu.setOpen(true, engine);

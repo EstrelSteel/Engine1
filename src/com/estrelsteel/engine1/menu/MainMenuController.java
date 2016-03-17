@@ -6,6 +6,7 @@ import java.awt.event.MouseMotionListener;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 
 public class MainMenuController extends LobbyMainController implements MouseMotionListener {
@@ -31,6 +32,7 @@ public class MainMenuController extends LobbyMainController implements MouseMoti
 			for(int i = 0; i < getMenu().getMenuItems().size(); i++) {
 				item = getMenu().getMenuItems().get(i);
 				if(item.getClickLocation().collidesWith(loc)) {
+					Effects.SELECT.getSound().play();
 					if(item.getType() == MenuItemType.HOST_BUTTON) {
 						engine.StartClientServer(true);
 						e.consume();

@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
@@ -36,6 +37,7 @@ public class RespawnController extends MenuController {
 				engine.overlayRespawn.setOpen(false, engine);
 				engine.hud.setOpen(true, engine);
 				engine.overlayHud.setOpen(true, engine);
+				Effects.SELECT.getSound().play();
 			}
 		}
 	}

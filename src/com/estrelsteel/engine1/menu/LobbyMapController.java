@@ -6,6 +6,7 @@ import java.awt.event.MouseMotionListener;
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 
 public class LobbyMapController extends LobbyMainController implements MouseMotionListener {
@@ -27,33 +28,41 @@ public class LobbyMapController extends LobbyMainController implements MouseMoti
 					e.consume();
 				}
 				if(item.getClickLocation().collidesWith(loc)) {
+					Effects.SELECT.getSound().play();
 					if((item.getType() == MenuItemType.BACK_BUTTON)) {
 						engine.lobbyMapHud.setOpen(false, engine);
 						engine.lobbyVoteHud.setOpen(true, engine);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.BUTTON_SELECTED_1 && item.getClickLocation().getY() > 0) {
 						item.setType(MenuItemType.BUTTON_SELECTED_2);
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.MINES_BUTTON) {
 						Engine1.vote = Maps.MINES;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.ISLAND_BUTTON) {
 						Engine1.vote = Maps.ISLAND;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.ISLAND_LOOP_BUTTON) {
 						Engine1.vote = Maps.ISLAND_LOOP;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.SAND_BAR_BUTTON) {
 						Engine1.vote = Maps.SAND_BAR;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.ZIG_ZAG_BUTTON) {
 						Engine1.vote = Maps.ZIG_ZAG;
+						Effects.SELECT.getSound().play();
 						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {

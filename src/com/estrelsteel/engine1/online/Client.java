@@ -16,6 +16,7 @@ import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.entitiy.player.PlayerClass;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
@@ -193,6 +194,10 @@ public class Client extends Thread {
 					try {
 						if(c.getPlayerType().getID() == Integer.parseInt(packetArgs[2].trim())) {
 							engine.player = c.convertPlayerToClass(engine.player);
+							if(engine.player.getEquiped().getType().getMenuItemType() != MenuItemType.UNKNOWN) {
+								engine.overlayHud.getMenuItems().get(5).setType(engine.player.getEquiped().getType().getMenuItemType());
+							}
+							engine.updateHelpMenu();
 							break;
 						}	
 					}

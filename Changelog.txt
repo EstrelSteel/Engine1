@@ -1,3 +1,38 @@
+>>> Minotaur v1.2a (build 43) <<<
+	+ Added game launcher
+	+ Added auto updater
+	+ Added sfx select.wav
+	+ Added sfx sword_swing_1.wav
+	+ Added sfx sword_swing_2.wav
+	+ Added sfx axe_swing_1.wav
+	+ Added sfx axe_swing_2.wav
+	+ Added sfx spear_jab_1.wav
+	+ Added sfx spear_jab_2.wav
+	+ Added sfx bow_shoot.wav
+	+ Added sfx alarm_trap_place.wav
+	+ Added sfx alarm_trap_play.wav
+	+ Added sfx alarm_trap_trigger.wav
+	+ Added sfx damage.wav
+	+ Added sfx lever.wav
+	+ Added player classes
+	+ Added sfx to buttons
+	+ Added sfx to swords
+	+ Added sfx to axes
+	+ Added sfx to spears
+	+ Added sfx to bows
+	+ Added sfx to placing the alarm trap
+	+ Added sfx for triggering the alarm trap
+	+ Added sfx for your alarm trap being triggered
+	+ Added sfx for lever being pulled
+	~ Changed how resources are loaded
+	~ Changed where resources are saved
+	~ Changed save data path
+	~ Fixed custom weapons not sustaining over maps
+	~ Fixed custom weapons not working for the minotaur
+	~ Increased the Minotaur's movement speed
+	~ Fixed issues with players appearing as minotaurs
+	
+
 >>> Minotaur v1.1a (build 42) <<<
 	+ Added map Islands
 	+ Added map Islands Loop
@@ -22,4 +57,3 @@
 	~ Changed respawning to only work on non-attacked shrines, other than the first
 	~ Fixed being able to start server with less than two players on some menus
 	- Removed unused asset files
-	

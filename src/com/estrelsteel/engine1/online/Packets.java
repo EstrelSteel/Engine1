@@ -21,7 +21,8 @@ public enum Packets {
 	VOTE("010"),			//MAP ID, GM ID
 	REQUEST_VOTES("011"),	//
 	VICTORY("012"),			//TEAM ID
-	CLASSIFY("013");		//NAME, PLAYER TYPE
+	CLASSIFY("013"),		//NAME, PLAYER TYPE
+	SOUND("014");			//SOUND ID
 	
 	private String packetID;
 	

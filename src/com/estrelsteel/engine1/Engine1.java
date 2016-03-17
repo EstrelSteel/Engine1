@@ -10,7 +10,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -37,8 +36,8 @@ import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
 import com.estrelsteel.engine1.handler.Selector;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map;
-import com.estrelsteel.engine1.maps.Victory;
 import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.maps.Victory;
 import com.estrelsteel.engine1.menu.EndController;
 import com.estrelsteel.engine1.menu.LobbyMainController;
 import com.estrelsteel.engine1.menu.LobbyMapController;
@@ -56,6 +55,7 @@ import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.PendingPacket;
 import com.estrelsteel.engine1.online.Server;
 import com.estrelsteel.engine1.saves.Profile;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 import com.estrelsteel.engine1.tile.shrine.Shrine;
@@ -91,10 +91,10 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v1.1a";
-	public static int build = 42;
+	public String version = "v1.2a";
+	public static int build = 43;
 	public long time = System.currentTimeMillis();
-	private String savesPath = "";
+	public static String filesPath = "";
 	
 	ArrayList<World> worlds = new ArrayList<World>();
 	public World world;
@@ -132,21 +132,21 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	//public Font fpsFont;
 	
-	public Menu hud = new Menu("hud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu respawn = new Menu("respawn", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyMainHud = new Menu("lobbyMainHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyVoteHud = new Menu("lobbyVoteHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyMapHud = new Menu("lobbyMapHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
-	public Menu lobbyModeHud = new Menu("lobbyModeHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0, 0, 16, 16)));
+	public Menu hud = new Menu("hud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	public Menu overlayHud = new Menu("overlayHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	public Menu respawn = new Menu("respawn", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu overlayRespawn = new Menu("overlayRespawn", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyMainHud = new Menu("lobbyMainHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyVoteHud = new Menu("lobbyVoteHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyMapHud = new Menu("lobbyMapHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	public Menu lobbyModeHud = new Menu("lobbyModeHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
 	public RespawnController respawnHandler = new RespawnController(overlayRespawn, "RespawnHandler", this);
-	public Menu victory =  new Menu("victory", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public Menu defeat =  new Menu("defeat", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/respawn_back.png", new Location(0, 0, 65, 65)));
-	public Menu vic1text = new Menu("vic1text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
-	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0, 0, 16, 16)));
-	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/lobby_hud.png", new Location(0 * 16, 0, 16, 16)));
-	public Menu alarmMenu = new Menu("alarmMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage("/com/estrelsteel/engine1/res/texture.png", new Location(0 * 16, 0, 16, 16)));
+	public Menu victory =  new Menu("victory", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu defeat =  new Menu("defeat", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/respawn_back.png", new Location(0, 0, 65, 65)));
+	public Menu vic1text = new Menu("vic1text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0, 0, 16, 16)));
+	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0 * 16, 0, 16, 16)));
+	public Menu alarmMenu = new Menu("alarmMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0, 16, 16)));
 	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
 	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
@@ -159,52 +159,15 @@ public class Engine1 extends Canvas implements Runnable {
 	public MainMenuController mainMenuController = new MainMenuController(mainMenu, "MainMenuController", this);
 	
 	public void start() {
-		File saveFolder;
 		if(System.getProperty("os.name").startsWith("Windows")) {
-			savesPath = System.getProperty("user.home") + "/AppData/Roaming/Minotaur";
+			filesPath = System.getProperty("user.home") + "/AppData/Roaming/Minotaur";
 		}
 		else if(System.getProperty("os.name").startsWith("Mac")) {
-			savesPath = System.getProperty("user.home") + "/Library/Application Support/Minotaur";
+			filesPath = System.getProperty("user.home") + "/Library/Application Support/Minotaur";
 		}
 		else if(System.getProperty("os.name").startsWith("Linux")) {
-			savesPath = System.getProperty("user.home") + "/Minotaur";
+			filesPath = System.getProperty("user.home") + "/Minotaur";
 		}
-		
-		saveFolder = new File(savesPath);
-		if(!saveFolder.exists()) {
-			saveFolder.mkdir();
-			FileReader fr;
-			try {
-				fr = new FileReader("src/com/estrelsteel/engine1/saves/profile0.cu1");
-				@SuppressWarnings("resource")
-				BufferedReader br = new BufferedReader(fr);
-				ArrayList<String> lines = new ArrayList<String>();
-				String line = br.readLine();
-				while(line != null) {
-					lines.add(line);
-					line = br.readLine();
-				}
-				FileWriter fw;
-				BufferedWriter bw;
-				for(int p = 1; p < 4; p++) {
-					fw = new FileWriter(savesPath + "/profile" + p + ".cu1");
-					bw = new BufferedWriter(fw);
-					for(String l : lines) {
-						bw.write(l + "\n");
-					}
-					bw.flush();
-					bw.close();
-				}
-			}
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		//END OF SAVE PREP...
 		String profileChoice = JOptionPane.showInputDialog("Load profile number(1-3)", "");
 		if(profileChoice == null) {
 			try {
@@ -231,7 +194,7 @@ public class Engine1 extends Canvas implements Runnable {
 			profileNum = 1;
 		}
 		try {
-			FileReader fr = new FileReader(savesPath + "/profile" + profileNum + ".cu1");
+			FileReader fr = new FileReader(filesPath + "/saves/profile" + profileNum + ".cu1");
 			@SuppressWarnings("resource")
 			BufferedReader br = new BufferedReader(fr);
 			ArrayList<String> lines = new ArrayList<String>();
@@ -249,10 +212,8 @@ public class Engine1 extends Canvas implements Runnable {
 			e.printStackTrace();
 		}
 		
-		running = true;
 		addFocusListener(coreHandler);
-		thread = new Thread(this, title + version + "_main");
-		thread.start();
+		
 		
 		playerCamera.setFollowX(true);
 		playerCamera.setFollowY(true);
@@ -265,135 +226,147 @@ public class Engine1 extends Canvas implements Runnable {
 		player.setMaxHealth(100.0);
 		
 		EntityType.WALPOLE.getAnimations().get(0).setMaxWait(15);
-		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
+		EntityType.WALPOLE.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
 		EntityType.JOHN_SNOW.getAnimations().get(0).setMaxWait(15);
-		EntityType.JOHN_SNOW.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
+		EntityType.JOHN_SNOW.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
 		EntityType.MINOTAUR.getAnimations().get(0).setMaxWait(15);
-		EntityType.MINOTAUR.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
+		EntityType.MINOTAUR.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(2 * 16, 0 * 16, 19, 21)));
 		EntityType.CLOUD.getAnimations().get(0).setMaxWait(7);
 		EntityType.SLASH.getAnimations().get(0).setMaxWait(3);
 		EntityType.SLASH_GOLD.getAnimations().get(0).setMaxWait(3);
 		EntityType.SLASH_RUBY.getAnimations().get(0).setMaxWait(3);
+		
 		EntityType.SWORD_DIAMOND.getAnimations().get(0).setMaxWait(3);
+		EntityType.SWORD_DIAMOND.getAnimations().get(0).setSoundEffect(Effects.SWORD_SWING_1);
 		EntityType.SWORD_GOLD.getAnimations().get(0).setMaxWait(3);
+		EntityType.SWORD_GOLD.getAnimations().get(0).setSoundEffect(Effects.SWORD_SWING_1);
 		EntityType.SWORD_RUBY.getAnimations().get(0).setMaxWait(3);
+		EntityType.SWORD_RUBY.getAnimations().get(0).setSoundEffect(Effects.SWORD_SWING_2);
+		
 		EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).setMaxWait(3);
+		EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).setSoundEffect(Effects.AXE_SWING_1);
 		EntityType.WAR_AXE_GOLD.getAnimations().get(0).setMaxWait(3);
+		EntityType.WAR_AXE_GOLD.getAnimations().get(0).setSoundEffect(Effects.AXE_SWING_1);
 		EntityType.WAR_AXE_RUBY.getAnimations().get(0).setMaxWait(3);
+		EntityType.WAR_AXE_RUBY.getAnimations().get(0).setSoundEffect(Effects.AXE_SWING_2);
+		
 		EntityType.SPEAR.getAnimations().get(0).setMaxWait(3);
+		EntityType.SPEAR.getAnimations().get(0).setSoundEffect(Effects.SPEAR_JAB_1);
 		EntityType.BOW.getAnimations().get(0).setMaxWait(3);
+		EntityType.BOW.getAnimations().get(0).setSoundEffect(Effects.BOW_SHOOT);
 		EntityType.LEVER.getAnimations().get(0).setMaxWait(5);
+		EntityType.LEVER.getAnimations().get(0).setSoundEffect(Effects.LEVER);
 		for(int i = 0; i < 10; i++) {
 			if(i > 0 && i < 4) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(15));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
 				
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(15));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
 				
 				EntityType.MINOTAUR.getAnimations().add(new Animation(15));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(0 * 16, 2 * i * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(2 * 16, 2 * i * 16, 19, 21)));
 			
 			}
 			if(i > 3 && i < 5) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(24));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().add(new Animation(24));
-				EntityType.WALPOLE.getAnimations().get(i + 1).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i + 1).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().add(new Animation(24));
-				EntityType.WALPOLE.getAnimations().get(i + 2).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i + 2).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
 				EntityType.WALPOLE.getAnimations().add(new Animation(24));
-				EntityType.WALPOLE.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i + 3).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
 				
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
-				EntityType.JOHN_SNOW.getAnimations().get(i + 1).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i + 1).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
-				EntityType.JOHN_SNOW.getAnimations().get(i + 2).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i + 2).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(24));
-				EntityType.JOHN_SNOW.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i + 3).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
 				
 				EntityType.MINOTAUR.getAnimations().add(new Animation(24));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 0 * 16, 19, 21)));
 				EntityType.MINOTAUR.getAnimations().add(new Animation(24));
-				EntityType.MINOTAUR.getAnimations().get(i + 1).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i + 1).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 2 * 16, 19, 21)));
 				EntityType.MINOTAUR.getAnimations().add(new Animation(24));
-				EntityType.MINOTAUR.getAnimations().get(i + 2).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i + 2).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 4 * 16, 19, 21)));
 				EntityType.MINOTAUR.getAnimations().add(new Animation(24));
-				EntityType.MINOTAUR.getAnimations().get(i + 3).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i + 3).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 6 * 16, 19, 21)));
 			}
 			if(i > 7 && i < 9) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(5));
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(5));
 				EntityType.MINOTAUR.getAnimations().add(new Animation(5));
 				
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 				
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(0 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(2 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(4 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(6 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 			}
 			if(i > 8 && i < 10) {
 				EntityType.WALPOLE.getAnimations().add(new Animation(5));
 				EntityType.JOHN_SNOW.getAnimations().add(new Animation(5));
 				EntityType.MINOTAUR.getAnimations().add(new Animation(5));
 				
-				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.WALPOLE.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 
-				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.JOHN_SNOW.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 				
-				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
+				EntityType.MINOTAUR.getAnimations().get(i).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(8 * 16, 8 * 16, 19, 21)));
 			}
 			if(i > -1 && i < 5) {
-				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 0 * 16, 16, 16)));
+				EntityType.CLOUD.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/particle.png", new Location(i * 16, 0 * 16, 16, 16)));
 			}
 			if(i > 0 && i < 7) {
-				EntityType.LEVER.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/aeris.png", new Location(i * 16, 0 * 16, 16, 16)));	
+				EntityType.LEVER.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/aeris.png", new Location(i * 16, 0 * 16, 16, 16)));	
 			}
 			if(i > 0 && i < 8) {
-				EntityType.SWORD_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 0 * 16, 16, 16)));
-				EntityType.SWORD_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 1 * 16, 16, 16)));
-				EntityType.SWORD_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 2 * 16, 16, 16)));
-				EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 3 * 16, 16, 16)));
-				EntityType.WAR_AXE_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 4 * 16, 16, 16)));
-				EntityType.WAR_AXE_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 5 * 16, 16, 16)));
+				EntityType.SWORD_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 0 * 16, 16, 16)));
+				EntityType.SWORD_GOLD.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 1 * 16, 16, 16)));
+				EntityType.SWORD_RUBY.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 2 * 16, 16, 16)));
+				EntityType.WAR_AXE_DIAMOND.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 3 * 16, 16, 16)));
+				EntityType.WAR_AXE_GOLD.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 4 * 16, 16, 16)));
+				EntityType.WAR_AXE_RUBY.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 5 * 16, 16, 16)));
 				
-				EntityType.BOW.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 16, 7 * 16, 16, 16)));
+				EntityType.BOW.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 16, 7 * 16, 16, 16)));
 				
-				EntityType.SLASH.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 1 * 16, 16, 16)));
-				EntityType.SLASH_GOLD.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 2 * 16, 16, 16)));
-				EntityType.SLASH_RUBY.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/particle.png", new Location(i * 16, 3 * 16, 16, 16)));
+				EntityType.SLASH.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/particle.png", new Location(i * 16, 1 * 16, 16, 16)));
+				EntityType.SLASH_GOLD.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/particle.png", new Location(i * 16, 2 * 16, 16, 16)));
+				EntityType.SLASH_RUBY.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/particle.png", new Location(i * 16, 3 * 16, 16, 16)));
 			
-				EntityType.SPEAR.getAnimations().get(0).getImages().add(new EntityImage("/com/estrelsteel/engine1/res/weapon.png", new Location(i * 32, 6 * 16, 32, 16)));
+				EntityType.SPEAR.getAnimations().get(0).getImages().add(new EntityImage(Engine1.filesPath + "/assets/res/img/weapon.png", new Location(i * 32, 6 * 16, 32, 16)));
 			}
 		}
 		
@@ -547,7 +520,6 @@ public class Engine1 extends Canvas implements Runnable {
 		statictest.setMainCamera(playerCamera);
 		statictest.sortToChunks();
 		worlds.add(statictest);
-
 		
 		player = profile.configPlayer(player);
 		weapon.setName("w_" + player.getName());
@@ -571,6 +543,16 @@ public class Engine1 extends Canvas implements Runnable {
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
 		//TEMPStartClientServer();
+		EntityType.updateSRC(filesPath);
+		TileType.updateSRC(filesPath);
+		MenuItemType.updateSRC(filesPath);
+		//Effects.updateSRC(filesPath);
+		for(Menu menu : menus) {
+			menu.getMenuImage().setSRC(filesPath + menu.getMenuImage().getSRC());
+		}
+		running = true;
+		thread = new Thread(this, title + version + "_main");
+		thread.start();
 	}
 	
 	public World addBasics(World world) {
@@ -702,7 +684,7 @@ public class Engine1 extends Canvas implements Runnable {
 			}
 		}
 		try {
-			FileWriter fw = new FileWriter(savesPath + "/profile" + profileNum + ".cu1");
+			FileWriter fw = new FileWriter(filesPath + "/saves/profile" + profileNum + ".cu1");
 			BufferedWriter bw = new BufferedWriter(fw);
 			ArrayList<String> lines = profile.save();
 			for(String line : lines) {
@@ -846,6 +828,7 @@ public class Engine1 extends Canvas implements Runnable {
 					if(PlayerControls.ONE.isPressed() && hud.isOpen()) {
 						alarmTrap.setTeam(player.getTeam());
 						alarmTrap.moveLocation(player.getLocation());
+						Effects.ALARM_TRAP_PLACE.getSound().play();
 					}
 					if((e.getActiveAnimationNum() == 1 || e.getActiveAnimationNum() == 5) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(5);
@@ -878,7 +861,12 @@ public class Engine1 extends Canvas implements Runnable {
 					else if(!PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
 						e.setTopEquip(false);
-						e.setWalkspeed(5);
+						if(e instanceof Player) {
+							e.setWalkspeed(((Player) e).getNormalWalkspeed());
+						}
+						else {
+							e.setWalkspeed(5);
+						}
 						slash.setLocation(new Location(1000, 1000, 0, 0, 90));
 						if(e.getActiveAnimationNum() > 3 && e.getActiveAnimationNum() < 8) {
 							e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
@@ -893,6 +881,10 @@ public class Engine1 extends Canvas implements Runnable {
 						}
 					}
 					if(e instanceof Player) {
+						if(e.getEquiped() != null && e.getEquiped().getCurrentAnimation().getFrame() == 0 && e.getEquiped().getCurrentAnimation().getSoundEffect() != null
+								&& e.getActiveAnimationNum() >= 4 && e.getActiveAnimationNum() <= 7) {
+							e.getEquiped().getCurrentAnimation().getSoundEffect().getSound().play();
+						}
 						if(((Player) e).getHealth() < 0.0) {
 							if(e.getActiveAnimationNum() != 9) {
 								e.setActiveAnimationNum(8);
