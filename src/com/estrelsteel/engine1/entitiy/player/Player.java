@@ -17,6 +17,7 @@ public class Player extends Entity {
 	private double damage;
 	private Engine1 engine;
 	private int normWalkspeed;
+	private double takeCount;
 	
 	public Player() {
 		super();
@@ -24,6 +25,7 @@ public class Player extends Entity {
 		this.health = 100.0;
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
+		this.takeCount = 1.0;
 	}
 	
 	public Player(EntityType type, Location loc) {
@@ -32,6 +34,7 @@ public class Player extends Entity {
 		this.health = 100.0;
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
+		this.takeCount = 1.0;
 	}
 	
 	public Player(EntityType type, Location loc, Handler controls) {
@@ -40,6 +43,7 @@ public class Player extends Entity {
 		this.health = 100.0;
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
+		this.takeCount = 1.0;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, Handler controls) {
@@ -49,6 +53,7 @@ public class Player extends Entity {
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
 		this.normWalkspeed = walkspeed;
+		this.takeCount = 1.0;
 	}
 	
 	public Player(EntityType type, Location loc, int walkspeed, boolean collide, Handler controls, String name) {
@@ -58,6 +63,7 @@ public class Player extends Entity {
 		this.maxHealth = 100.0;
 		this.damage = 0.1;
 		this.normWalkspeed = walkspeed;
+		this.takeCount = 1.0;
 	}
 	
 	public Team getTeam() {
@@ -82,6 +88,10 @@ public class Player extends Entity {
 	
 	public int getNormalWalkspeed() {
 		return normWalkspeed;
+	}
+	
+	public double getTakeCount() {
+		return takeCount;
 	}
 	
 	public boolean moveUp(World world) {
@@ -174,5 +184,9 @@ public class Player extends Entity {
 	
 	public void setNormalWalkspeed(int normWalkspeed) {
 		this.normWalkspeed = normWalkspeed;
+	}
+	
+	public void setTakeCount(double takeCount) {
+		this.takeCount = takeCount;
 	}
 }

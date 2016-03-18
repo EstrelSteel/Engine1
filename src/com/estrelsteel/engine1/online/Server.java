@@ -74,7 +74,7 @@ public class Server extends Thread {
 				return;
 			}
 			msg = new String(packet.getData());
-			System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
+			//System.out.println("[SERVER] [" + packet.getAddress() + ":" + packet.getPort() + "] " + msg);
 			id = Packets.trimToID(msg);
 			packetData = Packets.trimToData(msg);
 			packetArgs = Packets.packetArgs(packetData);

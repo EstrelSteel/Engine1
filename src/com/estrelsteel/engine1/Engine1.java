@@ -91,8 +91,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v1.2a";
-	public static int build = 43;
+	public String version = "v1.2b";
+	public static int build = 44;
 	public long time = System.currentTimeMillis();
 	public static String filesPath = "";
 	
