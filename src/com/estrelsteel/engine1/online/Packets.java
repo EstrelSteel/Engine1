@@ -22,7 +22,7 @@ public enum Packets {
 	REQUEST_VOTES("011"),	//
 	VICTORY("012"),			//TEAM ID
 	CLASSIFY("013"),		//NAME, PLAYER TYPE
-	SOUND("014");			//SOUND ID
+	SOUND("014");			//SOUND ID, X, Y
 	
 	private String packetID;
 	

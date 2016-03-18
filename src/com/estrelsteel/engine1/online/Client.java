@@ -14,9 +14,9 @@ import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.entitiy.player.PlayerClass;
-import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.tile.shrine.Team;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
@@ -128,6 +128,9 @@ public class Client extends Thread {
 			else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
 				if(packetArgs[1].trim().equalsIgnoreCase(engine.player.getName())) {
 					engine.player.setHealth(engine.player.getHealth() - Engine1.stringtodouble(packetArgs[2].trim()));
+					if(engine.player.getHealth() > engine.player.getMaxHealth()) {
+						engine.player.setHealth(engine.player.getMaxHealth());
+					}
 					packetCache.add(new PendingPacket(msg));
 				}
 			}
@@ -135,16 +138,16 @@ public class Client extends Thread {
 				packetCache.add(new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
-				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + "")) {
-					for(Player pl : engine.world.getPlayers()) {
-						if(pl.getTeam() == Team.BLUE) {
-							pl.setTeam(Team.RED);
-						}
-						else if(pl.getTeam() == Team.RED) {
-							pl.setTeam(Team.BLUE);
-						}
-					}
-				}
+//				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + "")) {
+//					for(Player pl : engine.world.getPlayers()) {
+//						if(pl.getTeam() == Team.BLUE) {
+//							pl.setTeam(Team.RED);
+//						}
+//						else if(pl.getTeam() == Team.RED) {
+//							pl.setTeam(Team.BLUE);
+//						}
+//					}
+//				}
 				if(!packetArgs[1].trim().equals(Maps.LOBBY.getID() + "") && !packetArgs[1].trim().equals(Maps.INVALID.getID() + "")) {
 					engine.hud.setOpen(true, engine);
 					engine.overlayHud.setOpen(true, engine);
@@ -198,12 +201,32 @@ public class Client extends Thread {
 								engine.overlayHud.getMenuItems().get(5).setType(engine.player.getEquiped().getType().getMenuItemType());
 							}
 							engine.updateHelpMenu();
+							sendData(c.getPlayerDataPacket().getBytes());
 							break;
 						}	
 					}
 					catch(NumberFormatException e) {
-						System.out.println("NON-VALID ID");
+						System.err.println("ERROR DURING CLASSIFICATION OF PLAYER");
+						System.err.println("\tNon valid number");
 					}
+				}
+			}
+			else if(id.equalsIgnoreCase(Packets.SOUND.getID())) {
+				try {
+					Effects sfx = Effects.findByID(Integer.parseInt(packetArgs[1].trim()));
+					int x = Integer.parseInt(packetArgs[2].trim());
+					int y = Integer.parseInt(packetArgs[3].trim());
+					if(x > engine.player.getLocation().getX() - 400 && x < engine.player.getLocation().getX() + 400) {
+						if(y > engine.player.getLocation().getY() - 400 && y < engine.player.getLocation().getY() + 400) {
+							if(sfx != Effects.INVALID) {
+								sfx.getSound().play();
+							}
+						}
+					}
+				}
+				catch(NumberFormatException e) {
+					System.err.println("ERROR DURING DETERMINING SOUND PACKET");
+					System.err.println("\tNon valid number");
 				}
 			}
 			

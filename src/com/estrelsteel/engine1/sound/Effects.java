@@ -3,6 +3,7 @@ package com.estrelsteel.engine1.sound;
 import com.estrelsteel.engine1.Engine1;
 
 public enum Effects {
+	INVALID(-1, null),
 	SELECT(0, new Sound(Engine1.filesPath + "/assets/res/sfx/select.wav")),
 	SWORD_SWING_1(1, new Sound(Engine1.filesPath + "/assets/res/sfx/sword_swing_1.wav")),
 	SWORD_SWING_2(2, new Sound(Engine1.filesPath + "/assets/res/sfx/sword_swing_2.wav")),
@@ -31,6 +32,15 @@ public enum Effects {
 	
 	public Sound getSound() {
 		return sound;
+	}
+	
+	public static Effects findByID(int id) {
+		for(Effects sfx : values()) {
+			if(sfx.getID() == id) {
+				return sfx;
+			}
+		}
+		return Effects.INVALID;
 	}
 	
 	public static void updateSRC(String filesPath) {

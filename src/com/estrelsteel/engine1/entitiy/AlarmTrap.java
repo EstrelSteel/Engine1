@@ -54,6 +54,10 @@ public class AlarmTrap extends Entity {
 						
 						if(getName().equalsIgnoreCase("at_" + world.getMainCamera().getEntity().getName())) {
 							Effects.ALARM_TRAP_TRIGGER.getSound().play();
+							if(Engine1.multiplayer) {
+								Engine1.client.sendData((Packets.SOUND.getID() + Packets.SPLIT.getID() + Effects.ALARM_TRAP_TRIGGER.getID()
+										+ Packets.SPLIT.getID() + engine.player.getLocation().getX() + Packets.SPLIT.getID() + engine.player.getLocation().getY()).getBytes());
+							}
 						}
 						return true;
 					}

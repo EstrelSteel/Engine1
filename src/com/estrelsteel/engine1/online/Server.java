@@ -8,11 +8,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.player.PlayerTypes;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
-import com.estrelsteel.engine1.tile.shrine.Team;
 
 public class Server extends Thread {
 	private DatagramSocket socket;
@@ -132,7 +130,18 @@ public class Server extends Thread {
 				}
 				else if(id.equalsIgnoreCase(Packets.PLAYER_DATA.getID())) {
 					Packets.sendPacketToAllUsers(msg, this);
-					cachedPlayerPackets.add(msg);
+					String p = "";
+					boolean found = false;
+					for(int i = 0; i < cachedPlayerPackets.size(); i++) {
+						p = cachedPlayerPackets.get(i);
+						if(packetArgs[1].trim().equalsIgnoreCase(Packets.packetArgs(p)[1].trim())) {
+							cachedPlayerPackets.set(i, msg);
+							found = true;
+						}
+					}
+					if(!found) {
+						cachedPlayerPackets.add(msg);
+					}
 				}
 				else if(id.equalsIgnoreCase(Packets.DAMAGE.getID())) {
 					Packets.sendPacketToUser(packetArgs[1].trim(), msg, this);
@@ -201,36 +210,43 @@ public class Server extends Thread {
 							}
 							
 						}
-						Team minoTeam = Team.RED;
-						if(gmVote.getID() == Gamemode.REVERSE.getID()) {
-							minoTeam = Team.BLUE;
-						}
+//						Team minoTeam = Team.RED;
+//						if(gmVote.getID() == Gamemode.REVERSE.getID()) {
+//							minoTeam = Team.BLUE;
+//						}
 						int r = -1;
+						int hID = PlayerTypes.HUMAN.getID();
+						int mID = PlayerTypes.MINOTAUR.getID();
+						if(gmVote.getID() == Gamemode.REVERSE.getID()) {
+							hID = PlayerTypes.HUMAN_REVERSE.getID();
+							mID = PlayerTypes.MINOTAUR_REVERSE.getID();
+						}
 						if(!minotaur.equalsIgnoreCase("")) {
 							for(r = 0; r < users.size(); r++) {
 								if(minotaur.equalsIgnoreCase(users.get(r))) {
-									cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + minotaur
-											+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
-											+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
-									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
+//									cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + minotaur
+//											+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
+//											+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
+//									Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
+									break;
 								}
 							}
 						}
 						else {
-							r = (int) (Math.random() * users.size());
-							cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + users.get(r)
-									+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
-									+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
-							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
+							r = (int) (Math.random() * (users.size() + 1));
+//							cachedPlayerPackets.set(r, Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + users.get(r)
+//									+ Packets.SPLIT.getID() + EntityType.MINOTAUR.getID() + Packets.SPLIT.getID() + minoTeam.getID()
+//									+ Packets.SPLIT.getID() + EntityType.WAR_AXE_DIAMOND.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID());
+//							Packets.sendPacketToAllUsers(cachedPlayerPackets.get(r), this);
 						}
 						for(int i = 0; i < users.size(); i++) {
 							if(i != r) {
-								Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
-										users.get(i) + Packets.SPLIT.getID() + PlayerTypes.HUMAN.getID(), this);
+								Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID()
+										+ users.get(i) + Packets.SPLIT.getID() + (hID), this);
 							}
 							else {
-								Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID() +
-										users.get(i) + Packets.SPLIT.getID() + PlayerTypes.MINOTAUR.getID(), this);
+								Packets.sendPacketToUser(users.get(i), Packets.CLASSIFY.getID() + Packets.SPLIT.getID()
+										+ users.get(i) + Packets.SPLIT.getID() + mID, this);
 							}
 						}
 						map = Packets.MAP.getID() + Packets.SPLIT.getID() + vote.getID() + Packets.SPLIT.getID() + gmVote.getID();
@@ -239,6 +255,9 @@ public class Server extends Thread {
 				}
 				else if(id.equalsIgnoreCase(Packets.CLASSIFY.getID())) {
 					Packets.sendPacketToUser(packetArgs[1].trim(), msg, this);
+				}
+				else if(id.equalsIgnoreCase(Packets.SOUND.getID())) {
+					Packets.sendPacketToAllUsers(msg, this);
 				}
 			}
 			if(msg.trim().equalsIgnoreCase("ping")) {

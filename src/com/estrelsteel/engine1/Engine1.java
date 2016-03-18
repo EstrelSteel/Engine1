@@ -611,12 +611,12 @@ public class Engine1 extends Canvas implements Runnable {
 		String portStr = "";
 		int port = 5006;
 		if(!startServer) {
-			ip = JOptionPane.showInputDialog("Enter the IP Address", "0.0.0.0");
+			ip = JOptionPane.showInputDialog("Enter the IP Address", "0.0.0.0").trim();
 		}
 		if(ip == null) {
 			return;
 		}
-		portStr = JOptionPane.showInputDialog("Enter the port", "5006");
+		portStr = JOptionPane.showInputDialog("Enter the port", "5006").trim();
 		if(portStr == null) {
 			return;
 		}
@@ -829,6 +829,10 @@ public class Engine1 extends Canvas implements Runnable {
 						alarmTrap.setTeam(player.getTeam());
 						alarmTrap.moveLocation(player.getLocation());
 						Effects.ALARM_TRAP_PLACE.getSound().play();
+						if(multiplayer) {
+							client.sendData((Packets.SOUND.getID() + Packets.SPLIT.getID() + Effects.ALARM_TRAP_PLACE.getID()
+									+ Packets.SPLIT.getID() + player.getLocation().getX() + Packets.SPLIT.getID() + player.getLocation().getY()).getBytes());
+						}
 					}
 					if((e.getActiveAnimationNum() == 1 || e.getActiveAnimationNum() == 5) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(5);
@@ -884,6 +888,10 @@ public class Engine1 extends Canvas implements Runnable {
 						if(e.getEquiped() != null && e.getEquiped().getCurrentAnimation().getFrame() == 0 && e.getEquiped().getCurrentAnimation().getSoundEffect() != null
 								&& e.getActiveAnimationNum() >= 4 && e.getActiveAnimationNum() <= 7) {
 							e.getEquiped().getCurrentAnimation().getSoundEffect().getSound().play();
+							if(multiplayer) {
+								client.sendData((Packets.SOUND.getID() + Packets.SPLIT.getID() + e.getEquiped().getCurrentAnimation().getSoundEffect().getID()
+										+ Packets.SPLIT.getID() + player.getLocation().getX() + Packets.SPLIT.getID() + player.getLocation().getY()).getBytes());
+							}
 						}
 						if(((Player) e).getHealth() < 0.0) {
 							if(e.getActiveAnimationNum() != 9) {
@@ -896,12 +904,20 @@ public class Engine1 extends Canvas implements Runnable {
 								world.setMainCamera(killCam);
 								hud.setOpen(false, this);
 								overlayHud.setOpen(false, this);
-								if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
-									client.sendData((Packets.VICTORY.getID() + Packets.SPLIT.getID() + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
-								}
-								else {
-									respawn.setOpen(true, this);
-									overlayRespawn.setOpen(true, this);
+								if(multiplayer) {
+									if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
+										client.sendData((Packets.VICTORY.getID() + Packets.SPLIT.getID() + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
+									}
+									else {
+										respawn.setOpen(true, this);
+										overlayRespawn.setOpen(true, this);
+										for(Player pl : world.getPlayers()) {
+											if(pl.getType() == EntityType.MINOTAUR) {
+												client.sendData((Packets.DAMAGE.getID() + Packets.SPLIT.getID() + pl.getName()
+														+ Packets.SPLIT.getID() + "-5" + Packets.SPLIT.getID() + player.getName()).getBytes());
+											}
+										}
+									}
 								}
 							}
 						}
@@ -1114,10 +1130,16 @@ public class Engine1 extends Canvas implements Runnable {
 						if(s.getLocation().collidesWith(e.getLocation())) {
 							if(((Player) e).getActiveAnimationNum() != 9) {
 								if(((Player) e).getTeam() == Team.BLUE) {
-									s.subtractCount(1.0);
+									if(e.getType() == EntityType.MINOTAUR) {
+										s.subtractCount((multiWorld.getPlayers().size() - 1) * 0.1);
+									}
+									s.subtractCount(((Player) e).getTakeCount());
 								}
 								else if(((Player) e).getTeam() == Team.RED) {
-									s.addCount(1.0);
+									if(e.getType() == EntityType.MINOTAUR) {
+										s.addCount((multiWorld.getPlayers().size() - 1) * 0.1);
+									}
+									s.addCount(((Player) e).getTakeCount());
 								}
 							}
 						}

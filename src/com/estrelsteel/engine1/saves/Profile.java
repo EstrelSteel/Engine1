@@ -36,8 +36,10 @@ public class Profile {
 		this.slash = EntityType.SLASH;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, 5, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, 7, minotaurWeapon, 1.3));
 	}
 	
 	public Profile(String username) {
@@ -52,8 +54,10 @@ public class Profile {
 		this.slash = EntityType.SLASH;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 7, minotaurWeapon));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, 5, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, 7, minotaurWeapon, 1.3));
 	}
 	
 	public String getUsername() {
@@ -173,8 +177,10 @@ public class Profile {
 		}
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN, Team.BLUE, 5, weapon));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR, Team.RED, 7, minotaurWeapon));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN, Team.BLUE, 5, weapon, 1.0));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR, Team.RED, 7, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN_REVERSE, Team.RED, 5, weapon, 1.0));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, 7, minotaurWeapon, 1.3));
 	}
 	
 	public void setUsername(String username) {

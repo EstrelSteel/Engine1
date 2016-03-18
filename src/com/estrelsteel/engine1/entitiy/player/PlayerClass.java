@@ -11,13 +11,15 @@ public class PlayerClass {
 	private int walkspeed;
 	private EntityType equip;
 	private PlayerTypes type;
+	private double takeCount;
 	
-	public PlayerClass(String name, PlayerTypes type, Team team, int walkspeed, EntityType equip) {
+	public PlayerClass(String name, PlayerTypes type, Team team, int walkspeed, EntityType equip, double takeCount) {
 		this.name = name;
 		this.type = type;
 		this.team = team;
 		this.walkspeed = walkspeed;
 		this.equip = equip;
+		this.takeCount = takeCount;
 	}
 	
 	public String getName() {
@@ -40,12 +42,17 @@ public class PlayerClass {
 		return equip;
 	}
 	
+	public double getTakeCount() {
+		return takeCount;
+	}
+	
 	public Player convertPlayerToClass(Player player) {
 		player.setTeam(team);
 		player.setWalkspeed(walkspeed);
 		player.setNormalWalkspeed(walkspeed);
 		player.getEquiped().setType(equip);
 		player.setType(type.getType());
+		player.setTakeCount(takeCount);
 		return player;
 	}
 	
@@ -73,5 +80,9 @@ public class PlayerClass {
 	
 	public void setEquip(EntityType equip) {
 		this.equip = equip;
+	}
+	
+	public void setTakeCount(double takeCount) {
+		this.takeCount = takeCount;
 	}
 }

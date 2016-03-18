@@ -1,3 +1,17 @@
+>>> Minotaur v1.2b (build 44) <<<
+	+ Minotaur takes shrines quicker
+	+ Minotaur nows heals health after kills
+	+ Added cross client sound
+	+ Added scaling of shrine capture speed for minotaur
+	~ Made IP input less sensitive
+	~ Made Port input less sensitive
+	~ Fixed Minotaur being too fast
+	~ Changed how cached player data works on the server
+	~ Changed how reverse gamemode is handled
+	~ Actually fixed players appearing to be minotaurs
+	~ Made reverse players separate class
+
+
 >>> Minotaur v1.2a (build 43) <<<
 	+ Added game launcher
 	+ Added auto updater
