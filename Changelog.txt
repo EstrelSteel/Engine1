@@ -1,3 +1,17 @@
+>>> Minotaur v1.2c (build 45) <<<
+	+ Added force admin command
+	+ Players can now damage their own team
+	~ Player damage is multiplied by 10
+	~ Increased minotaur health to 1000
+	~ Player death now heals 50 to the minotaur
+	~ Changed how movement speed works
+	~ Fixed some attack collisions not working correctly
+	~ Fixed menus not closing
+	~ Fixed players dying in the lobby
+	- Removed pick command
+	- Removed minotaur command
+
+
 >>> Minotaur v1.2b (build 44) <<<
 	+ Minotaur takes shrines quicker
 	+ Minotaur nows heals health after kills

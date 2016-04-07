@@ -64,21 +64,27 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 						}
 						String[] args = cmd.split(" ");
 						
-						if(args[0].trim().equalsIgnoreCase("pick") && args.length >= 3) {
+						if(args[0].trim().equalsIgnoreCase("force") && args.length >= 3) {
 							if(args[1].trim().equalsIgnoreCase("map")) {
 								Engine1.server.votes.add(new Vote(Maps.findByID(Engine1.stringtoint(args[2].trim())).getID(), 999999));
 							}
 							else if(args[1].trim().equalsIgnoreCase("gm")) {
 								Engine1.server.gmVotes.add(new Vote(Gamemode.findByID(Engine1.stringtoint(args[2].trim())).getID(), 999999));
 							}
-						}
-						else if(args[0].trim().equalsIgnoreCase("minotaur") && args.length >= 2) {
-							for(Player p : engine.world.getPlayers()) {
-								if(p.getName().split("#")[0].equalsIgnoreCase(args[1].trim())) {
-									Engine1.server.minotaur = p.getName();
+							else if(args[1].trim().equalsIgnoreCase("minotaur")) {
+								for(Player p : engine.world.getPlayers()) {
+									if(p.getName().split("#")[0].equalsIgnoreCase(args[2].trim())) {
+										Engine1.server.minotaur = p.getName();
+									}
 								}
 							}
 						}
+						else if(args[0].trim().equalsIgnoreCase("force") && args.length >= 2) {
+							if(args[1].trim().equalsIgnoreCase("start")) {
+								startGame();
+							}
+						}
+						e.consume();
 					}
 					else if(item.getType() == MenuItemType.START_BUTTON) {
 						startGame();

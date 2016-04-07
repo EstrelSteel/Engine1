@@ -1,14 +1,14 @@
 MINOTAUR by EstrelSteel
-version 1.2a-Gold
-build 43
+version 1.2c-Gold
+build 45
 
-release date: 16.03.2016
+release date: 03.04.2016
 
 ###
 
 Development info:
 	Derived from: Engine1 (build 6), Chatroom (build 3)
-	Period: 73 Days
+	Period: 91 Days
 
 
 ###
@@ -23,15 +23,20 @@ Controls:
 ###
 
 Administrator/Host Commands:
-	pick <map|gm> <id>
-	minotaur <player>
+	force <map | gm | minotaur | start> [id | player]
+		description: chooses map or game mode
+		examples:
+			“force map 0” / selects the map Mines to play
+			“force gm 0” / selects the game mode Classic
+			"force minotaur Test" / makes player Test the minotaur
+			"force minotaur " / makes the minotaur a random player
+			"force start" / starts the game immediately 
 	
 ###
 
 Maps:
 	NAME		| ID
 	-----------	|----
-	ISLAND		| -3
 	INVALID		| -2
 	LOBBY		| -1
 	MINES		| 0

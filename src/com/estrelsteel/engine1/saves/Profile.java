@@ -9,55 +9,56 @@ import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.entitiy.player.PlayerClass;
 import com.estrelsteel.engine1.entitiy.player.PlayerTypes;
+import com.estrelsteel.engine1.entitiy.weapon.WeaponType;
 import com.estrelsteel.engine1.tile.shrine.Team;
 
 public class Profile {
 	
 	private String username;
 	private long id;
-	private ArrayList<EntityType> weapons;
-	private ArrayList<EntityType> minotaurWeapons;
+	private ArrayList<WeaponType> weapons;
+	private ArrayList<WeaponType> minotaurWeapons;
 	private ArrayList<EntityType> slashes;
 	private boolean transHud;
-	private EntityType weapon;
-	private EntityType minotaurWeapon;
+	private WeaponType weapon;
+	private WeaponType minotaurWeapon;
 	private EntityType slash;
 	private ArrayList<PlayerClass> classes;
 	
 	public Profile() {
 		this.username = "NULL";
 		this.id = (int) (Math.random() * 1000000000);
-		this.weapons = new ArrayList<EntityType>();
-		this.minotaurWeapons = new ArrayList<EntityType>();
+		this.weapons = new ArrayList<WeaponType>();
+		this.minotaurWeapons = new ArrayList<WeaponType>();
 		this.slashes = new ArrayList<EntityType>();
 		this.transHud = false;
-		this.weapon = EntityType.SWORD_DIAMOND;
-		this.minotaurWeapon = EntityType.WAR_AXE_DIAMOND;
+		this.weapon = WeaponType.DIAMOND_SWORD;
+		this.minotaurWeapon = WeaponType.DIAMOND_WAR_AXE;
 		this.slash = EntityType.SLASH;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon, 1.3));
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, 5, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, 7, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, minotaurWeapon, 1.3));
 	}
 	
 	public Profile(String username) {
 		this.username = username;
 		this.id = (int) (Math.random() * 1000000000);
-		this.weapons = new ArrayList<EntityType>();
-		this.minotaurWeapons = new ArrayList<EntityType>();
+		this.weapons = new ArrayList<WeaponType>();
+		this.minotaurWeapons = new ArrayList<WeaponType>();
 		this.slashes = new ArrayList<EntityType>();
 		this.transHud = false;
-		this.weapon = EntityType.SWORD_DIAMOND;
-		this.minotaurWeapon = EntityType.WAR_AXE_DIAMOND;
+		this.weapon = WeaponType.DIAMOND_SWORD;
+		this.minotaurWeapon = WeaponType.DIAMOND_WAR_AXE;
 		this.slash = EntityType.SLASH;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, 5, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, 8, minotaurWeapon, 1.3));
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, 5, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, 7, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, minotaurWeapon, 1.3));
 	}
 	
 	public String getUsername() {
@@ -68,11 +69,11 @@ public class Profile {
 		return id;
 	}
 	
-	public ArrayList<EntityType> getWeapons() {
+	public ArrayList<WeaponType> getWeapons() {
 		return weapons;
 	}
 	
-	public ArrayList<EntityType> getMinotaurWeapons() {
+	public ArrayList<WeaponType> getMinotaurWeapons() {
 		return minotaurWeapons;
 	}
 	
@@ -80,11 +81,11 @@ public class Profile {
 		return slashes;
 	}
 	
-	public EntityType getWeapon() {
+	public WeaponType getWeapon() {
 		return weapon;
 	}
 	
-	public EntityType getMinotaurWeapon() {
+	public WeaponType getMinotaurWeapon() {
 		return minotaurWeapon;
 	}
 	
@@ -103,7 +104,7 @@ public class Profile {
 	@Deprecated
 	public void loadForPlayer(Engine1 engine) {
 		engine.player.setName(username + "#" + id);
-		engine.player.getEquiped().setType(weapon);
+		engine.player.setEquiped(weapon.getWeapon());
 		engine.slash.setType(slash);
 		return;
 	}
@@ -120,10 +121,10 @@ public class Profile {
 		lines.add("version " + Engine1.build);
 		lines.add("username " + username);
 		lines.add("id " + id);
-		for(EntityType t : weapons) {
+		for(WeaponType t : weapons) {
 			lines.add("weapons " + t.getID());
 		}
-		for(EntityType t : minotaurWeapons) {
+		for(WeaponType t : minotaurWeapons) {
 			lines.add("minotaurWeapons " + t.getID());
 		}
 		for(EntityType t : slashes) {
@@ -147,19 +148,19 @@ public class Profile {
 				id = Long.parseLong(args[1].trim());
 			}
 			else if(args[0].trim().equalsIgnoreCase("weapons")) {
-				weapons.add(EntityType.findByID(Integer.parseInt(args[1].trim())));
+				weapons.add(WeaponType.findByID(Integer.parseInt(args[1].trim())));
 			}
 			else if(args[0].trim().equalsIgnoreCase("minotaurWeapons")) {
-				minotaurWeapons.add(EntityType.findByID(Integer.parseInt(args[1].trim())));
+				minotaurWeapons.add(WeaponType.findByID(Integer.parseInt(args[1].trim())));
 			}
 			else if(args[0].trim().equalsIgnoreCase("slashes")) {
 				slashes.add(EntityType.findByID(Integer.parseInt(args[1].trim())));
 			}
 			else if(args[0].trim().equalsIgnoreCase("weapon")) {
-				weapon = EntityType.findByID(Integer.parseInt(args[1].trim()));
+				weapon = WeaponType.findByID(Integer.parseInt(args[1].trim()));
 			}
 			else if(args[0].trim().equalsIgnoreCase("minotaurWeapon")) {
-				minotaurWeapon = EntityType.findByID(Integer.parseInt(args[1].trim()));
+				minotaurWeapon = WeaponType.findByID(Integer.parseInt(args[1].trim()));
 			}
 			else if(args[0].trim().equalsIgnoreCase("slash")) {
 				slash = EntityType.findByID(Integer.parseInt(args[1].trim()));
@@ -177,10 +178,10 @@ public class Profile {
 		}
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN, Team.BLUE, 5, weapon, 1.0));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR, Team.RED, 7, minotaurWeapon, 1.3));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN_REVERSE, Team.RED, 5, weapon, 1.0));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, 7, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN, Team.BLUE, weapon, 1.0));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR, Team.RED, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN_REVERSE, Team.RED, weapon, 1.0));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, minotaurWeapon, 1.3));
 	}
 	
 	public void setUsername(String username) {
@@ -193,12 +194,12 @@ public class Profile {
 		return;
 	}
 	
-	public void setWeapons(ArrayList<EntityType> weapons) {
+	public void setWeapons(ArrayList<WeaponType> weapons) {
 		this.weapons = weapons;
 		return;
 	}
 	
-	public void setMinotaurWeapons(ArrayList<EntityType> minotaurWeapons) {
+	public void setMinotaurWeapons(ArrayList<WeaponType> minotaurWeapons) {
 		this.minotaurWeapons = minotaurWeapons;
 		return;
 	}
@@ -208,14 +209,14 @@ public class Profile {
 		return;
 	}
 	
-	public void setWeapon(EntityType weapon) {
+	public void setWeapon(WeaponType weapon) {
 		if(weapons.contains(weapon)) {
 			this.weapon = weapon;
 		}
 		return;
 	}
 	
-	public void setMinotaurWeapon(EntityType minotaurWeapon) {
+	public void setMinotaurWeapon(WeaponType minotaurWeapon) {
 		if(minotaurWeapons.contains(minotaurWeapon)) {
 			this.minotaurWeapon = minotaurWeapon;
 		}

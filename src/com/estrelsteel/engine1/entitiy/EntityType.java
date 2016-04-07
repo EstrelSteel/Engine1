@@ -8,7 +8,7 @@ import com.estrelsteel.engine1.world.Location;
 
 public enum EntityType {
 	UNKOWN(-1, "UNKNOWN", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
-	PLAYER(0, "PLAYER", Engine1.filesPath + "/assets/res/img/texture.png", new Location(1 * 16, 0 * 16, 16, 16)),
+	HIDDEN(0, "HIDDEN", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
 	WALPOLE(1, "WALPOLE", Engine1.filesPath + "/assets/res/img/robert_walpole_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
 	JOHN_SNOW(2, "JOHN_SNOW", Engine1.filesPath + "/assets/res/img/john_snow_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),
 	MINOTAUR(3, "MINOTAUR", Engine1.filesPath + "/assets/res/img/minotaur_sheet.png", new Location(0 * 16, 0 * 16, 19, 21)),

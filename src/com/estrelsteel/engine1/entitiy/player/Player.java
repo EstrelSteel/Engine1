@@ -14,7 +14,7 @@ public class Player extends Entity {
 	private Team team;
 	private double health;
 	private double maxHealth;
-	private double damage;
+	private double defense;
 	private Engine1 engine;
 	private int normWalkspeed;
 	private double takeCount;
@@ -24,7 +24,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 0.1;
+		this.defense = 0.0;
 		this.takeCount = 1.0;
 	}
 	
@@ -33,7 +33,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 0.1;
+		this.defense = 0.0;
 		this.takeCount = 1.0;
 	}
 	
@@ -42,7 +42,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 0.1;
+		this.defense = 0.0;
 		this.takeCount = 1.0;
 	}
 	
@@ -51,7 +51,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 0.1;
+		this.defense = 0.0;
 		this.normWalkspeed = walkspeed;
 		this.takeCount = 1.0;
 	}
@@ -61,7 +61,7 @@ public class Player extends Entity {
 		this.team = Team.OFF;
 		this.health = 100.0;
 		this.maxHealth = 100.0;
-		this.damage = 0.1;
+		this.defense = 0.0;
 		this.normWalkspeed = walkspeed;
 		this.takeCount = 1.0;
 	}
@@ -82,8 +82,8 @@ public class Player extends Entity {
 		return engine;
 	}
 	
-	public double getDamage() {
-		return damage;
+	public double getDefense() {
+		return defense;
 	}
 	
 	public int getNormalWalkspeed() {
@@ -136,22 +136,6 @@ public class Player extends Entity {
 		return;
 	}
 	
-	public void attack(Engine1 engine, Location location) {
-		for(Entity e : engine.world.getEntities()) {
-			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation())) && e != engine.player) {
-				((Player) e).setHealth(((Player) e).getHealth() - damage);
-				if(Engine1.multiplayer) {
-					if(getType() == EntityType.MINOTAUR) {
-						Engine1.client.sendData((Packets.DAMAGE.getID() + Packets.SPLIT.getID() + ((Player) e).getName() + Packets.SPLIT.getID() + damage * 15 +  Packets.SPLIT.getID() + getName()).getBytes());
-					}
-					else {
-						Engine1.client.sendData((Packets.DAMAGE.getID() + Packets.SPLIT.getID() + ((Player) e).getName() + Packets.SPLIT.getID() + damage +  Packets.SPLIT.getID() + getName()).getBytes());
-					}
-				}
-			}
-		}
-	}
-	
 	public void setGhostActiveAnimationNum(int activeAnimation) {
 		super.setActiveAnimationNum(activeAnimation);
 		return;
@@ -177,8 +161,8 @@ public class Player extends Entity {
 		return;
 	}
 	
-	public void setDamage(double damage) {
-		this.damage = damage;
+	public void setDefense(double defense) {
+		this.defense = defense;
 		return;
 	}
 	

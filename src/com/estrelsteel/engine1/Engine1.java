@@ -22,12 +22,14 @@ import javax.swing.JOptionPane;
 
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.camera.TestCameraControl;
-import com.estrelsteel.engine1.entitiy.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.Animation;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityImage;
 import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.place.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.player.Player;
+import com.estrelsteel.engine1.entitiy.weapon.Weapon;
+import com.estrelsteel.engine1.entitiy.weapon.WeaponType;
 import com.estrelsteel.engine1.estrelian.Estrelian;
 import com.estrelsteel.engine1.handler.CoreHandler;
 import com.estrelsteel.engine1.handler.Handler;
@@ -91,8 +93,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v1.2b";
-	public static int build = 44;
+	public String version = "v1.2c";
+	public static int build = 45;
 	public long time = System.currentTimeMillis();
 	public static String filesPath = "";
 	
@@ -100,17 +102,17 @@ public class Engine1 extends Canvas implements Runnable {
 	public World world;
 	public World statictest = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	public World test = statictest;
-	public Player player = new Player(EntityType.WALPOLE, new Location(0, 0, 64, 64), 5, true, playerHandler, "PLAYER");
+	public Player player = new Player(EntityType.WALPOLE, new Location(0, 0, 64, 64), 10, true, playerHandler, "PLAYER");
 	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
 	public Camera killCam = new Camera(new Location(0, 0, 0, 0), player);
 	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
-	public Entity weapon = new Entity(EntityType.SWORD_RUBY, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "WEAPON");
-	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 5, false, null, "SLASH");
+	public WeaponType weapon = WeaponType.DIAMOND_SWORD;
+	public Entity slash = new Entity(EntityType.SLASH, new Location(-1000, -1000, 0, 0, 0), 10, false, null, "SLASH");
 	public AlarmTrap alarmTrap = new AlarmTrap(new Location(-10000, -10000, 0, 0, 0), "ALARM_TRAP", this);
 	public Location attackLoc;
 	public World multiWorld = new World(WIDTH * SCALE, HEIGHT * SCALE);
-	private Maps devMap = Maps.SAND_BAR;
+	private Maps devMap = Maps.MINES;
 	
 	@SuppressWarnings("unused")
 	private Estrelian es2 = new Estrelian();
@@ -512,7 +514,7 @@ public class Engine1 extends Canvas implements Runnable {
 		mainMenu.setOpen(true, this);
 		menus.add(mainMenu);
 		
-		player.setEquiped(weapon);
+		player.setEquiped(weapon.getWeapon());
 		statictest.addEntity(slash);
 		statictest.addEntity(player);
 		statictest.addPlayer(player);
@@ -522,7 +524,7 @@ public class Engine1 extends Canvas implements Runnable {
 		worlds.add(statictest);
 		
 		player = profile.configPlayer(player);
-		weapon.setName("w_" + player.getName());
+		weapon.getWeapon().setName("w_" + player.getName());
 		slash.setName("s_" + player.getName());
 		alarmTrap.setName("at_" + player.getName());
 		alarmTrap.setParent(player);
@@ -542,7 +544,6 @@ public class Engine1 extends Canvas implements Runnable {
 		world = addBasics(world);
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
-		//TEMPStartClientServer();
 		EntityType.updateSRC(filesPath);
 		TileType.updateSRC(filesPath);
 		MenuItemType.updateSRC(filesPath);
@@ -559,7 +560,6 @@ public class Engine1 extends Canvas implements Runnable {
 		//ENTITIES
 		world.addEntity(alarmTrap);
 		world.addEntity(slash);
-		world.addEntity(weapon);
 		world.addEntity(player);
 		world.addPlayer(player);
 		
@@ -839,7 +839,7 @@ public class Engine1 extends Canvas implements Runnable {
 						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
 						e.setTopEquip(true);
 						slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - 64, 64, 64, 0);
+						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - e.getLocation().getHeight(), 64, 64, 0);
 					}
 					else if((e.getActiveAnimationNum() == 0 || e.getActiveAnimationNum() == 4) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.setActiveAnimationNum(4);
@@ -860,7 +860,7 @@ public class Engine1 extends Canvas implements Runnable {
 						e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
 						e.setTopEquip(true);
 						slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
-						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - 64, 64, 64, 0);
+						attackLoc = new Location(e.getLocation().getX() - e.getLocation().getWidth(), e.getLocation().getY() - 64, 64, 64, 0);
 					}
 					else if(!PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
@@ -878,9 +878,16 @@ public class Engine1 extends Canvas implements Runnable {
 					}
 					if(attackLoc != null && PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
 						if(e.getWalkspeed() != 0) {
-							e.setWalkspeed(2);
+							if(e.getEquiped() instanceof Weapon) {
+								e.setWalkspeed(2 + ((Weapon) e.getEquiped()).getWeight());
+							}
+							else {
+								e.setWalkspeed(2);
+							}
 							if(e instanceof Player) {
-								((Player) e).attack(this, attackLoc);
+								if(((Player) e).getEquiped() instanceof Weapon) {
+									((Weapon) (((Player) e).getEquiped())).attack(this, attackLoc);
+								}
 							}
 						}
 					}
@@ -894,27 +901,32 @@ public class Engine1 extends Canvas implements Runnable {
 							}
 						}
 						if(((Player) e).getHealth() < 0.0) {
-							if(e.getActiveAnimationNum() != 9) {
-								e.setActiveAnimationNum(8);
+							if(map == Maps.LOBBY || map == Maps.INVALID) {
+								((Player) e).setHealth(((Player) e).getMaxHealth());
 							}
-							if(e.getActiveAnimationNum() == 8 && e.getCurrentAnimation().getFrame() >= 4) {
-								e.setActiveAnimationNum(9);
-								e.setWalkspeed(0);
-								e.setSlowWalkspeed(0);
-								world.setMainCamera(killCam);
-								hud.setOpen(false, this);
-								overlayHud.setOpen(false, this);
-								if(multiplayer) {
-									if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
-										client.sendData((Packets.VICTORY.getID() + Packets.SPLIT.getID() + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
-									}
-									else {
-										respawn.setOpen(true, this);
-										overlayRespawn.setOpen(true, this);
-										for(Player pl : world.getPlayers()) {
-											if(pl.getType() == EntityType.MINOTAUR) {
-												client.sendData((Packets.DAMAGE.getID() + Packets.SPLIT.getID() + pl.getName()
-														+ Packets.SPLIT.getID() + "-5" + Packets.SPLIT.getID() + player.getName()).getBytes());
+							else {
+								if(e.getActiveAnimationNum() != 9) {
+									e.setActiveAnimationNum(8);
+								}
+								if(e.getActiveAnimationNum() == 8 && e.getCurrentAnimation().getFrame() >= 4) {
+									e.setActiveAnimationNum(9);
+									e.setWalkspeed(0);
+									e.setSlowWalkspeed(0);
+									world.setMainCamera(killCam);
+									hud.setOpen(false, this);
+									overlayHud.setOpen(false, this);
+									if(multiplayer) {
+										if(player.getType() == EntityType.MINOTAUR && map != Maps.INVALID && map != Maps.LOBBY && !victory.isOpen() && !defeat.isOpen() && !vic1text.isOpen() && !vic2text.isOpen() && canWin) {
+											client.sendData((Packets.VICTORY.getID() + Packets.SPLIT.getID() + Team.getOpposedTeam(player.getTeam()).getID()).getBytes());
+										}
+										else {
+											respawn.setOpen(true, this);
+											overlayRespawn.setOpen(true, this);
+											for(Player pl : world.getPlayers()) {
+												if(pl.getType() == EntityType.MINOTAUR) {
+													client.sendData((Packets.DAMAGE.getID() + Packets.SPLIT.getID() + pl.getName()
+															+ Packets.SPLIT.getID() + "-50" + Packets.SPLIT.getID() + player.getName()).getBytes());
+												}
 											}
 										}
 									}
@@ -924,6 +936,12 @@ public class Engine1 extends Canvas implements Runnable {
 					}
 				}
 				e.getCurrentAnimation().run();
+			}
+			for(WeaponType t : WeaponType.values()) {
+				t.getWeapon().getCurrentAnimation().run();
+			}
+			for(WeaponType t : WeaponType.values()) {
+				t.getWeapon().getCurrentAnimation().setRan(false);
 			}
 			for(Entity e : world.getEntities()) {
 				e.getCurrentAnimation().setRan(false);
@@ -1098,7 +1116,7 @@ public class Engine1 extends Canvas implements Runnable {
 									player.getLocation().setX(world.getShrines().get(4).getLocation().getX());
 									player.getLocation().setY(world.getShrines().get(4).getLocation().getY());
 									player.moveDown(world);
-									player.setWalkspeed(5);
+									player.setWalkspeed(10);
 									player.setSlowWalkspeed(1);
 								}
 								else if(player.getTeam() == Team.BLUE) {
@@ -1107,7 +1125,7 @@ public class Engine1 extends Canvas implements Runnable {
 									player.getLocation().setX(world.getShrines().get(0).getLocation().getX());
 									player.getLocation().setY(world.getShrines().get(0).getLocation().getY());
 									player.moveDown(world);
-									player.setWalkspeed(5);
+									player.setWalkspeed(10);
 									player.setSlowWalkspeed(1);
 								}
 								else {
@@ -1116,7 +1134,7 @@ public class Engine1 extends Canvas implements Runnable {
 									player.getLocation().setX(world.getShrines().get(2).getLocation().getX());
 									player.getLocation().setY(world.getShrines().get(2).getLocation().getY());
 									player.moveDown(world);
-									player.setWalkspeed(5);
+									player.setWalkspeed(10);
 									player.setSlowWalkspeed(1);
 								}
 								client.packetCache.remove(i);

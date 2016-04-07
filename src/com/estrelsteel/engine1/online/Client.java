@@ -9,12 +9,13 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
-import com.estrelsteel.engine1.entitiy.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.place.AlarmTrap;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.entitiy.player.PlayerClass;
 import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.tile.shrine.Team;
@@ -138,23 +139,12 @@ public class Client extends Thread {
 				packetCache.add(new PendingPacket(msg));
 			}
 			else if(id.equalsIgnoreCase(Packets.MAP.getID())) {
-//				if(packetArgs[2].trim().equalsIgnoreCase(Gamemode.REVERSE.getID() + "")) {
-//					for(Player pl : engine.world.getPlayers()) {
-//						if(pl.getTeam() == Team.BLUE) {
-//							pl.setTeam(Team.RED);
-//						}
-//						else if(pl.getTeam() == Team.RED) {
-//							pl.setTeam(Team.BLUE);
-//						}
-//					}
-//				}
 				if(!packetArgs[1].trim().equals(Maps.LOBBY.getID() + "") && !packetArgs[1].trim().equals(Maps.INVALID.getID() + "")) {
+					for(Menu menu : engine.menus) {
+						menu.setOpen(false, engine);
+					}
 					engine.hud.setOpen(true, engine);
 					engine.overlayHud.setOpen(true, engine);
-					engine.lobbyMainHud.setOpen(false, engine);
-					engine.lobbyVoteHud.setOpen(false, engine);
-					engine.lobbyMapHud.setOpen(false, engine);
-					engine.lobbyModeHud.setOpen(false, engine);
 				}
 
 				packetCache.add(packetCache.size(), new PendingPacket(msg));

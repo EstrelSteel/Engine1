@@ -1,6 +1,8 @@
-package com.estrelsteel.engine1.entitiy;
+package com.estrelsteel.engine1.entitiy.place;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.entitiy.Entity;
+import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.sound.Effects;
