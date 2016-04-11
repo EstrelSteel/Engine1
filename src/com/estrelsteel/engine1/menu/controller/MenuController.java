@@ -1,8 +1,9 @@
-package com.estrelsteel.engine1.menu;
+package com.estrelsteel.engine1.menu.controller;
 
 import java.awt.Graphics;
 
 import com.estrelsteel.engine1.handler.Handler;
+import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.world.Image;
 import com.estrelsteel.engine1.world.Location;
 

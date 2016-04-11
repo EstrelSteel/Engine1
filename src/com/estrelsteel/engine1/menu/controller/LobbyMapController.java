@@ -1,10 +1,12 @@
-package com.estrelsteel.engine1.menu;
+package com.estrelsteel.engine1.menu.controller;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.menu.Menu;
+import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;

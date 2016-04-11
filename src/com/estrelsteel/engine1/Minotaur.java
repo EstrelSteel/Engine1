@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import com.estrelsteel.engine1.handler.CoreHandler;
 
 @SuppressWarnings("serial")
-public class Launcher extends Applet {
+public class Minotaur extends Applet {
 	private static Engine1 engine = new Engine1();
 	
 	@Override

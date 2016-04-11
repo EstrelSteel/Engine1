@@ -3,13 +3,12 @@ package com.estrelsteel.engine1.menu;
 import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.menu.controller.MenuController;
 import com.estrelsteel.engine1.world.Location;
 
 public class Menu {
 	private String name;
 	private ArrayList<MenuItem> items;
-	private ArrayList<String> text;
-	private ArrayList<Location> locs;
 	private boolean open;
 	private Location loc;
 	private MenuController controller;
@@ -18,8 +17,6 @@ public class Menu {
 	public Menu(String name, Location loc, MenuImage image) {
 		this.name = name;
 		this.items = new ArrayList<MenuItem>();
-		this.text = new ArrayList<String>();
-		this.locs = new ArrayList<Location>();
 		this.open = false;
 		this.loc = loc;
 		this.image = image;
@@ -32,8 +29,6 @@ public class Menu {
 		this.loc = loc;
 		this.controller = controller;
 		this.image = image;
-		this.text = new ArrayList<String>();
-		this.locs = new ArrayList<Location>();
 	}
 	
 	public String getName() {
@@ -56,26 +51,12 @@ public class Menu {
 		return image;
 	}
 	
-	public ArrayList<String> getText() {
-		return text;
-	}
-	
-	public ArrayList<Location> getTextLocation() {
-		return locs;
-	}
-	
 	public boolean isOpen() {
 		return open;
 	}
 	
 	public void addMenuItem(MenuItem item) {
 		items.add(item);
-		return;
-	}
-	
-	public void addText(String s, Location l) {
-		text.add(s);
-		locs.add(l);
 		return;
 	}
 	
@@ -121,16 +102,6 @@ public class Menu {
 	
 	public void setMenuImage(MenuImage image) {
 		this.image = image;
-		return;
-	}
-	
-	public void setText(ArrayList<String> text) {
-		this.text = text;
-		return;
-	}
-	
-	public void setTextLocation(ArrayList<Location> locs) {
-		this.locs = locs;
 		return;
 	}
 }

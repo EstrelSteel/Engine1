@@ -100,6 +100,7 @@ public class Client extends Thread {
 			else if(id.equalsIgnoreCase(Packets.JOINABLE.getID())) {
 				engine.lobbyMainHud.setOpen(true, engine);
 				engine.mainMenu.setOpen(false, engine);
+				engine.n_mainMenu.setOpen(false, engine);
 			}
 			else if(id.equalsIgnoreCase(Packets.KICKED.getID())) {
 				if(Engine1.server == null) {

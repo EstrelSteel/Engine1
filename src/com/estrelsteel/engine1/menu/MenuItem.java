@@ -8,7 +8,8 @@ import com.estrelsteel.engine1.world.Location;
 public class MenuItem {
 	
 	public enum MenuItemType {
-		UNKNOWN(-1, "UNKNOWN", "null", Engine1.filesPath + "/assets/res/img/hud.png"),
+		UNKNOWN(-2, "UNKNOWN", "null", Engine1.filesPath + "/assets/res/img/hud.png"),
+		TEXT(-1, "TEXT", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(0 * 16, 0 * 16, 16, 16)),
 		MOUSE(0, "MOUSE", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(4 * 16, 0 * 16, 16, 32)),
 		KEY_BLANK(1, "KEY_BLANK", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(5 * 16, 0 * 16, 16, 16)),
 		KEY_ONE(2, "KEY_ONE", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(5 * 16, 1 * 16, 16, 16)),
@@ -79,7 +80,8 @@ public class MenuItem {
 		SAND_BAR_BUTTON(67, "SAND_BAR_BUTTON", "null", Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0 * 16, 8 * 16, 117, 16)),
 		ZIG_ZAG_BUTTON(68, "ZIG_ZAG_BUTTON", "null", Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0 * 16, 9 * 16, 106, 16)),
 		ALARM_CLOCK_ICON(69, "ALARM_CLOCK_ICON", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(7 * 16, 2 * 16, 16, 16)),
-		ALARM_TRAP_BUTTON(70, "ALARM_TRAP_BUTTON", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(9 * 16, 4 * 16, 16, 16));
+		ALARM_TRAP_BUTTON(70, "ALARM_TRAP_BUTTON", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(9 * 16, 4 * 16, 16, 16)),
+		SCREEN_HUD(71, "SCREEN_HUD", "null", Engine1.filesPath + "/assets/res/dev/new_hud.png", new Location(0 * 16, 0 * 16, 36, 36));
 		
 		private int id;
 		private String name;

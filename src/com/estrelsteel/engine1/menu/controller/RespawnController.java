@@ -1,9 +1,11 @@
-package com.estrelsteel.engine1.menu;
+package com.estrelsteel.engine1.menu.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import com.estrelsteel.engine1.Engine1;
+import com.estrelsteel.engine1.menu.Menu;
+import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.tile.shrine.Shrine;

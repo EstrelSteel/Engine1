@@ -40,18 +40,20 @@ import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.maps.Victory;
-import com.estrelsteel.engine1.menu.EndController;
-import com.estrelsteel.engine1.menu.LobbyMainController;
-import com.estrelsteel.engine1.menu.LobbyMapController;
-import com.estrelsteel.engine1.menu.LobbyModeController;
-import com.estrelsteel.engine1.menu.LobbyVoteController;
-import com.estrelsteel.engine1.menu.MainMenuController;
 import com.estrelsteel.engine1.menu.Menu;
 import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
-import com.estrelsteel.engine1.menu.RespawnController;
-import com.estrelsteel.engine1.menu.WinController;
+import com.estrelsteel.engine1.menu.MenuText;
+import com.estrelsteel.engine1.menu.N_MainMenuController;
+import com.estrelsteel.engine1.menu.controller.EndController;
+import com.estrelsteel.engine1.menu.controller.LobbyMainController;
+import com.estrelsteel.engine1.menu.controller.LobbyMapController;
+import com.estrelsteel.engine1.menu.controller.LobbyModeController;
+import com.estrelsteel.engine1.menu.controller.LobbyVoteController;
+import com.estrelsteel.engine1.menu.controller.MainMenuController;
+import com.estrelsteel.engine1.menu.controller.RespawnController;
+import com.estrelsteel.engine1.menu.controller.WinController;
 import com.estrelsteel.engine1.online.Client;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.PendingPacket;
@@ -93,8 +95,8 @@ public class Engine1 extends Canvas implements Runnable {
 	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
 	
 	public String title = "Minotaur";
-	public String version = "v1.2c";
-	public static int build = 45;
+	public String version = "v1.3a";
+	public static int build = 46;
 	public long time = System.currentTimeMillis();
 	public static String filesPath = "";
 	
@@ -149,6 +151,10 @@ public class Engine1 extends Canvas implements Runnable {
 	public Menu vic2text = new Menu("vic2text", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0, 0, 16, 16)));
 	public Menu mainMenu = new Menu("mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/lobby_hud.png", new Location(0 * 16, 0, 16, 16)));
 	public Menu alarmMenu = new Menu("alarmMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0, 16, 16)));
+
+	public Menu n_mainMenu = new Menu("n_mainMenu", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), MenuItemType.SCREEN_HUD.getMenuImage());
+	public N_MainMenuController n_mainMenuController = new N_MainMenuController(n_mainMenu, "N_MainMenuController", this);
+	public Menu n_lobbyMainHud = new Menu("n_lobbyMainHud", new Location(0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE)), MenuItemType.SCREEN_HUD.getMenuImage());
 	
 	public EndController victoryHandler = new EndController(victory, "VictoryHandler", this);
 	public EndController defeatHandler = new EndController(defeat, "DefeatHandler", this);
@@ -390,6 +396,7 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		
 		//hud.addMenuItem(new MenuItem(MenuItemType.MOUSE, new Location(0, 650 - 192, 128, 256)));
+		hud.addMenuItem(new MenuText("health", new Location(144 + (60) * 5 + 64, 650 - 40, 0, 0), new Font("Menlo", Font.BOLD, 16), Color.RED));
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_ONE, new Location(144 + (60) * 0, 650 - 140, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_TWO, new Location(144 + (60) * 1, 650 - 140, 64, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_THREE, new Location(144 + (60) * 2, 650 - 140, 64, 64)));
@@ -398,7 +405,6 @@ public class Engine1 extends Canvas implements Runnable {
 		hud.addMenuItem(new MenuItem(MenuItemType.KEY_SPACE, new Location(144 + (60) * 0, 650 - 80, 300, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.SHRINE_METER, new Location(37, 16, 576, 64)));
 		hud.addMenuItem(new MenuItem(MenuItemType.HEALTH_FULL, new Location(144 + (60) * 5, 650 - 80, 64, 64)));
-		hud.addText("health", new Location(144 + (60) * 5 + 64, 650 - 40, 0, 0));
 		hud.setOpen(false, this);
 		menus.add(hud);
 		
@@ -511,8 +517,21 @@ public class Engine1 extends Canvas implements Runnable {
 		mainMenu.addMenuItem(new MenuItem(MenuItemType.CONNECT_BUTTON, new Location(80, (HEIGHT) / 3 + 96, 288, 32)));
 		mainMenu.addMenuItem(new MenuItem(MenuItemType.ESTREL_ICON, new Location(WIDTH - 80, HEIGHT - 80, 64, 64)));
 		mainMenu.setController(mainMenuController);
-		mainMenu.setOpen(true, this);
+		mainMenu.setOpen(false, this);
 		menus.add(mainMenu);
+		
+		n_mainMenu.addMenuItem(new MenuText("MINOTAUR", new Location(100, 160), new Font("Menlo", Font.BOLD, 65), Color.LIGHT_GRAY));
+
+		n_mainMenu.addMenuItem(new MenuText(version, new Location(415, 160), new Font("Menlo", Font.BOLD, 16), Color.LIGHT_GRAY));
+		
+		n_mainMenu.addMenuItem(new MenuText("Multiplayer:", new Location(100, 235), new Font("Menlo", Font.BOLD, 35), Color.LIGHT_GRAY));
+		n_mainMenu.addMenuItem(new MenuText("Host", new Location(150, 250, 400, 35), new Font("Menlo", Font.BOLD, 35), Color.LIGHT_GRAY));
+		n_mainMenu.addMenuItem(new MenuText("Connect", new Location(150, 300, 400, 35), new Font("Menlo", Font.BOLD, 35), Color.LIGHT_GRAY));
+		
+		n_mainMenu.addMenuItem(new MenuText("Map Creator", new Location(100, 500, 400, 35), new Font("Menlo", Font.BOLD, 35), Color.LIGHT_GRAY));
+		n_mainMenu.setController(n_mainMenuController);
+		n_mainMenu.setOpen(true, this);
+		menus.add(n_mainMenu);
 		
 		player.setEquiped(weapon.getWeapon());
 		statictest.addEntity(slash);
@@ -1171,7 +1190,7 @@ public class Engine1 extends Canvas implements Runnable {
 			}
 		}
 		
-		hud.getText().set(0, (int) player.getHealth() + "/" + (int) player.getMaxHealth());
+		((MenuText) hud.getMenuItems().get(0)).setText((int) player.getHealth() + "/" + (int) player.getMaxHealth());
 		if(player.getHealth() / player.getMaxHealth() < .1) {
 			hud.getMenuItems().get(hud.getMenuItems().size() - 1).setType(MenuItemType.HEALTH_EMPTY); 
 		}
@@ -1195,7 +1214,6 @@ public class Engine1 extends Canvas implements Runnable {
 			return;
 		}
 		Graphics2D ctx = (Graphics2D) bs.getDrawGraphics();
-		ctx.setFont(new Font("Menlo", Font.BOLD, 16));
 		ctx.setColor(Color.RED);
 		
 		ctx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -1209,7 +1227,6 @@ public class Engine1 extends Canvas implements Runnable {
 			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
 			//ctx = fpsFont.renderString(ctx, fps + " fps, " + tps + " tps");
 		}
-		
 		if(debug && selector != null && !hideDebugHud) {
 			//if(selectTrans == null)  {
 			selectTrans = new AffineTransform();
@@ -1232,16 +1249,20 @@ public class Engine1 extends Canvas implements Runnable {
 			if(menu.isOpen()) {
 				ctx.drawImage(menu.getMenuImage().getMenuImage(), menu.getLocation().getX(), menu.getLocation().getY(), menu.getLocation().getWidth(), menu.getLocation().getHeight(), null);
 				for(MenuItem item : menu.getMenuItems()) {
-					ctx.drawImage(item.getType().getMenuImage().getMenuImage(), item.getClickLocation().getX(), item.getClickLocation().getY(), item.getClickLocation().getWidth(), item.getClickLocation().getHeight(), null);
-					if(item.isTextOpen()) {
-						for(int i = 0; i < item.getType().getDescription().size(); i++) {
-							line = item.getType().getDescription().get(i);
-							ctx.drawString(line, item.getTextLocation().getX(), item.getTextLocation().getY() + (item.getLineSpace() * i));
+					if(item instanceof MenuText) {
+						ctx.setFont(((MenuText) item).getFont());
+						ctx.setColor(((MenuText) item).getColour());
+						ctx.drawString(((MenuText) item).getText(), item.getClickLocation().getX(), item.getClickLocation().getY() + item.getClickLocation().getHeight());
+					}
+					else {
+						ctx.drawImage(item.getType().getMenuImage().getMenuImage(), item.getClickLocation().getX(), item.getClickLocation().getY(), item.getClickLocation().getWidth(), item.getClickLocation().getHeight(), null);
+						if(item.isTextOpen()) {
+							for(int i = 0; i < item.getType().getDescription().size(); i++) {
+								line = item.getType().getDescription().get(i);
+								ctx.drawString(line, item.getTextLocation().getX(), item.getTextLocation().getY() + (item.getLineSpace() * i));
+							}
 						}
 					}
-				}
-				for(int i = 0; i < menu.getText().size(); i++) {
-					ctx.drawString(menu.getText().get(i), menu.getTextLocation().get(i).getX(), menu.getTextLocation().get(i).getY());
 				}
 			}
 		}

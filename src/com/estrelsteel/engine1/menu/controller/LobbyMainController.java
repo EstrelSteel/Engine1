@@ -1,4 +1,4 @@
-package com.estrelsteel.engine1.menu;
+package com.estrelsteel.engine1.menu.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -10,6 +10,8 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.maps.Gamemode;
 import com.estrelsteel.engine1.maps.Map.Maps;
+import com.estrelsteel.engine1.menu.Menu;
+import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.online.Vote;
@@ -23,6 +25,10 @@ public class LobbyMainController extends MenuController implements MouseMotionLi
 	public LobbyMainController(Menu menu, String name, Engine1 engine) {
 		super(menu, name);
 		this.engine = engine;
+	}
+	
+	public Engine1 getEngine() {
+		return engine;
 	}
 
 	public void execute(int id) {

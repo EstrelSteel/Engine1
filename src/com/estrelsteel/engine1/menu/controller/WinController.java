@@ -1,7 +1,9 @@
-package com.estrelsteel.engine1.menu;
+package com.estrelsteel.engine1.menu.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
+import com.estrelsteel.engine1.menu.Menu;
 
 public class WinController extends MenuController {
 	
