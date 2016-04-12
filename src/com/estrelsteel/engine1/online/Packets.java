@@ -6,12 +6,25 @@ import java.util.ArrayList;
 import com.estrelsteel.engine1.Engine1;
 
 public enum Packets {
+	SPLIT("~"),
 	INVALID("-01"),
-	LOGIN("000"),
-	DISCONNECT("001"),
-	KICKED("002");
+	LOGIN("000"),			//NAME, BUILD
+	DISCONNECT("001"),		//NAME
+	KICKED("002"),			//NAME, REASON
+	JOINABLE("003"),		//
+	MOVE("004"),			//NAME, X, Y
+	ANIMATION("005"),		//NAME, ANIMATION ID
+	PLAYER_DATA("006"),		//NAME, TYPE ID, TEAM ID, WEAPON TYPE ID, SLASH TYPE ID
+	DAMAGE("007"),			//NAME (hit), DAMAGE, NAME (sender) 
+	SHRINE_CAP("008"),		//SHRINE ID, TEAM ID
+	MAP("009"), 			//MAP ID
+	VOTE("010"),			//MAP ID, GM ID
+	REQUEST_VOTES("011"),	//
+	VICTORY("012"),			//TEAM ID
+	CLASSIFY("013"),		//NAME, PLAYER TYPE
+	SOUND("014");			//SOUND ID, X, Y
 	
-	String packetID = "-01";
+	private String packetID;
 	
 	Packets(String packetID) {
 		this.packetID = packetID;
@@ -22,7 +35,10 @@ public enum Packets {
 	}
 	
 	public static String[] packetArgs(String msg) {
-		return msg.split("✂");
+		if(msg == null) {
+			return null;
+		}
+		return msg.split(Packets.SPLIT.getID());
 	}
 	
 	public static String trimToID(String packet) {

@@ -59,7 +59,7 @@ public class Selector extends Handler {
 				type = TileType.values()[select];
 				e.consume();
 			}
-			else if(e.getKeyCode() == 45 && e.isAltDown()) {
+			if(e.getKeyCode() == 45 && e.isAltDown()) {
 				select = select - 1;
 				if(select < 0) {
 					select = TileType.values().length - 1;
@@ -67,24 +67,33 @@ public class Selector extends Handler {
 				type = TileType.values()[select];
 				e.consume();
 			}
-			else if(e.getKeyCode() == 67 && e.isAltDown()) {
+			if(e.getKeyCode() == 67 && e.isAltDown()) {
 				collide = !collide;
 				e.consume();
 			}
-			else if(e.getKeyCode() == 80 && e.isAltDown()) {
+			if(e.getKeyCode() == 80 && e.isAltDown()) {
 				loc = new Location(engine.player.getLocation().getX() / 64 * 64, engine.player.getLocation().getY() / 64 * 64, 64, 64, rotation);
 				engine.world.addTile(new Tile(type, loc, collide, null));
 				System.out.println("PLACED TILE: " + type.getName() + "\t" + loc.toString());
 				e.consume();
 			}
-			else if(e.getKeyCode() == 78 && e.isAltDown()) {
+			if(e.getKeyCode() == 78 && e.isAltDown()) {
 				engine.player.setNoClip(!engine.player.isNoClip());
 				e.consume();
 			}
-			else if(e.getKeyCode() == 82 && e.isAltDown()) {
+			if(e.getKeyCode() == 82 && e.isAltDown()) {
 				rotation = rotation + 90;
 				if(rotation >= 360) {
 					rotation = 0;
+				}
+				e.consume();
+			}
+			if(e.getKeyCode() == 73 && e.isAltDown()) {
+				for(int i = 0; i < engine.world.getAllTiles().size(); i++) {
+					if(engine.world.getAllTiles().get(i).getLocation().equals(new Location(engine.player.getLocation().getX() / 64 * 64, engine.player.getLocation().getY() / 64 * 64, 64, 64, rotation))) {
+						engine.world.getAllTiles().remove(i);
+						i--;
+					}
 				}
 				e.consume();
 			}

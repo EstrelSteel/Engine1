@@ -1,8 +1,8 @@
 package com.estrelsteel.engine1.world;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -43,9 +43,8 @@ public class Image {
 	}
 	
 	public void loadImage() {
-		InputStream is = getClass().getResourceAsStream(src);
 		try {
-			this.img = ImageIO.read(is);
+			img = (BufferedImage) ImageIO.read(new File(src));
 		}
 		catch (IOException e) {
 			e.printStackTrace();

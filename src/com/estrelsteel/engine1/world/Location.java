@@ -2,8 +2,6 @@ package com.estrelsteel.engine1.world;
 
 import java.util.ArrayList;
 
-import com.estrelsteel.engine1.camera.Camera;
-
 public class Location {
 	private int x;
 	private int y;

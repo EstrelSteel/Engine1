@@ -1,0 +1,18 @@
+version 7
+username NULL
+
+id -1
+
+weapons 8
+
+minotaurWeapons 11
+
+slashes 5
+
+weapon 8
+
+minotaurWeapon 11
+
+slash 5
+
+transHud false

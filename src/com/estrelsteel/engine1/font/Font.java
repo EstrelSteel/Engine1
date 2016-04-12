@@ -2,7 +2,10 @@ package com.estrelsteel.engine1.font;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
+import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.world.Image;
 import com.estrelsteel.engine1.world.Location;
 
@@ -17,6 +20,7 @@ public class Font {
 	private Location charSize;
 	private Location textLoc;
 	private Location charSpace;
+	private ArrayList<BufferedImage> imgs;
 	
 	public Font() {
 		charBlock0 = "ABCDEFGH";
@@ -25,10 +29,11 @@ public class Font {
 		charBlock3 = "YZ123456";
 		charBlock4 = "7890.,!?";
 		charBlock5 = ";:-_ ###";
-		image = new Image("/com/estrelsteel/engine1/res/font.png");
+		image = new Image(Engine1.filesPath + "/assets/res/img/font.png");
 		charSize = new Location(0, 0, 16, 16);
 		textLoc = new Location(0, 0, 256, 32);
 		charSpace = new Location(0, 0, 2, 2);
+		imgs = new ArrayList<BufferedImage>();
 	}
 	
 	public String getCharBlock0() {
@@ -75,30 +80,32 @@ public class Font {
 		int xPush = 0;
 		int yPush = 112;
 		for(int i = 0; i < str.length(); i++) {
-			for(xPush = 0; xPush < charBlock0.length();  xPush++) {
-				if(str.toUpperCase().charAt(i) == charBlock0.charAt(xPush)) {
-					yPush = 0;
-					break;
-				}
-				if(str.toUpperCase().charAt(i) == charBlock1.charAt(xPush)) {
-					yPush = 16;
-					break;
-				}
-				if(str.toUpperCase().charAt(i) == charBlock2.charAt(xPush)) {
-					yPush = 32;
-					break;
-				}
-				if(str.toUpperCase().charAt(i) == charBlock3.charAt(xPush)) {
-					yPush = 48;
-					break;
-				}
-				if(str.toUpperCase().charAt(i) == charBlock4.charAt(xPush)) {
-					yPush = 64;
-					break;
-				}
-				if(str.toUpperCase().charAt(i) == charBlock5.charAt(xPush)) {
-					yPush = 80;
-					break;
+			if(imgs.size() != str.length()) {
+				for(xPush = 0; xPush < charBlock0.length();  xPush++) {
+					if(str.toUpperCase().charAt(i) == charBlock0.charAt(xPush)) {
+						yPush = 0;
+						break;
+					}
+					if(str.toUpperCase().charAt(i) == charBlock1.charAt(xPush)) {
+						yPush = 16;
+						break;
+					}
+					if(str.toUpperCase().charAt(i) == charBlock2.charAt(xPush)) {
+						yPush = 32;
+						break;
+					}
+					if(str.toUpperCase().charAt(i) == charBlock3.charAt(xPush)) {
+						yPush = 48;
+						break;
+					}
+					if(str.toUpperCase().charAt(i) == charBlock4.charAt(xPush)) {
+						yPush = 64;
+						break;
+					}
+					if(str.toUpperCase().charAt(i) == charBlock5.charAt(xPush)) {
+						yPush = 80;
+						break;
+					}
 				}
 			}
 			trans = new AffineTransform();
@@ -117,9 +124,19 @@ public class Font {
 			if(!image.isImageLoaded()) {
 				image.loadImage();
 			}
-			ctx.drawImage(image.getImage().getSubimage(xPush * 16, yPush, 16, 16), trans, null);
+			if(i < imgs.size() && imgs.get(i) != null) {
+				ctx.drawImage(imgs.get(i), trans, null);
+			}
+			else {
+				if(i < imgs.size()) {
+					imgs.add(image.getImage().getSubimage(xPush * 16, yPush, 16, 16));
+				}
+				else {
+					imgs.set(i, image.getImage().getSubimage(xPush * 16, yPush, 16, 16));
+				}
+				ctx.drawImage(imgs.get(i), trans, null);
+			}
 		}
-		
 		return ctx;
 	}
 	

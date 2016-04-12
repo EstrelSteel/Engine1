@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
+import com.estrelsteel.engine1.menu.Menu;
+import com.estrelsteel.engine1.menu.controller.LobbyMainController;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.world.World;
 
@@ -33,6 +35,13 @@ public abstract class Handler implements KeyListener, MouseListener {
 					engine.addKeyListener(e.getControls());
 					engine.addMouseListener(e.getControls());
 				}
+			}
+		}
+		for(Menu menu : engine.menus) {
+			engine.addKeyListener(menu.getController());
+			engine.addMouseListener(menu.getController());
+			if(menu.getController() instanceof LobbyMainController) {
+				engine.addMouseMotionListener((LobbyMainController) menu.getController());
 			}
 		}
 		engine.addKeyListener(engine.selector);
