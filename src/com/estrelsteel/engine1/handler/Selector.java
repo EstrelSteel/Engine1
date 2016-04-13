@@ -11,7 +11,7 @@ import com.estrelsteel.engine1.world.Location;
 public class Selector extends Handler {
 	
 	private int select = 0;
-	public TileType type = TileType.AIR;
+	public TileType type = TileType.UNKOWN;
 	private Engine1 engine;
 	private Location loc;
 	public boolean collide = false;

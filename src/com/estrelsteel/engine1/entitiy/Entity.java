@@ -107,6 +107,10 @@ public class Entity {
 	}
 	
 	public Animation getCurrentAnimation() {
+		if(activeAnimation >= type.getAnimations().size()) {
+			activeAnimation = activeAnimation - 1;
+			return getCurrentAnimation();
+		}
 		return type.getAnimations().get(activeAnimation);
 	}
 	

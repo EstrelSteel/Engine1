@@ -10,17 +10,12 @@ import com.estrelsteel.engine1.world.World;
 public abstract class Map {
 	
 	public enum Maps {
-		INVALID(-2, null),
-		LOBBY(-1, new Lobby()),
-		MINES(0, new Mine()),
-		ISLAND(1, new Island()),
-		ISLAND_LOOP(2, new Island_loop()),
-		SAND_BAR(3, new Sand_bar()),
-		ZIG_ZAG(4, new Zig_zag());
+		INVALID(-1, null),
+		DEV(0, new Dev());
 		
 		private int id;
 		private Map map;
-		public static final int playableMaps = 5;
+		public static final int playableMaps = 0;
 		
 		Maps(int id, Map map) {
 			this.id = id;
@@ -41,7 +36,7 @@ public abstract class Map {
 					return map;
 				}
 			}
-			return Maps.MINES;
+			return Maps.INVALID;
 		}
 		
 		public static Maps getRandomMap() {
@@ -64,10 +59,7 @@ public abstract class Map {
 		bw.write("import com.estrelsteel.engine1.tile.Tile;\n");
 		bw.write("import com.estrelsteel.engine1.tile.TileType;\n");
 		bw.write("import com.estrelsteel.engine1.world.Location;\n");
-		bw.write("import com.estrelsteel.engine1.world.World;\n");
-		bw.write("import com.estrelsteel.engine1.tile.shrine.Shrine;\n");
-		bw.write("import com.estrelsteel.engine1.tile.shrine.Team;\n");
-		bw.write("import com.estrelsteel.engine1.tile.shrine.BlankShrine;\n\n");
+		bw.write("import com.estrelsteel.engine1.world.World;\n\n");
 		bw.write("public class " + name + " extends Map {\n");
 		bw.write("\tpublic World load1(World world) {\n");
 		ArrayList<String> worldJava = world.convertToJava(new ArrayList<String>());

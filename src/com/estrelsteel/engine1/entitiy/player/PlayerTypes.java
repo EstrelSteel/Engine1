@@ -3,10 +3,7 @@ package com.estrelsteel.engine1.entitiy.player;
 import com.estrelsteel.engine1.entitiy.EntityType;
 
 public enum PlayerTypes {
-	HUMAN(0, EntityType.WALPOLE, 100.0),
-	MINOTAUR(1, EntityType.MINOTAUR, 1000.0),
-	HUMAN_REVERSE(2, EntityType.WALPOLE, 100.0),
-	MINOTAUR_REVERSE(3, EntityType.MINOTAUR, 100.0);
+	UNKNOWN(-1, EntityType.UNKNOWN, 100.0);
 	
 	private int id;
 	private EntityType type;
