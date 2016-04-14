@@ -3,12 +3,7 @@ package com.estrelsteel.engine1.entitiy.weapon;
 import com.estrelsteel.engine1.entitiy.EntityType;
 
 public enum WeaponType {
-	DIAMOND_SWORD(8, new Weapon(EntityType.SWORD_DIAMOND, 1.0, 5)),
-	GOLD_SWORD(9, new Weapon(EntityType.SWORD_GOLD, 1.0, 5)),
-	RUBY_SWORD(10, new Weapon(EntityType.SWORD_RUBY, 1.0, 5)),
-	DIAMOND_WAR_AXE(11, new Weapon(EntityType.WAR_AXE_DIAMOND, 1.5, 2)),
-	GOLD_WAR_AXE(12, new Weapon(EntityType.WAR_AXE_GOLD, 1.5, 2)),
-	RUBY_WAR_AXE(13, new Weapon(EntityType.WAR_AXE_RUBY, 1.5, 2)),;
+	UNKNOWN(-1, new Weapon(EntityType.UNKNOWN, 1.0, 5));
 	
 	private int id;
 	private Weapon weapon;
@@ -32,7 +27,7 @@ public enum WeaponType {
 				return type;
 			}
 		}
-		return WeaponType.DIAMOND_SWORD;
+		return WeaponType.UNKNOWN;
 	}
 	
 }

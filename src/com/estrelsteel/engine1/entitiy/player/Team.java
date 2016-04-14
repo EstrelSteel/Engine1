@@ -1,4 +1,4 @@
-package com.estrelsteel.engine1.tile.shrine;
+package com.estrelsteel.engine1.entitiy.player;
 
 public enum Team {
 	NEUTRAL(0, "NEUTRAL", "WHITE"),

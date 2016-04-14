@@ -4,7 +4,6 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.player.Player;
-import com.estrelsteel.engine1.online.Packets;
 import com.estrelsteel.engine1.world.Location;
 
 public class Weapon extends Entity {
@@ -30,10 +29,6 @@ public class Weapon extends Entity {
 		for(Entity e : engine.world.getEntities()) {
 			if(e instanceof Player && (e.getLocation().collidesWith(location) || location.collidesWith(e.getLocation())) && e != engine.player) {
 				((Player) e).setHealth(((Player) e).getHealth() - damage);
-				
-				if(Engine1.multiplayer) {
-					Engine1.client.sendData((Packets.DAMAGE.getID() + Packets.SPLIT.getID() + e.getName() + Packets.SPLIT.getID() + damage +  Packets.SPLIT.getID() + engine.player.getName()).getBytes());	
-				}
 			}
 		}
 	}

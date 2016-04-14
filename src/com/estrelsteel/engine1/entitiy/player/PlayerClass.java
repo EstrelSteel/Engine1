@@ -1,9 +1,6 @@
 package com.estrelsteel.engine1.entitiy.player;
 
-import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.weapon.WeaponType;
-import com.estrelsteel.engine1.online.Packets;
-import com.estrelsteel.engine1.tile.shrine.Team;
 
 public class PlayerClass {
 	private String name;
@@ -51,11 +48,6 @@ public class PlayerClass {
 		player.setMaxHealth(type.getMaxHealth());
 		player.setHealth(type.getMaxHealth());
 		return player;
-	}
-	
-	public String getPlayerDataPacket() {
-		return Packets.PLAYER_DATA.getID() + Packets.SPLIT.getID() + getName() + Packets.SPLIT.getID() + type.getType().getID() + Packets.SPLIT.getID() +
-				team.getID() + Packets.SPLIT.getID() + equip.getID() + Packets.SPLIT.getID() + EntityType.SLASH.getID();
 	}
 	
 	public void setPlayerType(PlayerTypes type) {

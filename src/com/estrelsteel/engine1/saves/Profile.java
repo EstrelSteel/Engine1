@@ -9,8 +9,8 @@ import com.estrelsteel.engine1.entitiy.EntityType;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.entitiy.player.PlayerClass;
 import com.estrelsteel.engine1.entitiy.player.PlayerTypes;
+import com.estrelsteel.engine1.entitiy.player.Team;
 import com.estrelsteel.engine1.entitiy.weapon.WeaponType;
-import com.estrelsteel.engine1.tile.shrine.Team;
 
 public class Profile {
 	
@@ -32,15 +32,15 @@ public class Profile {
 		this.minotaurWeapons = new ArrayList<WeaponType>();
 		this.slashes = new ArrayList<EntityType>();
 		this.transHud = false;
-		this.weapon = WeaponType.DIAMOND_SWORD;
-		this.minotaurWeapon = WeaponType.DIAMOND_WAR_AXE;
-		this.slash = EntityType.SLASH;
+		this.weapon = WeaponType.UNKNOWN;
+		this.minotaurWeapon = WeaponType.UNKNOWN;
+		this.slash = EntityType.UNKNOWN;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, minotaurWeapon, 1.3));
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.BLUE, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.RED, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.RED, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.BLUE, minotaurWeapon, 1.3));
 	}
 	
 	public Profile(String username) {
@@ -50,15 +50,15 @@ public class Profile {
 		this.minotaurWeapons = new ArrayList<WeaponType>();
 		this.slashes = new ArrayList<EntityType>();
 		this.transHud = false;
-		this.weapon = WeaponType.DIAMOND_SWORD;
-		this.minotaurWeapon = WeaponType.DIAMOND_WAR_AXE;
-		this.slash = EntityType.SLASH;
+		this.weapon = WeaponType.UNKNOWN;
+		this.minotaurWeapon = WeaponType.UNKNOWN;
+		this.slash = EntityType.UNKNOWN;
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN, Team.BLUE, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR, Team.RED, minotaurWeapon, 1.3));
-		classes.add(new PlayerClass(username, PlayerTypes.HUMAN_REVERSE, Team.RED, weapon, 1.0));
-		classes.add(new PlayerClass(username, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.BLUE, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.RED, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.RED, weapon, 1.0));
+		classes.add(new PlayerClass(username, PlayerTypes.UNKNOWN, Team.BLUE, minotaurWeapon, 1.3));
 	}
 	
 	public String getUsername() {
@@ -178,10 +178,10 @@ public class Profile {
 		}
 
 		classes = new ArrayList<PlayerClass>();
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN, Team.BLUE, weapon, 1.0));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR, Team.RED, minotaurWeapon, 1.3));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.HUMAN_REVERSE, Team.RED, weapon, 1.0));
-		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.MINOTAUR_REVERSE, Team.BLUE, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.UNKNOWN, Team.BLUE, weapon, 1.0));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.UNKNOWN, Team.RED, minotaurWeapon, 1.3));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.UNKNOWN, Team.RED, weapon, 1.0));
+		classes.add(new PlayerClass(username + "#" + id, PlayerTypes.UNKNOWN, Team.BLUE, minotaurWeapon, 1.3));
 	}
 	
 	public void setUsername(String username) {

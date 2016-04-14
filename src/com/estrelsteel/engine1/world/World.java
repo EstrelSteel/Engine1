@@ -10,7 +10,6 @@ import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.player.Player;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
-import com.estrelsteel.engine1.tile.shrine.Shrine;
 
 public class World {
 	private ArrayList<Chunk> chunks;
@@ -18,7 +17,6 @@ public class World {
 	private ArrayList<Tile> collideTiles;
 	private ArrayList<Entity> entities;
 	private ArrayList<Camera> cameras;
-	private ArrayList<Shrine> shrines;
 	private ArrayList<Player> players;
 	private Camera mainCamera;
 	
@@ -31,7 +29,6 @@ public class World {
 		this.collideTiles = new ArrayList<Tile>();
 		this.entities = new ArrayList<Entity>();
 		this.cameras = new ArrayList<Camera>();
-		this.shrines = new ArrayList<Shrine>();
 		this.players = new ArrayList<Player>();
 		this.width = 1;
 		this.height = 1;
@@ -45,7 +42,6 @@ public class World {
 		this.collideTiles = new ArrayList<Tile>();
 		this.entities = new ArrayList<Entity>();
 		this.cameras = new ArrayList<Camera>();
-		this.shrines = new ArrayList<Shrine>();
 		this.players = new ArrayList<Player>();
 		this.width = width;
 		this.height = height;
@@ -81,10 +77,6 @@ public class World {
 		return cameras;
 	}
 	
-	public ArrayList<Shrine> getShrines() {
-		return shrines;
-	}
-	
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
@@ -118,11 +110,6 @@ public class World {
 		return;
 	}
 	
-	public void addShrine(Shrine shrine) {
-		shrines.add(shrine);
-		return;
-	}
-	
 	public void addPlayer(Player player) {
 		players.add(player);
 		return;
@@ -141,7 +128,6 @@ public class World {
 		Tile t;
 		Entity e;
 		Chunk c;
-		Shrine s;
 		for(int i = 0; i < chunks.size(); i++) {
 			c = chunks.get(i);
 			if(mainCamera.getFollowX()) {
@@ -215,38 +201,6 @@ public class World {
 					trans.rotate(Math.toRadians(t.getLocation().getRotation()), t.getLocation().getWidth() / (t.getType().getImage().getLocation().getWidth() / 2), t.getLocation().getHeight() / (t.getType().getImage().getLocation().getHeight() / 2));
 					//transE.rotate(Math.toRadians(e.getEquiped().getLocation().getRotation()), e.getEquiped().getLocation().getWidth() / (e.getEquiped().getCurrentImage().getLocation().getWidth() / 2), e.getEquiped().getLocation().getHeight() / (e.getEquiped().getCurrentImage().getLocation().getHeight() / 2));
 					ctx.drawImage(t.getType().getImage().getTile(), trans, null);
-				}
-			}
-		}
-		for(int i = 0; i < shrines.size(); i++) {
-			s = shrines.get(i);
-			for(int j = 0; j < s.getTiles().size(); j++) {
-				t = s.getTiles().get(j);
-				if(t.getType() != TileType.UNKOWN) {
-					if(mainCamera.getFollowX()) {
-						displayX = t.getLocation().getX() - (t.getLocation().getWidth() / 2) + x;
-					}
-					else {
-						displayX = t.getLocation().getX() + x;
-					}
-					if(mainCamera.getFollowY()) {
-						displayY = t.getLocation().getY() - (t.getLocation().getHeight() / 2) + y;
-					}
-					else {
-						displayY = t.getLocation().getY() + y;
-					}
-					//ctx.setColor(Color.BLACK);
-					if(displayX + t.getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + t.getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
-						if(!t.getType().getImage().isImageLoaded()) {
-							t.getType().getImage().loadImage();
-						}
-						trans = new AffineTransform();
-						trans.translate(displayX, displayY);
-						trans.scale(t.getLocation().getWidth() / t.getType().getLocation().getWidth(), t.getLocation().getHeight() / t.getType().getLocation().getHeight());
-						trans.rotate(Math.toRadians(t.getLocation().getRotation()), t.getLocation().getWidth() / (t.getType().getImage().getLocation().getWidth() / 2), t.getLocation().getHeight() / (t.getType().getImage().getLocation().getHeight() / 2));
-						//transE.rotate(Math.toRadians(e.getEquiped().getLocation().getRotation()), e.getEquiped().getLocation().getWidth() / (e.getEquiped().getCurrentImage().getLocation().getWidth() / 2), e.getEquiped().getLocation().getHeight() / (e.getEquiped().getCurrentImage().getLocation().getHeight() / 2));
-						ctx.drawImage(t.getType().getImage().getTile(), trans, null);
-					}
 				}
 			}
 		}
@@ -427,9 +381,6 @@ public class World {
 		for(Tile t : tiles) {
 			lines.add("world.addTile("+ t.convertToJava() + ");");
 		}
-		for(Shrine s : shrines) {
-			lines.add("world.addShrine("+ s.convertToJava() + ");");
-		}
 		return lines;
 	}
 	
@@ -491,11 +442,6 @@ public class World {
 	
 	public void setCameras(ArrayList<Camera> cameras) {
 		this.cameras = cameras;
-		return;
-	}
-	
-	public void setShrines(ArrayList<Shrine> shrines) {
-		this.shrines = shrines;
 		return;
 	}
 	
