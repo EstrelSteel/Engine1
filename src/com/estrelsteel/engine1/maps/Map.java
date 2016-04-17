@@ -11,7 +11,15 @@ public abstract class Map {
 	
 	public enum Maps {
 		INVALID(-1, null),
-		DEV(0, new Dev());
+		DEV(0, new Dev()),
+		BASICS(1, new Basics()),
+		TOYS(2, new Toys()),
+		FOOD(3, new Food()),
+		CIRCLES(4, new Circles()),
+		TOOLS(5, new Tools()),
+		STARS(6, new Stars()),
+		POINTS(7, new Points()),
+		THE_END(8, new TheEnd());
 		
 		private int id;
 		private Map map;

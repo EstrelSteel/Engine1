@@ -3,9 +3,8 @@ package com.estrelsteel.engine1.entitiy;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
-import com.estrelsteel.engine1.entitiy.weapon.Weapon;
+import com.estrelsteel.engine1.handler.GameHandler;
 import com.estrelsteel.engine1.handler.Handler;
-import com.estrelsteel.engine1.handler.PlayerHandler;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 
@@ -25,7 +24,7 @@ public class Entity {
 	
 	public Entity() {
 		this.loc = new Location(0, 0, 64, 64);
-		this.controls = new PlayerHandler("PLAYER");
+		this.controls = new GameHandler("PLAYER");
 		this.name = "NULL";
 		this.activeAnimation = 0;
 	}
@@ -154,9 +153,6 @@ public class Entity {
 	
 	public boolean moveUp(World world) {
 		int walk = walkspeed;
-		if(equiped instanceof Weapon) {
-			walk = walk - ((Weapon) equiped).getWeight();
-		}
 		if(noClip || !world.doesCollide(this, new Location(loc.getX(), loc.getY() - walkspeed, loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX());
 			loc.setY(loc.getY() - walk);
@@ -176,9 +172,6 @@ public class Entity {
 	
 	public boolean moveDown(World world) {
 		int walk = walkspeed;
-		if(equiped instanceof Weapon) {
-			walk = walk - ((Weapon) equiped).getWeight();
-		}
 		if(noClip || !world.doesCollide(this, new Location(loc.getX(), loc.getY() + walkspeed, loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX());
 			loc.setY(loc.getY() + walk);
@@ -196,9 +189,6 @@ public class Entity {
 	
 	public boolean moveRight(World world) {
 		int walk = walkspeed;
-		if(equiped instanceof Weapon) {
-			walk = walk - ((Weapon) equiped).getWeight();
-		}
 		if(noClip || !world.doesCollide(this, new Location(loc.getX() + walkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX() + walk);
 			loc.setY(loc.getY());
@@ -216,9 +206,6 @@ public class Entity {
 	
 	public boolean moveLeft(World world) {
 		int walk = walkspeed;
-		if(equiped instanceof Weapon) {
-			walk = walk - ((Weapon) equiped).getWeight();
-		}
 		if(noClip || !world.doesCollide(this, new Location(loc.getX() - walkspeed, loc.getY(), loc.getWidth(), loc.getHeight()))) {
 			loc.setX(loc.getX() - walk);
 			loc.setY(loc.getY());

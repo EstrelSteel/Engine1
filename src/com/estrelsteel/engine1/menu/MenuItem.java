@@ -9,7 +9,15 @@ public class MenuItem {
 	
 	public enum MenuItemType {
 		UNKNOWN(-1, "UNKNOWN", "null", Engine1.filesPath + "/assets/res/img/hud.png"),
-		TEXT(0, "TEXT", "null", Engine1.filesPath + "/assets/res/img/hud.png", new Location(0 * 16, 0 * 16, 16, 16));
+		TEXT(0, "TEXT", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
+		CLOCK(1, "CLOCK", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(4 * 16, 1 * 16, 16, 16)),
+		START(2, "START", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
+		QUIT(3, "QUIT", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
+		SPEAKER(4, "SPEAKER", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(5 * 16, 1 * 16, 16, 16)),
+		SOUND(5, "SOUND", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(6 * 16, 1 * 16, 16, 16)),
+		CREDIT(6, "CREDIT", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(7 * 16, 1 * 16, 16, 16)),
+		PAINT(7, "PAINT", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 6 * 16, 16, 16)),
+		PAPER(8, "PAPER", "null", Engine1.filesPath + "/assets/res/img/texture.png", new Location(2 * 16, 4 * 16, 32, 32));
 		
 		private int id;
 		private String name;

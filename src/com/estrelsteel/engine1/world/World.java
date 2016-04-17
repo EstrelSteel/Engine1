@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.camera.Camera;
+import com.estrelsteel.engine1.collide.CollideMap;
 import com.estrelsteel.engine1.entitiy.Entity;
-import com.estrelsteel.engine1.entitiy.player.Player;
+import com.estrelsteel.engine1.entitiy.EntityType;
+import com.estrelsteel.engine1.entitiy.block.Block;
 import com.estrelsteel.engine1.tile.Tile;
 import com.estrelsteel.engine1.tile.TileType;
 
@@ -17,7 +19,8 @@ public class World {
 	private ArrayList<Tile> collideTiles;
 	private ArrayList<Entity> entities;
 	private ArrayList<Camera> cameras;
-	private ArrayList<Player> players;
+	private ArrayList<CollideMap> maps;
+	private int mapPos;
 	private Camera mainCamera;
 	
 	private double width;
@@ -29,7 +32,8 @@ public class World {
 		this.collideTiles = new ArrayList<Tile>();
 		this.entities = new ArrayList<Entity>();
 		this.cameras = new ArrayList<Camera>();
-		this.players = new ArrayList<Player>();
+		this.maps = new ArrayList<CollideMap>();
+		this.mapPos = 0;
 		this.width = 1;
 		this.height = 1;
 		this.cameras.add(new Camera(new Location(0, 0)));
@@ -42,7 +46,8 @@ public class World {
 		this.collideTiles = new ArrayList<Tile>();
 		this.entities = new ArrayList<Entity>();
 		this.cameras = new ArrayList<Camera>();
-		this.players = new ArrayList<Player>();
+		this.maps = new ArrayList<CollideMap>();
+		this.mapPos = 0;
 		this.width = width;
 		this.height = height;
 		this.cameras.add(new Camera(new Location(0, 0)));
@@ -77,8 +82,12 @@ public class World {
 		return cameras;
 	}
 	
-	public ArrayList<Player> getPlayers() {
-		return players;
+	public ArrayList<CollideMap> getCollideMaps() {
+		return maps;
+	}
+	
+	public int getCollideMapPosition() {
+		return mapPos;
 	}
 
 	public Camera getMainCamera() {
@@ -110,9 +119,8 @@ public class World {
 		return;
 	}
 	
-	public void addPlayer(Player player) {
-		players.add(player);
-		return;
+	public void addCollideMap(CollideMap map) {
+		maps.add(map);
 	}
 	
 	public Graphics2D renderWorld(Graphics2D ctx) {
@@ -128,6 +136,30 @@ public class World {
 		Tile t;
 		Entity e;
 		Chunk c;
+		if(mainCamera.getFollowX()) {
+			displayX = maps.get(mapPos).getLocation().getX() - (maps.get(mapPos).getLocation().getWidth() / 2) + x;
+		}
+		else {
+			displayX = maps.get(mapPos).getLocation().getX() + x;
+		}
+		
+		if(mainCamera.getFollowY()) {
+			displayY = maps.get(mapPos).getLocation().getY() - (maps.get(mapPos).getLocation().getHeight() / 2) + y;
+		}
+		else {
+			displayY = maps.get(mapPos).getLocation().getY() + y;
+		}
+		//ctx.setColor(Color.BLACK);
+		if(displayX + maps.get(mapPos).getLocation().getWidth() > -10 && displayX < Engine1.startWidth + 10 && displayY + maps.get(mapPos).getLocation().getHeight() > -10 && displayY < Engine1.startHeight + 10) {
+			if(!maps.get(mapPos).getCurrentImage().isImageLoaded()) {
+				maps.get(mapPos).getCurrentImage().loadImage();
+			}
+			trans = new AffineTransform();
+			trans.rotate(Math.toRadians(maps.get(mapPos).getLocation().getRotation()), maps.get(mapPos).getCentre().getX() + x, maps.get(mapPos).getCentre().getY() + y);
+			trans.translate(displayX, displayY);
+			trans.scale(maps.get(mapPos).getLocation().getWidth() / maps.get(mapPos).getType().getLocation().getWidth(), maps.get(mapPos).getLocation().getHeight() / maps.get(mapPos).getType().getLocation().getHeight());
+			ctx.drawImage(maps.get(mapPos).getCurrentImage().getEntity(), trans, null);
+		}
 		for(int i = 0; i < chunks.size(); i++) {
 			c = chunks.get(i);
 			if(mainCamera.getFollowX()) {
@@ -252,10 +284,16 @@ public class World {
 					e.getCurrentImage().loadImage();
 				}
 				trans = new AffineTransform();
+				
+				if(e instanceof Block || e instanceof CollideMap) {
+					trans.rotate(Math.toRadians(e.getLocation().getRotation()), maps.get(mapPos).getCentre().getX() + x, maps.get(mapPos).getCentre().getY() + y);
+				}
+				else {
+					trans.rotate(Math.toRadians(e.getLocation().getRotation()), e.getLocation().getWidth() / (e.getCurrentImage().getLocation().getWidth() / 2), e.getLocation().getHeight() / (e.getCurrentImage().getLocation().getHeight() / 2));
+				}
 				trans.translate(displayX, displayY);
 				trans.scale(e.getLocation().getWidth() / e.getCurrentImage().getLocation().getWidth(), e.getLocation().getHeight() / e.getCurrentImage().getLocation().getHeight());
 				
-				trans.rotate(Math.toRadians(e.getLocation().getRotation()), e.getLocation().getWidth() / (e.getCurrentImage().getLocation().getWidth() / 2), e.getLocation().getHeight() / (e.getCurrentImage().getLocation().getHeight() / 2));
 				if(e.getEquiped() != null) {
 					transE = new AffineTransform();
 					transE.translate(displayXE, displayYE);
@@ -445,9 +483,12 @@ public class World {
 		return;
 	}
 	
-	public void setPlayers(ArrayList<Player> players) {
-		this.players = players;
-		return;
+	public void setCollideMaps(ArrayList<CollideMap> maps) {
+		this.maps = maps;
+	}
+	
+	public void setCollideMapPosition(int mapPos) {
+		this.mapPos = mapPos;
 	}
 	
 	public void setMainCamera(Camera mainCamera) {

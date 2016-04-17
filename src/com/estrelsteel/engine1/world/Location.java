@@ -135,6 +135,12 @@ public class Location {
 		return Math.sqrt((getYDistance(loc) * getYDistance(loc)) + (getXDistance(loc) * getXDistance(loc)));
 	}
 	
+	public Location getRotatedPoint(int x, int y, double rotation) {
+		int x2 = (int) (x * Math.cos(Math.toRadians(rotation)) - y * Math.sin(Math.toRadians(rotation)));
+		int y2 = (int) (y * Math.cos(Math.toRadians(rotation)) + x * Math.sin(Math.toRadians(rotation)));
+		return new Location(x2, y2);
+	}
+	
 	public boolean collidesWith(Location loc) {
 		if(x + w > loc.getX()
 				&& x < loc.getX() + loc.getWidth()

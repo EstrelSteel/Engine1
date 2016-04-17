@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,31 +15,32 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import com.estrelsteel.engine1.camera.Camera;
-import com.estrelsteel.engine1.camera.TestCameraControl;
+import com.estrelsteel.engine1.contract.Contract;
+import com.estrelsteel.engine1.contract.RequireData;
 import com.estrelsteel.engine1.entitiy.Entity;
 import com.estrelsteel.engine1.entitiy.EntityType;
-import com.estrelsteel.engine1.entitiy.player.Player;
-import com.estrelsteel.engine1.entitiy.player.Team;
-import com.estrelsteel.engine1.entitiy.weapon.Weapon;
-import com.estrelsteel.engine1.entitiy.weapon.WeaponType;
+import com.estrelsteel.engine1.entitiy.block.Block;
+import com.estrelsteel.engine1.entitiy.block.BlockStatus;
+import com.estrelsteel.engine1.entitiy.block.BlockType;
 import com.estrelsteel.engine1.estrelian.Estrelian;
 import com.estrelsteel.engine1.handler.CoreHandler;
+import com.estrelsteel.engine1.handler.GameHandler;
+import com.estrelsteel.engine1.handler.GameHandler.GameControls;
 import com.estrelsteel.engine1.handler.Handler;
-import com.estrelsteel.engine1.handler.PlayerHandler;
-import com.estrelsteel.engine1.handler.PlayerHandler.PlayerControls;
-import com.estrelsteel.engine1.handler.Selector;
 import com.estrelsteel.engine1.maps.Gamemode;
-import com.estrelsteel.engine1.maps.Map;
 import com.estrelsteel.engine1.maps.Map.Maps;
 import com.estrelsteel.engine1.menu.Menu;
+import com.estrelsteel.engine1.menu.MenuImage;
 import com.estrelsteel.engine1.menu.MenuItem;
 import com.estrelsteel.engine1.menu.MenuItem.MenuItemType;
 import com.estrelsteel.engine1.menu.MenuText;
+import com.estrelsteel.engine1.menu.controller.ContractController;
+import com.estrelsteel.engine1.menu.controller.FinshedContractController;
+import com.estrelsteel.engine1.menu.controller.HudController;
+import com.estrelsteel.engine1.menu.controller.MainMenuController;
 import com.estrelsteel.engine1.saves.Profile;
-import com.estrelsteel.engine1.tile.TileType;
+import com.estrelsteel.engine1.sound.Effects;
 import com.estrelsteel.engine1.world.Location;
 import com.estrelsteel.engine1.world.World;
 
@@ -59,7 +59,7 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	public int tickCount = 0;
 	public int frames;
-	public boolean debug = true;
+	public boolean debug = false;
 	private boolean hideDebugHud = false;
 	private boolean showFPS = false;
 	public int fps;
@@ -68,25 +68,19 @@ public class Engine1 extends Canvas implements Runnable {
 	
 	private Thread thread; 
 	public CoreHandler coreHandler;
-	public PlayerHandler playerHandler = new PlayerHandler("PLAYER");
+	public GameHandler playerHandler = new GameHandler("PLAYER");
 	
-	public String title = "Engine1";
-	public String version = "v0.1g";
-	public static int build = 7;
+	public String title = "ShapeCrafter";
+	public String version = "v0.1a";
+	public static int build = 8;
 	public long time = System.currentTimeMillis();
 	public static String filesPath = "";
-	private boolean appendEstrel = false;
+	private boolean appendEstrel = true;
 	
 	ArrayList<World> worlds = new ArrayList<World>();
 	public World world;
-	public Player player = new Player(EntityType.UNKNOWN, new Location(0, 0, 64, 64), 10, true, playerHandler, "PLAYER");
-	public Camera playerCamera = new Camera(new Location(0, 0, 0, 0), player);
-	public Camera killCam = new Camera(new Location(0, 0, 0, 0), player);
-	public TestCameraControl camControlTest = new TestCameraControl(playerCamera);
+	public Camera camera = new Camera(new Location(0, 0, 0, 0));
 	public ArrayList<Menu> menus = new ArrayList<Menu>();
-	public WeaponType weapon = WeaponType.UNKNOWN;
-	public Entity slash = new Entity(EntityType.UNKNOWN, new Location(-1000, -1000, 0, 0, 0), 10, false, null, "SLASH");
-	public Location attackLoc;
 	public World multiWorld = new World(WIDTH * SCALE, HEIGHT * SCALE);
 	private Maps devMap = Maps.DEV;
 	
@@ -96,11 +90,41 @@ public class Engine1 extends Canvas implements Runnable {
 	public Maps map = Maps.DEV;
 	public boolean canWin = false;
 	
-	public Selector selector = new Selector("SELECTOR", this);
-	private AffineTransform selectTrans;
+	public GameHandler gameHandler = new GameHandler("GAME_HANDLER");
 	
 	public Profile profile = new Profile();
 	private int profileNum = 0;
+	
+	public double score = 0.0;
+	public long startTime = 0;
+	public long expireTime = 10000;
+	
+	public Block activeBlock = new Block(BlockType.getRandomBlockType(), new Location(98, 500, 64, 64, 0));
+	public Entity claw = new Entity(EntityType.CLAW, new Location(98, 468, 128, 128));
+	public Entity claw_arm	= new Entity(EntityType.CLAW_ARM, new Location(226, 468, 300, 128));
+	
+	public Menu hud = new Menu("HUD", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	private HudController hudController = new HudController(hud, this);
+	
+	public Menu mainMenu = new Menu("MAIN_MENU", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/menuHud.png", new Location(0, 0, 256, 256)));
+	private MainMenuController mainMenuController = new MainMenuController(mainMenu, this);
+	
+	public Menu contract = new Menu("CONTRACT", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(2 * 16, 4 * 16, 32, 32)));
+	private ContractController contractController = new ContractController(contract, this);
+	
+	public Menu victory = new Menu("VICTORY", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(2 * 16, 4 * 16, 32, 32)));
+	private FinshedContractController victoryController = new FinshedContractController(victory, this);
+	
+	public Menu defeat = new Menu("DEFEAT", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(2 * 16, 4 * 16, 32, 32)));
+	private FinshedContractController defeatController = new FinshedContractController(defeat, this);
+	
+	public Menu over = new Menu("OVER", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(2 * 16, 4 * 16, 32, 32)));
+	private FinshedContractController overController = new FinshedContractController(over, this);
+	
+	public Menu hudContract = new Menu("HUD", new Location(0, 0, 16, 16), new MenuImage(Engine1.filesPath + "/assets/res/img/texture.png", new Location(0, 0, 16, 16)));
+	
+	public ArrayList<Contract> contracts = new ArrayList<Contract>();
+	public int contractPos = 0;
 	
 	public void start() {
 		if(System.getProperty("os.name").startsWith("Windows")) {
@@ -115,31 +139,7 @@ public class Engine1 extends Canvas implements Runnable {
 		if(appendEstrel) {
 			filesPath = filesPath + "_estrelsteel";
 		}
-		String profileChoice = JOptionPane.showInputDialog("Load profile number(1-3)", "");
-		if(profileChoice == null) {
-			try {
-				stop();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		try {
-			profileNum = stringtoint(profileChoice);
-		}
-		catch(NumberFormatException e) {
-			try {
-				stop();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		if(profileNum > 3 || profileNum < 1) {
-			System.out.println("PROFILE OUT OF BOUNDS");
-			profileNum = 1;
-		}
+		profileNum = 1;
 		try {
 			FileReader fr = new FileReader(filesPath + "/saves/profile" + profileNum + ".cu1");
 			@SuppressWarnings("resource")
@@ -158,24 +158,40 @@ public class Engine1 extends Canvas implements Runnable {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		contractPos = profile.getPosition();
+		try {
+			FileReader fr = new FileReader(filesPath + "/assets/contracts.cu1");
+			@SuppressWarnings("resource")
+			BufferedReader br = new BufferedReader(fr);
+			ArrayList<String> lines = new ArrayList<String>();
+			String line = br.readLine();
+			while(line != null) {
+				lines.add(line);
+				line = br.readLine();
+			}
+			for(String s : lines) {
+				contracts.add(Contract.create(s));
+			}
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		addFocusListener(coreHandler);
 		
-		playerCamera.setFollowX(true);
-		playerCamera.setFollowY(true);
-		killCam.setFollowX(true);
-		killCam.setFollowY(true);
-		playerCamera.setCameraController(camControlTest);
-		player.setSlowWalkspeed(1);
-		player.setTeam(Team.BLUE);
-		player.setEngine(this);
-		player.setMaxHealth(100.0);
+		camera.setFollowX(false);
+		camera.setFollowY(false);
+		camera.getLocation().setX(325 - 128);
+		camera.getLocation().setY(50);
 		
-		player.setEquiped(weapon.getWeapon());
+		claw.setCollide(false);
+		claw.setWalkspeed(10);
 		
-		player = profile.configPlayer(player);
-		weapon.getWeapon().setName("w_" + player.getName());
-		slash.setName("s_" + player.getName());
+		claw_arm.setCollide(false);
+		claw_arm.setWalkspeed(10);
 		
 		if(!debug) {
 			world = Maps.DEV.getMap().load();
@@ -187,11 +203,61 @@ public class Engine1 extends Canvas implements Runnable {
 				m.setOpen(false);
 			}
 		}
+
+		hud.addMenuItem(new MenuText(" seconds", new Location(56, 56), new Font("Menlo", Font.BOLD, 16), Color.BLACK));
+		hud.addMenuItem(new MenuText("0", new Location(56, 86), new Font("Menlo", Font.BOLD, 16), Color.BLACK));
+		hud.addMenuItem(new MenuItem(MenuItemType.CLOCK, new Location(16, 32, 32, 32)));
+		hud.addMenuItem(new MenuItem(MenuItemType.CREDIT, new Location(16, 64, 32, 32)));
+		hud.addMenuItem(new MenuItem(MenuItemType.PAINT, new Location(16, 570, 64, 64)));
+		hud.setController(hudController);
+		hud.setOpen(false, this);
+		menus.add(hud);
+		
+		mainMenu.addMenuItem(new MenuText("Start", new Location(84, 370), new Font("Menlo", Font.BOLD, 48), new Color(0, 102, 0)));
+		mainMenu.addMenuItem(new MenuText("Quit", new Location(435, 370), new Font("Menlo", Font.BOLD, 48), new Color(102, 0, 0)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.START, new Location(53, 310, 216, 86)));
+		mainMenu.addMenuItem(new MenuItem(MenuItemType.QUIT, new Location(386, 310, 216, 86)));
+		mainMenu.addMenuItem(new MenuText("Restart Progress", new Location(16, 610, 200, 32), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		mainMenu.setController(mainMenuController);
+		mainMenu.setOpen(true, this);
+		menus.add(mainMenu);
+		
+		
+		contract.setController(contractController);
+		contract.setOpen(false, this);
+		menus.add(contract);
+		
+		victory.addMenuItem(new MenuText("Contract Completed!", new Location(125, 90), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		victory.addMenuItem(new MenuText("Next", new Location(125, 270, 160, 32), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		victory.setController(victoryController);
+		victory.setOpen(false, this);
+		menus.add(victory);
+		
+		defeat.addMenuItem(new MenuText("Contract Failed!", new Location(125, 90), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		defeat.addMenuItem(new MenuText("Next", new Location(125, 270, 160, 32), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		defeat.setController(defeatController);
+		defeat.setOpen(false, this);
+		menus.add(defeat);
+		
+		over.addMenuItem(new MenuText("All Contracts Complete!", new Location(125, 90), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		over.addMenuItem(new MenuText("By: EstrelSteel", new Location(140, 130), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		over.addMenuItem(new MenuText("For: Ludum Dare 35", new Location(140, 170), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		over.addMenuItem(new MenuText("Theme: Shapeshift", new Location(140, 210), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		over.addMenuItem(new MenuText("Thank you for playing!", new Location(125, 290), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		over.addMenuItem(new MenuText("Exit", new Location(125, 380, 160, 32), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		over.setController(overController);
+		over.setOpen(false, this);
+		menus.add(over);
+		
+		updateContractMenu();
+		hudContract.setOpen(false, this);
+		menus.add(hudContract);
+		
 		world = addBasics(world);
 		worlds.add(world);
 		Handler.loadHandlers(this, worlds);
 		EntityType.updateSRC(filesPath);
-		TileType.updateSRC(filesPath);
+		//TileType.updateSRC(filesPath);
 		MenuItemType.updateSRC(filesPath);
 		//Effects.updateSRC(filesPath);
 		for(Menu menu : menus) {
@@ -202,34 +268,39 @@ public class Engine1 extends Canvas implements Runnable {
 		thread.start();
 	}
 	
+	public void updateContractMenu() {
+		contract.setMenuItems(new ArrayList<MenuItem>());
+		hudContract.setMenuItems(new ArrayList<MenuItem>());
+		contract.addMenuItem(new MenuText("Contract: " + contracts.get(contractPos).getName(), new Location(125, 90), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		contract.addMenuItem(new MenuText("Requirements:", new Location(125, 130), new Font("Menlo", Font.BOLD, 16), Color.BLACK));
+		hudContract.addMenuItem(new MenuItem(MenuItemType.PAPER, new Location(16, 300, 256, 256)));
+		hudContract.addMenuItem(new MenuText("Requirements:", new Location(75, 320), new Font("Menlo", Font.PLAIN, 8), Color.BLACK));
+		for(int i = 0; i < contracts.get(contractPos).getRequirements().size(); i++) {
+			contract.addMenuItem(new MenuText("- " + contracts.get(contractPos).getRequirements().get(i), new Location(140, 130 + (20 * (i + 1))), new Font("Menlo", Font.BOLD, 16), Color.BLACK));
+			hudContract.addMenuItem(new MenuText("- " + contracts.get(contractPos).getRequirements().get(i), new Location(50, 320 + (12 * (i + 1))), new Font("Menlo", Font.PLAIN, 8), Color.BLACK));
+		}
+		contract.addMenuItem(new MenuText("Begin", new Location(125, 540, 160, 32), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+		contract.addMenuItem(new MenuText("Exit", new Location(125, 580, 160, 32), new Font("Menlo", Font.BOLD, 32), Color.BLACK));
+	}
+	
 	public World addBasics(World world) {
-		//ENTITIES
-		world.addEntity(slash);
-		world.addEntity(player);
-		world.addPlayer(player);
-		
 		//CAMERAS
-		world.addCamera(playerCamera);
-		world.setMainCamera(playerCamera);
-		for(Entity e : multiWorld.getEntities()) {
-			world.addEntity(e);
-		}
-		for(Player p : multiWorld.getPlayers()) {
-			world.addPlayer(p);
-		}
-		//CHUNKS
-		//world.sortToChunks();
+		world.addEntity(activeBlock);
+		world.addEntity(claw);
+		world.addEntity(claw_arm);
+		
+		world.addCamera(camera);
+		world.setMainCamera(camera);
 		
 		return world;
 	}
 	
 	public void stop() throws IOException {
 		if(debug) {
-			Map.generateFile(map.name().substring(0, 1) + map.name().substring(1).toLowerCase(), world);
-			System.out.println(map.name().substring(0, 1) + map.name().substring(1).toLowerCase());
+			//Map.generateFile(map.name().substring(0, 1) + map.name().substring(1).toLowerCase(), world);
 		}
 		running = false;
-		
+		profile.setPosition(contractPos);
 		try {
 			FileWriter fw = new FileWriter(filesPath + "/saves/profile" + profileNum + ".cu1");
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -309,146 +380,85 @@ public class Engine1 extends Canvas implements Runnable {
 	}
 	
 	public void tick() {
-		boolean moved = false;
-		@SuppressWarnings("unused")
-		int lastAnimation = -1;
-		
 		tickCount++;
-		if(world != null) {
-			for(Entity e : world.getEntities()) {
-				lastAnimation = e.getActiveAnimationNum();
-				if(e.getControls() != null) {
-					if(PlayerControls.UP.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						if(!moved) {
-							moved = e.moveUp(world);
-						}
-						else {
-							e.moveUp(world);
-						}
-						if(!PlayerControls.USE.isPressed()) {
-							e.setActiveAnimationNum(1);
-						}
-					}
-					if(PlayerControls.DOWN.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						if(!moved) {
-							moved = e.moveDown(world);
-						}
-						else {
-							e.moveDown(world);
-						}
-						if(!PlayerControls.USE.isPressed()) {
-							e.setActiveAnimationNum(0);
-						}
-					}
-					if(PlayerControls.RIGHT.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						if(!moved) {
-							moved = e.moveRight(world);
-						}
-						else {
-							e.moveRight(world);
-						}
-						if(!PlayerControls.USE.isPressed()) {
-							e.setActiveAnimationNum(2);
-						}
-					}
-					if(PlayerControls.LEFT.isPressed() && e.getActiveAnimationNum() != 9  && e.getActiveAnimationNum() != 8 && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						if(!moved) {
-							moved = e.moveLeft(world);
-						}
-						else {
-							e.moveLeft(world);
-						}
-						if(!PlayerControls.USE.isPressed()) {
-							e.setActiveAnimationNum(3);
-						}
-					}
-					if((e.getActiveAnimationNum() == 1 || e.getActiveAnimationNum() == 5) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.setActiveAnimationNum(5);
-						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-						e.setTopEquip(true);
-						slash.setLocation(new Location(0 + e.getLocation().getX(), -32 + e.getLocation().getY(), 64, 64, 270));
-						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() - e.getLocation().getHeight(), 64, 64, 0);
-					}
-					else if((e.getActiveAnimationNum() == 0 || e.getActiveAnimationNum() == 4) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.setActiveAnimationNum(4);
-						e.getEquiped().setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
-						e.setTopEquip(false);
-						slash.setLocation(new Location(0 + e.getLocation().getX(), 48 + e.getLocation().getY(), 64, 64, 90));
-						attackLoc = new Location(e.getLocation().getX(), e.getLocation().getY() + e.getLocation().getHeight(), 64, 64, 0);
-					}
-					else if((e.getActiveAnimationNum() == 2 || e.getActiveAnimationNum() == 6) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.setActiveAnimationNum(6);
-						e.getEquiped().setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
-						e.setTopEquip(true);
-						slash.setLocation(new Location(32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 0));
-						attackLoc = new Location(e.getLocation().getX() + e.getLocation().getWidth(), e.getLocation().getY(), 64, 64, 0);
-					}
-					else if((e.getActiveAnimationNum() == 3 || e.getActiveAnimationNum() == 7) && PlayerControls.USE.isPressed() && e.getEquiped() != null && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.setActiveAnimationNum(7);
-						e.getEquiped().setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
-						e.setTopEquip(true);
-						slash.setLocation(new Location(-32 + e.getLocation().getX(), 16 + e.getLocation().getY(), 64, 64, 180));
-						attackLoc = new Location(e.getLocation().getX() - e.getLocation().getWidth(), e.getLocation().getY() - 64, 64, 64, 0);
-					}
-					else if(!PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						e.getEquiped().setLocation(new Location(1000, 1000, 0, 0, 90));
-						e.setTopEquip(false);
-						if(e instanceof Player) {
-							e.setWalkspeed(((Player) e).getNormalWalkspeed());
-						}
-						else {
-							e.setWalkspeed(5);
-						}
-						slash.setLocation(new Location(1000, 1000, 0, 0, 90));
-						if(e.getActiveAnimationNum() > 3 && e.getActiveAnimationNum() < 8) {
-							e.setActiveAnimationNum(e.getActiveAnimationNum() - 4);
-						}
-					}
-					if(attackLoc != null && PlayerControls.USE.isPressed() && e.getControls().getName().equalsIgnoreCase("PLAYER")) {
-						if(e.getWalkspeed() != 0) {
-							if(e.getEquiped() instanceof Weapon) {
-								e.setWalkspeed(2 + ((Weapon) e.getEquiped()).getWeight());
-							}
-							else {
-								e.setWalkspeed(2);
-							}
-							if(e instanceof Player) {
-								if(((Player) e).getEquiped() instanceof Weapon) {
-									((Weapon) (((Player) e).getEquiped())).attack(this, attackLoc);
-								}
-							}
-						}
-					}
-					if(e instanceof Player) {
-						if(e.getEquiped() != null && e.getEquiped().getCurrentAnimation().getFrame() == 0 && e.getEquiped().getCurrentAnimation().getSoundEffect() != null
-								&& e.getActiveAnimationNum() >= 4 && e.getActiveAnimationNum() <= 7) {
-							e.getEquiped().getCurrentAnimation().getSoundEffect().getSound().play();
-						}
-						if(((Player) e).getHealth() < 0.0) {
-							if(map == Maps.DEV || map == Maps.INVALID) {
-								((Player) e).setHealth(((Player) e).getMaxHealth());
-							}
-							else {
-								if(e.getActiveAnimationNum() != 9) {
-									e.setActiveAnimationNum(8);
-								}
-								if(e.getActiveAnimationNum() == 8 && e.getCurrentAnimation().getFrame() >= 4) {
-									e.setActiveAnimationNum(9);
-									e.setWalkspeed(0);
-									e.setSlowWalkspeed(0);
-									world.setMainCamera(killCam);
-								}
-							}
+		if(!contract.isOpen() && !mainMenu.isOpen() && !victory.isOpen() && !defeat.isOpen()) {
+			if(System.currentTimeMillis() - startTime >= expireTime) {
+				startTime = System.currentTimeMillis();
+				for(Entity e : world.getEntities()) {
+					if(e instanceof Block) {
+						if(((Block) e).getStatus() == BlockStatus.PINNED) {
+							score = score + ((Block) e).getCollideType(world.getCollideMaps().get(world.getCollideMapPosition())).getScore();
 						}
 					}
 				}
+				((MenuText) hud.getMenuItems().get(1)).setText("" + score);
+				if(world.getCollideMapPosition() + 1 >= world.getCollideMaps().size()) {
+					world.setCollideMapPosition(0);
+					hud.setOpen(false, this);
+					hudContract.setOpen(false, this);
+					if(contracts.get(contractPos).checkFinished(new RequireData(world, score), true)) {
+						contractPos = contractPos + 1;
+						
+						if(contractPos >= contracts.size()) {
+							over.setOpen(true, this);
+							contractPos = 0;
+						}
+						else {
+							Effects.VICTORY.getSound().play();
+							updateContractMenu();
+							victory.setOpen(true, this);
+						}
+					}
+					else {
+						Effects.DEFEAT.getSound().play();
+						defeat.setOpen(true, this);
+					}
+				}
+				else {
+					if(!contracts.get(contractPos).checkFinished(new RequireData(world, score), false)) {
+						Effects.DEFEAT.getSound().play();
+						hud.setOpen(false, this);
+						hudContract.setOpen(false, this);
+						defeat.setOpen(true, this);
+					}
+					world.setCollideMapPosition(world.getCollideMapPosition() + 1);
+	
+				}
+				world.setEntities(new ArrayList<Entity>());
+				world.addEntity(activeBlock);
+				world.addEntity(claw);
+				world.addEntity(claw_arm);
+				
+			}
+		}
+		((MenuText) hud.getMenuItems().get(0)).setText((int) ((expireTime - (System.currentTimeMillis() - startTime)) / 1000)+ " seconds");
+		if(GameControls.USE.isPressed()) {
+			activeBlock.setStatus(BlockStatus.values()[activeBlock.getStatus().ordinal() + 1]);
+			GameControls.USE.setPressed(false);
+		}
+		if(activeBlock.getStatus() == BlockStatus.PINNED) {
+			activeBlock = new Block(BlockType.getRandomBlockType(), new Location(98, 500, 64, 64, 0));
+			world.addEntity(activeBlock);
+			claw.setLocation(new Location(98, 468, 128, 128));
+			claw_arm.setLocation(new Location(226, 468, 300, 128));
+		}
+		if(world != null) {
+			world.getCollideMaps().get(world.getCollideMapPosition()).getLocation().setRotation(
+					world.getCollideMaps().get(world.getCollideMapPosition()).getLocation().getRotation() + 1);
+			for(Entity e : world.getEntities()) {
 				e.getCurrentAnimation().run();
-			}
-			for(WeaponType t : WeaponType.values()) {
-				t.getWeapon().getCurrentAnimation().run();
-			}
-			for(WeaponType t : WeaponType.values()) {
-				t.getWeapon().getCurrentAnimation().setRan(false);
+				if(e instanceof Block) {
+					if(((Block) e).getStatus() == BlockStatus.PINNED) {
+						if(tickCount % 1 == 0) {
+							e.getLocation().setRotation(e.getLocation().getRotation() + 1);
+						}
+					}
+					if(((Block) e).getStatus() == BlockStatus.MOVING) {
+						e.moveUp(world);
+						claw.moveUp(world);
+						claw_arm.moveUp(world);
+					}
+				}
 			}
 			for(Entity e : world.getEntities()) {
 				e.getCurrentAnimation().setRan(false);
@@ -471,6 +481,7 @@ public class Engine1 extends Canvas implements Runnable {
 		ctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		ctx.clearRect(0, 0, getWidth(), getHeight());
+		ctx.drawImage(EntityType.BACK.getDefaultImage().getEntity(), 0, 0, WIDTH, HEIGHT, null);
 		
 		ctx.setFont(new Font("Menlo", Font.BOLD, 16));
 		if(world != null) {
@@ -478,21 +489,6 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		if((showFPS || debug) && !hideDebugHud) {
 			ctx.drawString(fps + " fps, " + tps + " tps", 20, 20);
-		}
-		if(debug && selector != null && !hideDebugHud) {
-			selectTrans = new AffineTransform();
-			selectTrans.translate(650 - 64, 0);
-			selectTrans.scale(64 / selector.type.getLocation().getWidth(), 64 / selector.type.getLocation().getHeight());
-			selectTrans.rotate(Math.toRadians(selector.rotation), 64 / (selector.type.getImage().getLocation().getWidth() / 2), 64 / (selector.type.getImage().getLocation().getHeight() / 2));
-			ctx.setColor(Color.WHITE);
-			ctx.fillRect(650 - 64, 0, 64, 94);
-			ctx.setColor(Color.BLACK);
-			ctx.drawImage(selector.type.getImage().getTile(), selectTrans, null);
-			ctx.drawString("r = "+ selector.rotation, 650 - 64, 74);
-			ctx.drawString("c = " + selector.collide, 650 - 64, 94);
-			ctx.setColor(Color.RED);
-			//loc = new Location(engine.player.getLocation().getX() / 64 * 64, engine.player.getLocation().getY() / 64 * 64, 64, 64, rotation);
-			ctx.drawRect((player.getLocation().getX() / 64 * 64) - (32) + world.getMainCamera().getLocation().getX(), (player.getLocation().getY() / 64 * 64) - (32) + world.getMainCamera().getLocation().getY(), 64, 64);
 		}
 		String line;
 		for(Menu menu : menus) {

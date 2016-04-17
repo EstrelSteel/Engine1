@@ -4,7 +4,8 @@ import com.estrelsteel.engine1.Engine1;
 import com.estrelsteel.engine1.world.Location;
 
 public enum TileType {
-	UNKOWN(-1, "UNKOWN", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16));
+	UNKOWN(-1, "UNKOWN", Engine1.filesPath + "/assets/res/img/texture.png", new Location(0 * 16, 0 * 16, 16, 16)),
+	BACK(0, "BACK", Engine1.filesPath + "/assets/res/img/back.png", new Location(0, 0, 256, 256));
 	
 	private int id;
 	private String name;

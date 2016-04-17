@@ -40,8 +40,7 @@ public abstract class Handler implements KeyListener, MouseListener {
 			engine.addKeyListener(menu.getController());
 			engine.addMouseListener(menu.getController());
 		}
-		engine.addKeyListener(engine.selector);
-		
+		engine.addKeyListener(engine.gameHandler);
 	}
 	
 	public String getName() {
