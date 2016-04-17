@@ -1,9 +1,10 @@
-Engine1 by EstrelSteel
-version 0.1g-Gold
-build 7
+ShapeCrafter by EstrelSteel
+version 0.1a-GOLD
+build 8
 
-release date: 13.04.2016
+release date: 17.04.2016
 
 ###
 
-To be used by EstrelSteel for Ludum Dare 35
+For Ludum Dare 35
+Theme: Shape Shifter
