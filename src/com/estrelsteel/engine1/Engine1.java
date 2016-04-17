@@ -433,6 +433,7 @@ public class Engine1 extends Canvas implements Runnable {
 		}
 		((MenuText) hud.getMenuItems().get(0)).setText((int) ((expireTime - (System.currentTimeMillis() - startTime)) / 1000)+ " seconds");
 		if(GameControls.USE.isPressed()) {
+			Effects.PLACE.getSound().play();
 			activeBlock.setStatus(BlockStatus.values()[activeBlock.getStatus().ordinal() + 1]);
 			GameControls.USE.setPressed(false);
 		}
