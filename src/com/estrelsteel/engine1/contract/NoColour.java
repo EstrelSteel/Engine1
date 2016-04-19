@@ -33,7 +33,7 @@ public class NoColour implements Requirement {
 		return true;
 	}
 
-	public static Requirement create(String line) {
+	public static Requirement make(String line) {
 		String[] args = line.split("/");
 		NoColour require = new NoColour();
 		require.setColour(BlockType.getByID(Integer.parseInt(args[1].trim())));

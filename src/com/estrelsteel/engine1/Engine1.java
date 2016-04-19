@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -71,11 +72,11 @@ public class Engine1 extends Canvas implements Runnable {
 	public GameHandler playerHandler = new GameHandler("PLAYER");
 	
 	public String title = "ShapeCrafter";
-	public String version = "v0.1a";
-	public static int build = 8;
+	public String version = "v0.1b";
+	public static int build = 9;
 	public long time = System.currentTimeMillis();
 	public static String filesPath = "";
-	private boolean appendEstrel = true;
+	private boolean appendEstrel = false;
 	
 	ArrayList<World> worlds = new ArrayList<World>();
 	public World world;
@@ -127,15 +128,9 @@ public class Engine1 extends Canvas implements Runnable {
 	public int contractPos = 0;
 	
 	public void start() {
-		if(System.getProperty("os.name").startsWith("Windows")) {
-			filesPath = System.getProperty("user.home") + "/AppData/Roaming/" + title;
-		}
-		else if(System.getProperty("os.name").startsWith("Mac")) {
-			filesPath = System.getProperty("user.home") + "/Library/Application Support/" + title;
-		}
-		else if(System.getProperty("os.name").startsWith("Linux")) {
-			filesPath = System.getProperty("user.home") + "/" + title;
-		}
+		File f = new File(System.getProperty("java.class.path"));
+		File dir = f.getAbsoluteFile().getParentFile();
+		filesPath = dir.toString();
 		if(appendEstrel) {
 			filesPath = filesPath + "_estrelsteel";
 		}
