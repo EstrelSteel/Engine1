@@ -16,6 +16,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import com.estrelsteel.engine1.camera.Camera;
 import com.estrelsteel.engine1.contract.Contract;
 import com.estrelsteel.engine1.contract.RequireData;
@@ -134,6 +136,7 @@ public class Engine1 extends Canvas implements Runnable {
 		if(appendEstrel) {
 			filesPath = filesPath + "_estrelsteel";
 		}
+		
 		profileNum = 1;
 		try {
 			FileReader fr = new FileReader(filesPath + "/saves/profile" + profileNum + ".cu1");
