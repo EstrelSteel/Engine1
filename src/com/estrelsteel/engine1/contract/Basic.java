@@ -5,7 +5,7 @@ import com.estrelsteel.engine1.entitiy.block.Block;
 import com.estrelsteel.engine1.entitiy.block.BlockStatus;
 
 
-public class Basic implements Requirement {
+public class Basic extends Requirement {
 
 	public boolean checkRequirement(RequireData data) {
 		for(Entity e : data.getWorld().getEntities()) {
@@ -18,7 +18,7 @@ public class Basic implements Requirement {
 		return false;
 	}
 
-	public static Requirement create(String line) {
+	public static Requirement load(String line) {
 		Basic require = new Basic();
 		return require;
 	}

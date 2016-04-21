@@ -1,7 +1,7 @@
 package com.estrelsteel.engine1.contract;
 
 
-public class MinTotalScore implements Requirement {
+public class MinTotalScore extends Requirement {
 	
 	private double score;
 	
@@ -24,7 +24,7 @@ public class MinTotalScore implements Requirement {
 		return false;
 	}
 
-	public static Requirement create(String line) {
+	public static Requirement load(String line) {
 		String[] args = line.split("/");
 		MinTotalScore require = new MinTotalScore();
 		require.setMinimumScore(Double.parseDouble(args[1].trim()));

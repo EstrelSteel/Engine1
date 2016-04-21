@@ -6,7 +6,7 @@ import com.estrelsteel.engine1.entitiy.block.BlockStatus;
 import com.estrelsteel.engine1.entitiy.block.BlockType;
 
 
-public class NoColour implements Requirement {
+public class NoColour extends Requirement {
 	
 	private BlockType colour;
 	
@@ -33,7 +33,7 @@ public class NoColour implements Requirement {
 		return true;
 	}
 
-	public static Requirement create(String line) {
+	public static Requirement load(String line) {
 		String[] args = line.split("/");
 		NoColour require = new NoColour();
 		require.setColour(BlockType.getByID(Integer.parseInt(args[1].trim())));

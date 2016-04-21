@@ -3,10 +3,10 @@ package com.estrelsteel.engine1.contract;
 import java.util.ArrayList;
 
 
-public interface Requirement {
-	public boolean checkRequirement(RequireData data);
+public abstract class Requirement {
+	public abstract boolean checkRequirement(RequireData data);
 	
-	public String toString();
+	public abstract String toString();
 	
 	public static ArrayList<Requirement> create(String line) {
 		String[] requirements = line.split("~");
@@ -17,13 +17,13 @@ public interface Requirement {
 			args = s.split("/");
 			type = RequirementTypes.findByID(Integer.parseInt(args[0].trim()));
 			if(type == RequirementTypes.MIN_TOT_SCORE) {
-				requires.add(MinTotalScore.create(s));
+				requires.add(MinTotalScore.load(s));
 			}
 			else if(type == RequirementTypes.NO_COLOUR) {
-				requires.add(NoColour.create(s));
+				requires.add(NoColour.load(s));
 			}
 			else if(type == RequirementTypes.BASIC) {
-				requires.add(Basic.create(s));
+				requires.add(Basic.load(s));
 			}
 		}
 		return requires;
